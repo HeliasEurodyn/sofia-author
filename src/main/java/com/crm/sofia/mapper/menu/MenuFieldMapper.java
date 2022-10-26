@@ -10,9 +10,6 @@ import org.mapstruct.NullValueCheckStrategy;
 @Mapper(componentModel = "spring", nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS,
         uses = {MenuMapper.class})
 public abstract class MenuFieldMapper extends BaseMapper<MenuFieldDTO, MenuField> {
-
-    public abstract void mapUpdateDtoToEntity(MenuFieldDTO dto, @MappingTarget MenuField entity);
-
 }
 
 

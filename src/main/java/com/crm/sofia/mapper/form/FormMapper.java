@@ -1,4 +1,4 @@
-package com.crm.sofia.mapper.form.designer;
+package com.crm.sofia.mapper.form;
 
 import com.crm.sofia.dto.form.base.FormDTO;
 import com.crm.sofia.mapper.common.BaseMapper;
