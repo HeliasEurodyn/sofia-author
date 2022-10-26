@@ -1,6 +1,6 @@
 package com.crm.sofia.services.xls_import;
 
-import com.crm.sofia.dto.component.designer.ComponentPersistEntityDTO;
+import com.crm.sofia.dto.component.ComponentPersistEntityDTO;
 import com.crm.sofia.dto.xls_import.XlsImportDTO;
 import com.crm.sofia.mapper.xls_import.XlsImportMapper;
 import com.crm.sofia.model.xls_import.XlsImport;

@@ -1,8 +1,8 @@
 package com.crm.sofia.services.form;
 
-import com.crm.sofia.dto.component.designer.ComponentPersistEntityDTO;
-import com.crm.sofia.dto.component.designer.ComponentPersistEntityFieldDTO;
-import com.crm.sofia.dto.form.base.*;
+import com.crm.sofia.dto.component.ComponentPersistEntityDTO;
+import com.crm.sofia.dto.component.ComponentPersistEntityFieldDTO;
+import com.crm.sofia.dto.form.*;
 import com.crm.sofia.mapper.form.FormMapper;
 import com.crm.sofia.model.form.FormEntity;
 import com.crm.sofia.repository.form.FormRepository;
@@ -34,7 +34,6 @@ public class FormDesignerService {
                                FormMapper formMapper,
                                JWTService jwtService,
                                ComponentPersistEntityFieldAssignmentService componentPersistEntityFieldAssignmentService,
-                               FormCacheingService formCacheingService,
                                FormJavascriptService formJavascriptService) {
         this.formRepository = formRepository;
         this.formMapper = formMapper;

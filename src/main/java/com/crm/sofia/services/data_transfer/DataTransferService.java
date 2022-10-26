@@ -2,15 +2,15 @@ package com.crm.sofia.services.data_transfer;
 
 import com.crm.sofia.dto.appview.AppViewDTO;
 import com.crm.sofia.dto.chart.ChartDTO;
-import com.crm.sofia.dto.component.designer.ComponentDTO;
+import com.crm.sofia.dto.component.ComponentDTO;
 import com.crm.sofia.dto.custom_query.CustomQueryDTO;
 import com.crm.sofia.dto.dashboard.DashboardDTO;
 import com.crm.sofia.dto.data_transfer.DataTransferDTO;
-import com.crm.sofia.dto.form.base.FormDTO;
+import com.crm.sofia.dto.form.FormDTO;
 import com.crm.sofia.dto.html_dashboard.HtmlDashboardDTO;
 import com.crm.sofia.dto.info_card.InfoCardDTO;
 import com.crm.sofia.dto.language.LanguageDTO;
-import com.crm.sofia.dto.list.base.ListDTO;
+import com.crm.sofia.dto.list.ListDTO;
 import com.crm.sofia.dto.menu.MenuDTO;
 import com.crm.sofia.dto.search.SearchDTO;
 import com.crm.sofia.dto.table.TableDTO;

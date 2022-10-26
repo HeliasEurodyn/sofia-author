@@ -1,7 +1,7 @@
 package com.crm.sofia.services.form;
 
-import com.crm.sofia.dto.form.base.FormAreaDTO;
-import com.crm.sofia.dto.form.base.FormDTO;
+import com.crm.sofia.dto.form.FormAreaDTO;
+import com.crm.sofia.dto.form.FormDTO;
 import com.crm.sofia.utils.JSMin;
 import org.springframework.stereotype.Service;
 

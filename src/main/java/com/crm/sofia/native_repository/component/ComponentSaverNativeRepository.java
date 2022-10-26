@@ -1,9 +1,9 @@
 package com.crm.sofia.native_repository.component;
 
-import com.crm.sofia.dto.component.designer.ComponentDTO;
-import com.crm.sofia.dto.component.designer.ComponentPersistEntityDTO;
-import com.crm.sofia.dto.component.designer.ComponentPersistEntityDataLineDTO;
-import com.crm.sofia.dto.component.designer.ComponentPersistEntityFieldDTO;
+import com.crm.sofia.dto.component.ComponentDTO;
+import com.crm.sofia.dto.component.ComponentPersistEntityDTO;
+import com.crm.sofia.dto.component.ComponentPersistEntityDataLineDTO;
+import com.crm.sofia.dto.component.ComponentPersistEntityFieldDTO;
 import com.crm.sofia.model.expression.ExprResponse;
 import com.crm.sofia.services.auth.JWTService;
 import com.crm.sofia.services.expression.ExpressionService;

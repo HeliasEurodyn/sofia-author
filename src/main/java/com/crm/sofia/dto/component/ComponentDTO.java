@@ -1,39 +1,32 @@
-package com.crm.sofia.dto.xls_import;
+package com.crm.sofia.dto.component;
 
 import com.crm.sofia.dto.access_control.AccessControlDTO;
 import com.crm.sofia.dto.common.BaseDTO;
-import com.crm.sofia.dto.component.ComponentDTO;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 import java.util.List;
 
-@Getter
-@Setter
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Accessors(chain = true)
-public class XlsImportDTO extends BaseDTO {
-
-    private String code;
+public class ComponentDTO extends BaseDTO {
 
     private String name;
 
     private String description;
 
-    private String icon;
-
-    private Long firstLine;
-
-    private String xlsIterationColumn;
-
-    private ComponentDTO component;
+    private List<ComponentPersistEntityDTO> componentPersistEntityList;
 
     private Boolean accessControlEnabled;
 
     private List<AccessControlDTO> accessControls;
+
 }

@@ -1,7 +1,7 @@
 package com.crm.sofia.dto.info_card;
 
 import com.crm.sofia.dto.common.BaseDTO;
-import com.crm.sofia.dto.list.base.ListScriptDTO;
+import com.crm.sofia.dto.list.ListScriptDTO;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;

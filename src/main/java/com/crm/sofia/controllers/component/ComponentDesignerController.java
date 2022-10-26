@@ -1,8 +1,8 @@
 package com.crm.sofia.controllers.component;
 
-import com.crm.sofia.dto.component.designer.ComponentDTO;
-import com.crm.sofia.dto.component.designer.ComponentPersistEntityDTO;
-import com.crm.sofia.dto.component.designer.ComponentPersistEntityFieldDTO;
+import com.crm.sofia.dto.component.ComponentDTO;
+import com.crm.sofia.dto.component.ComponentPersistEntityDTO;
+import com.crm.sofia.dto.component.ComponentPersistEntityFieldDTO;
 import com.crm.sofia.services.component.ComponentDesignerService;
 import com.crm.sofia.services.form.FormDynamicQueryService;
 import lombok.extern.slf4j.Slf4j;

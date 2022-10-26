@@ -1,6 +1,6 @@
 package com.crm.sofia.mapper.form;
 
-import com.crm.sofia.dto.form.base.FormDTO;
+import com.crm.sofia.dto.form.FormDTO;
 import com.crm.sofia.mapper.common.BaseMapper;
 import com.crm.sofia.model.form.FormEntity;
 import org.mapstruct.Mapper;
