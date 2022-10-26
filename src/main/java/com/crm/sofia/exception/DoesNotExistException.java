@@ -3,18 +3,9 @@ package com.crm.sofia.exception;
 public class DoesNotExistException extends SofiaException{
 
     public DoesNotExistException() {
-    }
-
-    public DoesNotExistException(String message) {
-        super(message);
-    }
-
-    public DoesNotExistException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public DoesNotExistException(String message, Object... args) {
-        super(message, args);
+        super("Could not find user");
+        this.code = "4001";
+        this.category = "4001";
     }
 
 }

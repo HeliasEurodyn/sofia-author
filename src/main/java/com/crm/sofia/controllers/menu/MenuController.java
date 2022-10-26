@@ -48,5 +48,4 @@ public class MenuController {
           this.menuService.deleteObject(id);
     }
 
-
 }

@@ -58,8 +58,8 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         Role modRole = this.createRoleIfNotFound(Role.ROLE_MODERATOR);
         Menu sidebarMenu = this.createSidebarMenu();
         Menu headerMenu = this.createHeaderMenu();
-        this.createUserIfNotFound(Set.of(userRole, adminRole, modRole), sidebarMenu, headerMenu);
-        this.sofiaImports();
+      //  this.createUserIfNotFound(Set.of(userRole, adminRole, modRole), sidebarMenu, headerMenu);
+       // this.sofiaImports();
 //        this.cveSearchSettingsService.tryInsertVendorsIfEmptyTable();
     }
 

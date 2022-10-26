@@ -1,11 +1,20 @@
 package com.crm.sofia.exception;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.io.Serializable;
 import java.text.MessageFormat;
 
+@Getter
+@Setter
 public class SofiaException extends RuntimeException implements Serializable {
-    protected SofiaException() {
 
+    String code;
+    String category;
+    Boolean isVisible;
+
+    protected SofiaException() {
     }
 
     protected SofiaException(String message) {

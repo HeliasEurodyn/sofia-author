@@ -4,14 +4,11 @@ public class ExpressionException extends SofiaException{
 
     public ExpressionException(String message) {
         super(message);
+        this.code = "4000";
+        this.category = "4000";
     }
 
-    public ExpressionException(String message, Throwable cause) {
-        super(message, cause);
-    }
 
-    public ExpressionException(String message, Object... args) {
-        super(message, args);
-    }
+
 }
 

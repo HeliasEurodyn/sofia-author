@@ -2,15 +2,13 @@ package com.crm.sofia.exception;
 
 public class CouldNotSaveException extends SofiaException{
 
+    String reason = "";
+
     public CouldNotSaveException() {
-    }
-
-    public CouldNotSaveException(String message) {
-        super(message);
-    }
-
-    public CouldNotSaveException(String message, Throwable cause) {
-        super(message, cause);
+        super("Could not save");
+        this.code = "4002";
+        this.category = "4002";
+        this.reason = "NOT_FOUND_TABLE";
     }
 
 }
