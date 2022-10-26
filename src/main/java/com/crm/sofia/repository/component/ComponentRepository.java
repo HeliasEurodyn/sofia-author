@@ -8,7 +8,4 @@ import java.util.List;
 
 @Repository
 public interface ComponentRepository extends BaseRepository<Component> {
-
-    List<Component> findAll();
-
 }

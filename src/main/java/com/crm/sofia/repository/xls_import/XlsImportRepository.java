@@ -8,5 +8,4 @@ import java.util.List;
 
 @Repository
 public interface XlsImportRepository extends BaseRepository<XlsImport> {
-    public List<XlsImport> findAll();
 }

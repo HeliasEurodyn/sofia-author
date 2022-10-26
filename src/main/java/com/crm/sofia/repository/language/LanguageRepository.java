@@ -8,7 +8,4 @@ import java.util.List;
 
 @Repository
 public interface LanguageRepository extends BaseRepository<Language> {
-
-    public List<Language> findAll();
-
 }

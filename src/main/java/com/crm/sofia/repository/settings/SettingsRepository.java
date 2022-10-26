@@ -10,7 +10,6 @@ import java.util.List;
 
 @Repository
 public interface SettingsRepository extends BaseRepository<Settings> {
-    List<Settings> findAll();
 
     @Query(" SELECT DISTINCT s.sidebarImage FROM Settings s " +
             " WHERE s.id =:id ")

@@ -11,7 +11,5 @@ public interface RoleRepository extends BaseRepository<Role> {
 
     Role findFirstByName(String name);
 
-    List<Role> findAll();
-
     List<Role> findAllByOrderByModifiedOn();
 }

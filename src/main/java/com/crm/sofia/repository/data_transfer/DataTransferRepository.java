@@ -10,7 +10,6 @@ import java.util.List;
 
 @Repository
 public interface DataTransferRepository extends BaseRepository<DataTransfer> {
-    List<DataTransfer> findAll();
 
     @Query(" SELECT DISTINCT d.currentVersion FROM DataTransfer d " +
             " WHERE d.id =:id ")

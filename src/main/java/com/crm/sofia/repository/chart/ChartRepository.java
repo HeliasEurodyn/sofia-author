@@ -8,7 +8,4 @@ import java.util.List;
 
 @Repository
 public interface ChartRepository extends BaseRepository<Chart> {
-
-    public List<Chart> findAll();
-
 }

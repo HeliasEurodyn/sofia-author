@@ -11,7 +11,6 @@ import java.util.List;
 
 @Repository
 public interface ReportRepository extends BaseRepository<Report> {
-    List<Report> findAll();
 
     @Query(" SELECT r.reportUuid FROM Report r " +
             " WHERE r.id =:id ")

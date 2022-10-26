@@ -8,5 +8,4 @@ import java.util.List;
 
 @Repository
 public interface HtmlDashboardRepository extends BaseRepository<HtmlDashboard> {
-    List<HtmlDashboard> findAll();
 }

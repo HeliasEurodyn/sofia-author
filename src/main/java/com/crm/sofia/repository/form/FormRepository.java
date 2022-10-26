@@ -13,8 +13,6 @@ import java.util.List;
 @Repository
 public interface FormRepository extends BaseRepository<FormEntity> {
 
-    List<FormEntity> findAll();
-
     List<FormEntity> findAllByOrderByModifiedOn();
 
     @Query(" SELECT DISTINCT f.businessUnit FROM FormEntity f WHERE f.businessUnit IS NOT NULL ")

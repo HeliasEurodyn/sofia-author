@@ -8,5 +8,4 @@ import java.util.List;
 
 @Repository
 public interface DownloadRepository extends BaseRepository<Download> {
-    List<Download> findAll();
 }

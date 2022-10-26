@@ -13,10 +13,7 @@ import java.util.List;
 @Repository
 public interface ListRepository extends BaseRepository<ListEntity> {
 
-    List<ListEntity> findAll();
-
     List<ListEntity> findAllByOrderByModifiedOn();
-
 
     @Query(" SELECT DISTINCT l.businessUnit FROM ListEntity l WHERE l.businessUnit IS NOT NULL ")
     List<String> findBusinessUnitsDistinct();

@@ -7,5 +7,4 @@ import java.util.List;
 
 @Repository
 public interface UserGroupRepository extends BaseRepository<UserGroup> {
-    List<UserGroup> findAll();
 }

@@ -8,7 +8,4 @@ import java.util.List;
 
 @Repository
 public  interface SearchRepository extends BaseRepository<Search> {
-
-    List<Search> findAll();
-
 }

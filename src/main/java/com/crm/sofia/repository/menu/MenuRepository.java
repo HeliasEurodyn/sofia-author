@@ -12,8 +12,6 @@ import java.util.Optional;
 @Repository
 public interface MenuRepository extends BaseRepository<Menu> {
 
-    List<Menu> findAll();
-
     @Query(" SELECT DISTINCT c " +
             " FROM Menu c " +
             " LEFT JOIN FETCH c.menuFieldList fl " +

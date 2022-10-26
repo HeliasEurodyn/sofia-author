@@ -12,8 +12,6 @@ import java.util.List;
 @Repository
 public interface InfoCardRepository extends BaseRepository<InfoCard> {
 
-    public List<InfoCard> findAll();
-
     @Query(" SELECT DISTINCT l.id FROM InfoCard l ")
     public List<String> getListIds();
 
