@@ -8,6 +8,7 @@ public class ExpressionException extends SofiaException {
         super(message);
         this.setCode("4000");
         this.setCategory("4000");
+        this.setVisible(true);
     }
 
 
