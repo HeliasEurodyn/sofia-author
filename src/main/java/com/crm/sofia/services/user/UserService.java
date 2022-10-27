@@ -5,6 +5,8 @@ import com.crm.sofia.dto.user.*;
 import com.crm.sofia.exception.DoesNotExistException;
 import com.crm.sofia.exception.OAuth2AuthenticationProcessingException;
 import com.crm.sofia.exception.UserAlreadyExistAuthenticationException;
+import com.crm.sofia.exception.login.IncorrectPasswordException;
+import com.crm.sofia.exception.login.UserNotFoundException;
 import com.crm.sofia.mapper.user.UserMapper;
 import com.crm.sofia.model.user.LocalUser;
 import com.crm.sofia.model.user.Role;
@@ -123,36 +125,30 @@ public class UserService {
     @Transactional
     public ResponseEntity<?> authenticate(@NotBlank String username, @NotBlank String enteredPassword) {
 
-        Optional<User> userOptional = userRepository.findByUsername(username);
+        User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
 
-        if (!userOptional.isPresent()) {
-            throw new DoesNotExistException();
+        if (passwordEncoder.matches(enteredPassword, user.getPassword())) {
+            user.setEnabled(true);
+            UserDetails userDetails =
+                    new LocalUser(user.getEmail(), user.getPassword(),
+                            true, true, true,
+                            true,
+                            GeneralUtils.buildSimpleGrantedAuthorities(user.getRolesSet()), user, user.getRoles());
+
+
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(username, enteredPassword)
+            );
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            String jwt = tokenProvider.createToken(authentication);
+            LocalUser localUser = (LocalUser) authentication.getPrincipal();
+
+            UserDTO userDTO = this.userMapper.mapUserToDtoWithMenu(localUser.getUser());
+            return ResponseEntity.ok(new JwtAuthenticationResponse(jwt, userDTO));
+        } else {
+
+            throw new IncorrectPasswordException();
         }
-
-        if (userOptional.isPresent()) {
-            User user = userOptional.get();
-            if (passwordEncoder.matches(enteredPassword, user.getPassword())) {
-                user.setEnabled(true);
-                UserDetails userDetails =
-                        new LocalUser(user.getEmail(), user.getPassword(),
-                                true, true, true,
-                                true,
-                                GeneralUtils.buildSimpleGrantedAuthorities(user.getRolesSet()), user, user.getRoles() );
-
-
-                Authentication authentication = authenticationManager.authenticate(
-                        new UsernamePasswordAuthenticationToken(username, enteredPassword)
-                );
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-                String jwt = tokenProvider.createToken(authentication);
-                LocalUser localUser = (LocalUser) authentication.getPrincipal();
-
-                UserDTO userDTO = this.userMapper.mapUserToDtoWithMenu(localUser.getUser());
-                return ResponseEntity.ok(new JwtAuthenticationResponse(jwt, userDTO));
-            }
-        }
-
-        return new ResponseEntity<>(new ApiResponse(false, "Login error!"), HttpStatus.BAD_REQUEST);
     }
 
     @Transactional

@@ -1,11 +1,13 @@
 package com.crm.sofia.exception;
 
-public class DoesNotExistException extends SofiaException{
+import com.crm.sofia.exception.common.SofiaException;
+
+public class DoesNotExistException extends SofiaException {
 
     public DoesNotExistException() {
         super("Could not find user");
-        this.code = "4001";
-        this.category = "4001";
+        this.setCode("4001");
+        this.setCategory("4001");
     }
 
 }
