@@ -3,6 +3,7 @@ package com.crm.sofia.services.list;
 import com.crm.sofia.dto.component.ComponentPersistEntityDTO;
 import com.crm.sofia.dto.list.ListComponentFieldDTO;
 import com.crm.sofia.dto.list.ListDTO;
+import com.crm.sofia.exception.DoesNotExistException;
 import com.crm.sofia.mapper.list.ListMapper;
 import com.crm.sofia.model.list.ListEntity;
 import com.crm.sofia.repository.list.ListRepository;
@@ -107,7 +108,7 @@ public class ListDesignerService {
         ListEntity listEntity =
                 this.listRepository.findById(id)
                         .orElseThrow(() ->
-                                new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "ListEntity does not exist")
+                                new DoesNotExistException("List Entity Does Not Exist")
                         );
 
         ListDTO listDTO = this.listMapper.mapList(listEntity);

@@ -16,33 +16,14 @@ import java.util.Map;
 @ControllerAdvice
 public class RestResponseEntityExceptionHandler{
 
-    @ExceptionHandler({ExpressionException.class, DoesNotExistException.class})
+    @ExceptionHandler(
+            {ExpressionException.class, DoesNotExistException.class, UserNotFoundException.class, IncorrectPasswordException.class})
     public ResponseEntity<Map<String,String>> handleException(SofiaException exception){
         Map<String,String> response = new HashMap<>();
         response.put("code", exception.getCode());
-        response.put("category", exception.getCategory());
         response.put("message", exception.getMessage());
+        response.put("category",exception.getCategory());
+        response.put("isVisible",Boolean.toString(exception.isVisible()));
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
-
-    @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<Map<String,String>> handleUserNotFoundException(UserNotFoundException userNotFoundException){
-        Map<String,String> response = new HashMap<>();
-        response.put("code", userNotFoundException.getCode());
-        response.put("message", userNotFoundException.getMessage());
-        response.put("category",userNotFoundException.getCategory());
-        response.put("isVisible",Boolean.toString(userNotFoundException.isVisible()));
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(IncorrectPasswordException.class)
-    public ResponseEntity<Map<String,String>> handleIncorrectPasswordException(IncorrectPasswordException incorrectPasswordException){
-        Map<String,String> response = new HashMap<>();
-        response.put("code", incorrectPasswordException.getCode());
-        response.put("message", incorrectPasswordException.getMessage());
-        response.put("category",incorrectPasswordException.getCategory());
-        response.put("isVisible",Boolean.toString(incorrectPasswordException.isVisible()));
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-    }
-
 }

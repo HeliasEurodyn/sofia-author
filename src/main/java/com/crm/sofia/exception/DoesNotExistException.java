@@ -5,9 +5,17 @@ import com.crm.sofia.exception.common.SofiaException;
 public class DoesNotExistException extends SofiaException {
 
     public DoesNotExistException() {
-        super("Could not find user");
-        this.setCode("4001");
-        this.setCategory("4001");
+        super("Object Does Not Exist");
+        this.setCode("002-1");
+        this.setCategory("OBJECT_NOT_FOUND");
+        this.setVisible(true);
+    }
+
+    public DoesNotExistException(String message) {
+        super(message);
+        this.setCode("002-1");
+        this.setCategory("OBJECT_NOT_FOUND");
+        this.setVisible(true);
     }
 
 }

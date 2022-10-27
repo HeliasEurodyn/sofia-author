@@ -1,6 +1,7 @@
 package com.crm.sofia.services.timeline;
 
 import com.crm.sofia.dto.timeline.TimelineDTO;
+import com.crm.sofia.exception.DoesNotExistException;
 import com.crm.sofia.mapper.timeline.TimelineMapper;
 import com.crm.sofia.model.timeline.Timeline;
 import com.crm.sofia.repository.timeline.TimelineRepository;
@@ -34,12 +35,9 @@ public class TimelineDesignerService {
     }
 
     public TimelineDTO getObject(String id) {
-        Optional<Timeline> optionalEntity = timelineRepository.findById(id);
-        if (!optionalEntity.isPresent()) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Object does not exist");
-        }
-        Timeline entity = optionalEntity.get();
-        TimelineDTO dto = timelineMapper.map(entity);
+
+        Timeline timeline = timelineRepository.findById(id).orElseThrow(()->new DoesNotExistException("Timeline Designer Does Not Exist"));
+        TimelineDTO dto = timelineMapper.map(timeline);
 
         String encodedQuery = Base64.getEncoder().encodeToString(dto.getQuery().getBytes(StandardCharsets.UTF_8));
         dto.setQuery(encodedQuery);
