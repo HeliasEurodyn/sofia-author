@@ -35,9 +35,12 @@ public class TimelineDesignerService {
     }
 
     public TimelineDTO getObject(String id) {
-
-        Timeline timeline = timelineRepository.findById(id).orElseThrow(()->new DoesNotExistException("Timeline Designer Does Not Exist"));
-        TimelineDTO dto = timelineMapper.map(timeline);
+        Optional<Timeline> optionalEntity = timelineRepository.findById(id);
+        if (!optionalEntity.isPresent()) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Object does not exist");
+        }
+        Timeline entity = optionalEntity.get();
+        TimelineDTO dto = timelineMapper.map(entity);
 
         String encodedQuery = Base64.getEncoder().encodeToString(dto.getQuery().getBytes(StandardCharsets.UTF_8));
         dto.setQuery(encodedQuery);
