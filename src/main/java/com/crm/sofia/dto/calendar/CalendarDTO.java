@@ -26,4 +26,9 @@ public class CalendarDTO extends BaseDTO {
     private String description;
 
     private String icon;
+
+    @NotNull
+    private String query;
+
+
 }
