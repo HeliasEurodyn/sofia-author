@@ -1,7 +1,6 @@
 package com.crm.sofia.services.calendar;
 
 import com.crm.sofia.dto.calendar.CalendarDTO;
-import com.crm.sofia.exception.DoesNotExistException;
 import com.crm.sofia.mapper.calendar.CalendarMapper;
 import com.crm.sofia.model.calendar.Calendar;
 import com.crm.sofia.repository.calendar.CalendarRepository;
@@ -40,8 +39,12 @@ public class CalendarDesignerService {
     }
 
     public CalendarDTO getObject(String id) {
-        Calendar calendar = calendarRepository.findById(id).orElseThrow(() ->new DoesNotExistException("Calendar Designer Does Not Exist"));
-        CalendarDTO dto = calendarMapper.map(calendar);
+        Optional<Calendar> optionalEntity = calendarRepository.findById(id);
+        if (!optionalEntity.isPresent()) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Object does not exist");
+        }
+        Calendar entity = optionalEntity.get();
+        CalendarDTO dto = calendarMapper.map(entity);
 
         String encodedQuery = Base64.getEncoder().encodeToString(dto.getQuery().getBytes(StandardCharsets.UTF_8));
         dto.setQuery(encodedQuery);
@@ -69,11 +72,13 @@ public class CalendarDesignerService {
     }
 
     public void deleteObject(String id) {
-        Optional<Calendar> optionalEntity = Optional.ofNullable(calendarRepository.findById(id)).
-                orElseThrow(()->new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Object does not exist"));
-
+        Optional<Calendar> optionalEntity = calendarRepository.findById(id);
+        if (!optionalEntity.isPresent()) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Object does not exist");
+        }
         calendarRepository.deleteById(optionalEntity.get().getId());
     }
+
 
 
 }
