@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
 
@@ -31,7 +32,7 @@ public class TimelineDesignerController {
     }
 
     @PostMapping
-    public TimelineDTO postObject(@RequestBody TimelineDTO timelineDTO) throws IOException {
+    public TimelineDTO postObject(@RequestBody @Valid TimelineDTO timelineDTO) throws IOException {
         return timelineDesignerService.postObject(timelineDTO);
     }
 

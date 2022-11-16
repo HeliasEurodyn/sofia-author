@@ -21,8 +21,8 @@ import java.util.List;
 @Accessors(chain = true)
 public class TimelineDTO extends BaseDTO {
 
-    @NotNull
-    @NotBlank
+    @NotNull(message = "Title Cannot Be Null")
+    @NotBlank(message = "Title Cannot Be Blank")
     private String title;
 
     private String description;
