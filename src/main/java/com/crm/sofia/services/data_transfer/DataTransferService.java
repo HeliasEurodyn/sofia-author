@@ -18,6 +18,9 @@ import com.crm.sofia.dto.user.RoleDTO;
 import com.crm.sofia.dto.user.UserDTO;
 import com.crm.sofia.dto.view.ViewDTO;
 import com.crm.sofia.dto.xls_import.XlsImportDTO;
+import com.crm.sofia.exception.data_tranfer.DataImportException;
+import com.crm.sofia.exception.data_tranfer.ImportedFileAlreadyExistsException;
+import com.crm.sofia.exception.data_tranfer.WrongFileTypeException;
 import com.crm.sofia.mapper.data_transfer.DataTransferMapper;
 import com.crm.sofia.model.data_transfer.DataTransfer;
 import com.crm.sofia.repository.data_transfer.DataTransferRepository;
@@ -44,6 +47,7 @@ import com.crm.sofia.utils.ByteUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
@@ -283,13 +287,14 @@ public class DataTransferService {
         return byteUtils.objectToBase64Bytes(dataTransferDTO);
     }
 
+    @Transactional(rollbackFor = Exception.class)
     public void importMultipartFile(MultipartFile multipartFile) throws Exception {
 
         /* Check file extension */
         String extension = StringUtils.getFilenameExtension(multipartFile.getOriginalFilename());
 
         if (!extension.equals("sofia")) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Wrong file type");
+            throw new WrongFileTypeException();
         }
 
         this.importByteArray(multipartFile.getBytes());
@@ -304,89 +309,94 @@ public class DataTransferService {
 
         if ((currentVersion == null ? 0 : currentVersion) < dataTransferDTO.getCurrentVersion()) {
             this.importDTO(dataTransferDTO);
+        }else{
+            throw new ImportedFileAlreadyExistsException();
         }
     }
 
     public void importDTO(DataTransferDTO dataTransferDTO) throws Exception {
 
-        this.postObject(dataTransferDTO);
+        try{
+            for (TableDTO dto : dataTransferDTO.getTables()) {
+                //   version = this.getCurrentVersion("Menu", dto.getId());
+                //   dto.setVersion(version);
+                this.tableService.save(dto);
+            }
 
-        for (TableDTO dto : dataTransferDTO.getTables()) {
-            //   version = this.getCurrentVersion("Menu", dto.getId());
-            //   dto.setVersion(version);
-            this.tableService.save(dto);
-        }
+            for (AppViewDTO dto : dataTransferDTO.getAppViews()) {
+                this.appViewService.postObject(dto);
+            }
 
-        for (AppViewDTO dto : dataTransferDTO.getAppViews()) {
-            this.appViewService.postObject(dto);
-        }
+            for (ViewDTO dto : dataTransferDTO.getViews()) {
+                this.viewService.postObject(dto);
+            }
 
-        for (ViewDTO dto : dataTransferDTO.getViews()) {
-            this.viewService.postObject(dto);
-        }
+            for (LanguageDTO dto : dataTransferDTO.getLanguages()) {
+                this.languageDesignerService.postObject(dto);
+            }
 
-        for (LanguageDTO dto : dataTransferDTO.getLanguages()) {
-            this.languageDesignerService.postObject(dto);
-        }
+            for (RoleDTO dto : dataTransferDTO.getRoles()) {
+                this.roleService.postObject(dto);
+            }
 
-        for (RoleDTO dto : dataTransferDTO.getRoles()) {
-            this.roleService.postObject(dto);
-        }
+            for (MenuDTO dto : dataTransferDTO.getMenus()) {
+                this.menuService.postObject(dto);
+            }
 
-        for (MenuDTO dto : dataTransferDTO.getMenus()) {
-            this.menuService.postObject(dto);
-        }
+            for (ComponentDTO dto : dataTransferDTO.getComponents()) {
+                this.componentDesignerService.postObject(dto);
+            }
 
-        for (ComponentDTO dto : dataTransferDTO.getComponents()) {
-            this.componentDesignerService.postObject(dto);
-        }
+            for (UserDTO dto : dataTransferDTO.getUsers()) {
+                this.userService.postTransferUser(dto);
+            }
 
-        for (UserDTO dto : dataTransferDTO.getUsers()) {
-            this.userService.postTransferUser(dto);
-        }
+            for (ListDTO dto : dataTransferDTO.getLists()) {
+                this.listDesignerService.postObject(dto);
+            }
 
-        for (ListDTO dto : dataTransferDTO.getLists()) {
-            this.listDesignerService.postObject(dto);
-        }
+            for (FormDTO dto : dataTransferDTO.getForms()) {
+                this.formDesignerService.postObject(dto);
+            }
 
-        for (FormDTO dto : dataTransferDTO.getForms()) {
-            this.formDesignerService.postObject(dto);
-        }
+            for (ChartDTO dto : dataTransferDTO.getCharts()) {
+                this.chartDesignerService.postObject(dto);
+            }
 
-        for (ChartDTO dto : dataTransferDTO.getCharts()) {
-            this.chartDesignerService.postObject(dto);
-        }
+            for (InfoCardDTO dto : dataTransferDTO.getInfoCards()) {
+                this.infoCardDesignerService.postObject(dto);
+            }
 
-        for (InfoCardDTO dto : dataTransferDTO.getInfoCards()) {
-            this.infoCardDesignerService.postObject(dto);
-        }
+            for (HtmlDashboardDTO dto : dataTransferDTO.getHtmlParts()) {
+                this.htmlDashboardDesignerService.postObject(dto);
+            }
 
-        for (HtmlDashboardDTO dto : dataTransferDTO.getHtmlParts()) {
-            this.htmlDashboardDesignerService.postObject(dto);
-        }
-
-        for (DashboardDTO dto : dataTransferDTO.getDashboards()) {
-            this.dashboardDesignerService.postObject(dto);
-        }
+            for (DashboardDTO dto : dataTransferDTO.getDashboards()) {
+                this.dashboardDesignerService.postObject(dto);
+            }
 
 //        for (ReportDTO dto : dataTransferDTO.getReports()) {
 //            this.reportDesignerService.postObject(dto);
 //        }
 
-        for (XlsImportDTO dto : dataTransferDTO.getXlsImports()) {
-            this.xlsImportDesignerService.postObject(dto);
-        }
+            for (XlsImportDTO dto : dataTransferDTO.getXlsImports()) {
+                this.xlsImportDesignerService.postObject(dto);
+            }
 
-        for (SearchDTO dto : dataTransferDTO.getSearchs()) {
-            this.searchDesignerService.postObject(dto);
-        }
+            for (SearchDTO dto : dataTransferDTO.getSearchs()) {
+                this.searchDesignerService.postObject(dto);
+            }
 
-        for (CustomQueryDTO dto : dataTransferDTO.getCustomQuerys()) {
-            this.customQueryService.postObject(dto);
-        }
+            for (CustomQueryDTO dto : dataTransferDTO.getCustomQuerys()) {
+                this.customQueryService.postObject(dto);
+            }
+
+            this.postObject(dataTransferDTO);
 
 //        tryRunQuery(dataTransferDTO);
-
+        }catch (Exception e) {
+            throw new DataImportException();
+        }
     }
 
 //    @Transactional
