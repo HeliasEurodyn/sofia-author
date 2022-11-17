@@ -6,6 +6,7 @@ import com.crm.sofia.dto.list.ListDTO;
 import com.crm.sofia.exception.DoesNotExistException;
 import com.crm.sofia.mapper.list.ListMapper;
 import com.crm.sofia.model.list.ListEntity;
+import com.crm.sofia.model.list.ListView;
 import com.crm.sofia.repository.list.ListRepository;
 import com.crm.sofia.services.auth.JWTService;
 import com.crm.sofia.services.language.LanguageDesignerService;
@@ -100,8 +101,8 @@ public class ListDesignerService {
     }
 
     public List<ListDTO> getObject() {
-        List<ListEntity> lists = this.listRepository.findAllByOrderByModifiedOn();
-        return this.listMapper.mapEntitiesForList(lists);
+        List<ListView> lists = this.listRepository.findAllProjectedBy();
+        return this.listMapper.mapViewsForList(lists);
     }
 
     public ListDTO getObject(String id) {

@@ -1,6 +1,7 @@
 package com.crm.sofia.repository.list;
 
 import com.crm.sofia.model.list.ListEntity;
+import com.crm.sofia.model.list.ListView;
 import com.crm.sofia.repository.common.BaseRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -62,4 +63,7 @@ public interface ListRepository extends BaseRepository<ListEntity> {
     @Query(" SELECT l FROM ListEntity l " +
             " WHERE l.jsonUrl <> '' AND l.jsonUrl is not null ")
     public List<ListEntity> getIdsByExistingJsonUrls();
+
+    @Query("SELECT l FROM ListEntity l JOIN FETCH l.component c")
+    List<ListView> findAllProjectedBy();
 }

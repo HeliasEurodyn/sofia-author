@@ -3,6 +3,7 @@ package com.crm.sofia.mapper.list;
 import com.crm.sofia.dto.list.ListDTO;
 import com.crm.sofia.mapper.common.BaseMapper;
 import com.crm.sofia.model.list.ListEntity;
+import com.crm.sofia.model.list.ListView;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.NullValueCheckStrategy;
@@ -147,6 +148,12 @@ public abstract class ListMapper extends BaseMapper<ListDTO, ListEntity> {
 
         return dto;
     }
+
+    public List<ListDTO> mapViewsForList(List<ListView> entities) {
+        return entities.stream().map(this::viewToDTO).collect(Collectors.toList());
+    }
+
+    public abstract ListDTO viewToDTO(ListView listView);
 
 
 }
