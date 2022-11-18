@@ -44,6 +44,8 @@ import com.crm.sofia.services.user.UserService;
 import com.crm.sofia.services.view.ViewService;
 import com.crm.sofia.services.xls_import.XlsImportDesignerService;
 import com.crm.sofia.utils.ByteUtils;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -57,6 +59,7 @@ import javax.persistence.Query;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 
@@ -174,6 +177,7 @@ public class DataTransferService {
 
     public byte[] export(String id) throws IOException, ClassNotFoundException {
 
+        ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
         DataTransferDTO dataTransferDTO = this.getObject(id);
 
         dataTransferDTO.setTables(new ArrayList<>());
@@ -284,7 +288,8 @@ public class DataTransferService {
             dataTransferDTO.getUsers().add(dto);
         });
 
-        return byteUtils.objectToBase64Bytes(dataTransferDTO);
+        String jsonDataTransferDto =ow.writeValueAsString(dataTransferDTO);
+        return Base64.getEncoder().encode(jsonDataTransferDto.getBytes());
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -303,7 +308,10 @@ public class DataTransferService {
     public void importByteArray(byte[] bytes) throws Exception {
 
         /* Bytes to DataTransferDTO */
-        DataTransferDTO dataTransferDTO = (DataTransferDTO) byteUtils.base64BytesToObject(bytes);
+        byte[] decodedBytes = Base64.getDecoder().decode(bytes);
+        String jsonDataTransferDto = new String(decodedBytes);
+        ObjectMapper mapper = new ObjectMapper();
+        DataTransferDTO dataTransferDTO = mapper.readValue(jsonDataTransferDto, DataTransferDTO.class);
 
         Integer currentVersion = this.dataTransferRepository.getCurrentVersion(dataTransferDTO.getId());
 
