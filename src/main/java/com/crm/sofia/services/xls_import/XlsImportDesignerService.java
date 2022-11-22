@@ -2,22 +2,21 @@ package com.crm.sofia.services.xls_import;
 
 import com.crm.sofia.dto.component.ComponentPersistEntityDTO;
 import com.crm.sofia.dto.xls_import.XlsImportDTO;
+import com.crm.sofia.exception.DoesNotExistException;
 import com.crm.sofia.mapper.xls_import.XlsImportMapper;
 import com.crm.sofia.model.xls_import.XlsImport;
 import com.crm.sofia.repository.xls_import.XlsImportRepository;
 import com.crm.sofia.services.component.ComponentPersistEntityFieldAssignmentService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
-import java.util.Optional;
+
 
 @Slf4j
 @Service
@@ -40,11 +39,10 @@ public class XlsImportDesignerService {
     }
 
     public XlsImportDTO getObject(String id) {
-        Optional<XlsImport> optionalchart = this.xlsImportRepository.findById(id);
-        if (!optionalchart.isPresent()) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Object does not exist");
-        }
-        XlsImportDTO dto = this.xlsImportMapper.map(optionalchart.get());
+        XlsImport optionalChart = this.xlsImportRepository.findById(id)
+                .orElseThrow(() -> new DoesNotExistException("XlsImport Does Not Exist"));
+
+        XlsImportDTO dto = this.xlsImportMapper.map(optionalChart);
 
         List<ComponentPersistEntityDTO> cpeList =
                 this.treeToList(dto.getComponent().getComponentPersistEntityList());
@@ -118,12 +116,11 @@ public class XlsImportDesignerService {
     @Transactional
     @Modifying
     public void deleteObject(String id) {
-        Optional<XlsImport> optionalChart = this.xlsImportRepository.findById(id);
-        if (!optionalChart.isPresent()) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Object does not exist");
-        }
-        this.componentPersistEntityFieldAssignmentService.deleteByIdAndEntityType(optionalChart.get().getId(), "xls_import");
-        this.xlsImportRepository.deleteById(optionalChart.get().getId());
+       XlsImport optionalChart = this.xlsImportRepository.findById(id)
+               .orElseThrow(() -> new DoesNotExistException("XlsImport Does Not Exist"));
+
+        this.componentPersistEntityFieldAssignmentService.deleteByIdAndEntityType(optionalChart.getId(), "xls_import");
+        this.xlsImportRepository.deleteById(optionalChart.getId());
     }
 
 }

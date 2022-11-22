@@ -1,14 +1,13 @@
 package com.crm.sofia.services.download;
 
 import com.crm.sofia.dto.download.DownloadDTO;
+import com.crm.sofia.exception.DoesNotExistException;
 import com.crm.sofia.mapper.download.DownloadMapper;
 import com.crm.sofia.model.download.Download;
 import com.crm.sofia.repository.download.DownloadRepository;
 import com.crm.sofia.services.auth.JWTService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.time.Instant;
 import java.util.List;
@@ -29,12 +28,10 @@ public class DownloadService {
     }
 
     public DownloadDTO getObject(String id) {
-        Optional<Download> optionalEntity = downloadRepository.findById(id);
-        if (!optionalEntity.isPresent()) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Object does not exist");
-        }
-        Download entity = optionalEntity.get();
-        DownloadDTO dto = downloadMapper.map(entity);
+       Download optionalEntity = downloadRepository.findById(id)
+               .orElseThrow(() -> new DoesNotExistException("Download Does Not Exist"));
+
+        DownloadDTO dto = downloadMapper.map(optionalEntity);
         return dto;
     }
 
@@ -54,11 +51,10 @@ public class DownloadService {
     }
 
     public void deleteObject(String id) {
-        Optional<Download> optionalEntity = downloadRepository.findById(id);
-        if (!optionalEntity.isPresent()) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Object does not exist");
-        }
-        downloadRepository.deleteById(optionalEntity.get().getId());
+        Download optionalEntity = downloadRepository.findById(id)
+                        .orElseThrow(() -> new DoesNotExistException("Download Does Not Exist"));
+
+        downloadRepository.deleteById(optionalEntity.getId());
     }
 
 }

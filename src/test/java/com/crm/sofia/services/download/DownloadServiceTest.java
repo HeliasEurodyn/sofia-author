@@ -1,6 +1,7 @@
 package com.crm.sofia.services.download;
 
 import com.crm.sofia.dto.download.DownloadDTO;
+import com.crm.sofia.exception.DoesNotExistException;
 import com.crm.sofia.mapper.download.DownloadMapper;
 import com.crm.sofia.model.download.Download;
 import com.crm.sofia.repository.download.DownloadRepository;
@@ -8,9 +9,11 @@ import com.crm.sofia.services.auth.JWTService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.*;
+import org.mockito.ArgumentMatchers;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,8 +39,8 @@ public class DownloadServiceTest {
     private Download download;
     private DownloadDTO downloadDto;
 
-    @Mock(answer = Answers.CALLS_REAL_METHODS)
-    private DownloadMapper downloadMapper ;
+    @Mock
+    private DownloadMapper downloadMapper;
 
     @BeforeEach
     void setUp() {
@@ -48,59 +51,64 @@ public class DownloadServiceTest {
         download.setCode("1234");
         download.setName("dummy");
         downloadList.add(download);
-        downloadDto.setName("124");
-        downloadDto.setCode("LOTR");
+        downloadDto.setName("dummy");
+        downloadDto.setCode("1234");
+        downloadDto.setCode("1");
+        downloadDto.setId("1");
     }
 
     @Test
     public void getObjectTest() {
         given(downloadRepository.findAll()).willReturn(downloadList);
+        given(downloadMapper.map(ArgumentMatchers.any(List.class))).willReturn(List.of(downloadDto));
         List<DownloadDTO> list = downloadService.getObject();
         assertThat(list).isNotNull();
+        assertThat(list.size()).isEqualTo(1);
+        assertThat(list.get(0).getName()).isEqualTo("dummy");
     }
 
     @Test
-    public void getObjectByIdTest(){
+    public void getObjectByIdTest() {
         given(downloadRepository.findById(ArgumentMatchers.anyString())).willReturn(Optional.of(download));
-        DownloadDTO dto = downloadService.getObject("6L");
+        given(downloadMapper.map(ArgumentMatchers.any(Download.class))).willReturn(downloadDto);
+        DownloadDTO dto = downloadService.getObject("1");
+        assertThat(dto).isNotNull();
+        assertThat(dto.getId().equals("1"));
     }
 
     @Test
-    public void getObjectByIdWhenEmptyTest(){
+    public void getObjectByIdWhenEmptyTest() {
         given(downloadRepository.findById(ArgumentMatchers.anyString())).willReturn(Optional.empty());
-        Exception exception = assertThrows(ResponseStatusException.class, () -> {
-            downloadService.getObject("6L");
+        Exception exception = assertThrows(DoesNotExistException.class, () -> {
+            downloadService.getObject("1");
         });
 
-        String expectedMessage = "500 INTERNAL_SERVER_ERROR \"Object does not exist\"";
+        String expectedMessage = "Download Does Not Exist";
         String actualMessage = exception.getMessage();
 
-        assertEquals(actualMessage,expectedMessage);
+        assertEquals(actualMessage, expectedMessage);
     }
 
     @Test
-    public void postObjectTest(){
+    public void postObjectTest() {
         given(downloadRepository.save(ArgumentMatchers.any(Download.class))).willReturn(download);
         given(downloadMapper.map(ArgumentMatchers.any(DownloadDTO.class))).willReturn(download);
-        downloadService.postObject(downloadDto);
+        given(downloadMapper.map(ArgumentMatchers.any(Download.class))).willReturn(downloadDto);
+        DownloadDTO dto = downloadService.postObject(downloadDto);
+        assertThat(dto).isNotNull();
+        assertThat(dto.getId().equals("1"));
     }
 
-    @Test
-    public void getDeleteByIdTest(){
-        given(downloadRepository.findById(ArgumentMatchers.anyString())).willReturn(Optional.of(download));
-        downloadService.deleteObject("6L");
-
-    }
 
     @Test
-    public void getDeleteByIdWhenEmptyTest(){
+    public void getDeleteByIdWhenEmptyTest() {
         given(downloadRepository.findById(ArgumentMatchers.anyString())).willReturn(Optional.empty());
-        Exception exception = assertThrows(ResponseStatusException.class, () -> {
+        Exception exception = assertThrows(DoesNotExistException.class, () -> {
             downloadService.deleteObject("6L");
         });
-        String expectedMessage = "500 INTERNAL_SERVER_ERROR \"Object does not exist\"";
+        String expectedMessage = "Download Does Not Exist";
         String actualMessage = exception.getMessage();
-        assertEquals(actualMessage,expectedMessage);
+        assertEquals(actualMessage, expectedMessage);
     }
 
 }

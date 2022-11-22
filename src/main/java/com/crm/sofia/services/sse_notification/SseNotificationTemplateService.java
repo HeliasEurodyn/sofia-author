@@ -1,20 +1,18 @@
 package com.crm.sofia.services.sse_notification;
 
 import com.crm.sofia.dto.sse_notification.SseNotificationDTO;
+import com.crm.sofia.exception.DoesNotExistException;
 import com.crm.sofia.mapper.sse_notification.SseNotificationMapper;
 import com.crm.sofia.model.sse_notification.SseNotification;
 import com.crm.sofia.repository.sse_notification.SseNotificationRepository;
 import com.crm.sofia.services.auth.JWTService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.Base64;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class SseNotificationTemplateService {
@@ -34,12 +32,10 @@ public class SseNotificationTemplateService {
     }
 
     public SseNotificationDTO getObject(String id) {
-        Optional<SseNotification> optionalEntity = sseNotificationRepository.findById(id);
-        if (!optionalEntity.isPresent()) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Object does not exist");
-        }
-        SseNotification entity = optionalEntity.get();
-        SseNotificationDTO dto = sseNotificationMapper.map(entity);
+        SseNotification optionalEntity = sseNotificationRepository.findById(id)
+                .orElseThrow(() -> new DoesNotExistException("SseNotificationTemplate Does Not Exist"));
+
+        SseNotificationDTO dto = sseNotificationMapper.map(optionalEntity);
 
         String encodedQuery = Base64.getEncoder().encodeToString(dto.getQuery().getBytes(StandardCharsets.UTF_8));
         dto.setQuery(encodedQuery);
@@ -66,11 +62,10 @@ public class SseNotificationTemplateService {
     }
 
     public void deleteObject(String id) {
-        Optional<SseNotification> optionalEntity = sseNotificationRepository.findById(id);
-        if (!optionalEntity.isPresent()) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Object does not exist");
-        }
-        sseNotificationRepository.deleteById(optionalEntity.get().getId());
+        SseNotification optionalEntity = sseNotificationRepository.findById(id)
+                        .orElseThrow(() -> new DoesNotExistException("SseNotificationTemplate Does Not Exist"));
+
+        sseNotificationRepository.deleteById(optionalEntity.getId());
     }
 
 }

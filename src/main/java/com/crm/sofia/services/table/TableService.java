@@ -2,16 +2,15 @@ package com.crm.sofia.services.table;
 
 import com.crm.sofia.dto.table.TableDTO;
 import com.crm.sofia.dto.table.TableFieldDTO;
+import com.crm.sofia.exception.DoesNotExistException;
 import com.crm.sofia.mapper.table.TableMapper;
 import com.crm.sofia.model.persistEntity.PersistEntity;
 import com.crm.sofia.repository.persistEntity.PersistEntityRepository;
 import com.crm.sofia.services.auth.JWTService;
 import com.crm.sofia.services.component.ComponentDesignerService;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
@@ -74,12 +73,10 @@ public class TableService {
     }
 
     public TableDTO getObject(String id) {
-        Optional<PersistEntity> optionalComponent = this.persistEntityRepository.findById(id);
-        if (!optionalComponent.isPresent()) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Component does not exist");
-        }
+        PersistEntity optionalComponent = this.persistEntityRepository.findById(id)
+                .orElseThrow(() -> new DoesNotExistException("Component Does Not Exist"));
 
-        TableDTO tableDTO = this.tableMapper.map(optionalComponent.get());
+        TableDTO tableDTO = this.tableMapper.map(optionalComponent);
         this.shortTableFields(tableDTO);
         return tableDTO;
     }
@@ -96,12 +93,11 @@ public class TableService {
     }
 
     public void deleteObject(String id) {
-        Optional<PersistEntity> optionalPersistEntity = this.persistEntityRepository.findById(id);
-        if (!optionalPersistEntity.isPresent()) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Persist entity does not exist");
-        }
+        PersistEntity optionalPersistEntity = this.persistEntityRepository.findById(id)
+                .orElseThrow(() -> new DoesNotExistException("Persist Entity Does Not Exist"));
+
         this.componentDesignerService.removeComponentTablesByTableId(id);
-        this.persistEntityRepository.deleteById(optionalPersistEntity.get().getId());
+        this.persistEntityRepository.deleteById(optionalPersistEntity.getId());
     }
 
     @Transactional

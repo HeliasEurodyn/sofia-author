@@ -3,6 +3,7 @@ package com.crm.sofia.services.component;
 import com.crm.sofia.dto.component.ComponentDTO;
 import com.crm.sofia.dto.component.ComponentPersistEntityDTO;
 import com.crm.sofia.dto.component.ComponentPersistEntityFieldDTO;
+import com.crm.sofia.exception.DoesNotExistException;
 import com.crm.sofia.mapper.component.ComponentMapper;
 import com.crm.sofia.mapper.component.ComponentPersistEntityMapper;
 import com.crm.sofia.model.common.MainEntity;
@@ -12,10 +13,9 @@ import com.crm.sofia.model.component.ComponentPersistEntityField;
 import com.crm.sofia.model.persistEntity.PersistEntity;
 import com.crm.sofia.repository.component.ComponentPersistEntityRepository;
 import com.crm.sofia.repository.component.ComponentRepository;
-import org.springframework.http.HttpStatus;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Comparator;
 import java.util.List;
@@ -24,38 +24,31 @@ import java.util.stream.Collectors;
 
 @Service
 public class ComponentDesignerService {
+    @Autowired
+    private  ComponentMapper componentMapper;
+    @Autowired
+    private  ComponentRepository componentRepository;
+    @Autowired
+    private  ComponentPersistEntityRepository componentPersistEntityRepository;
+    @Autowired
+    private  ComponentPersistEntityMapper componentPersistEntityMapper;
 
-    private final ComponentMapper componentMapper;
-    private final ComponentRepository componentRepository;
-    private final ComponentPersistEntityRepository componentPersistEntityRepository;
-    private final ComponentPersistEntityMapper componentPersistEntityMapper;
 
-    public ComponentDesignerService(ComponentMapper menuMapper,
-                                    ComponentRepository componentRepository,
-                                    ComponentPersistEntityRepository componentPersistEntityRepository,
-                                    ComponentPersistEntityMapper componentPersistEntityMapper
-    ) {
-        this.componentMapper = menuMapper;
-        this.componentRepository = componentRepository;
-        this.componentPersistEntityRepository = componentPersistEntityRepository;
-        this.componentPersistEntityMapper = componentPersistEntityMapper;
-    }
 
     public List<ComponentDTO> getList() {
-        List<Component> entites = this.componentRepository.findAll();
-        entites = entites.stream().sorted(Comparator.comparing(MainEntity::getCreatedOn))
+        List<Component> entities = this.componentRepository.findAll();
+        entities = entities.stream().sorted(Comparator.comparing(MainEntity::getCreatedOn))
                 .collect(Collectors.toList());
 
-        return this.componentMapper.map(entites);
+        return this.componentMapper.map(entities);
     }
 
     public ComponentDTO getObject(String id) {
-        Optional<Component> optionalEntity = this.componentRepository.findById(id);
+        Component optionalEntity = this.componentRepository.findById(id)
+                .orElseThrow(() -> new DoesNotExistException("Component Does Not Exist"));
 
-        if (!optionalEntity.isPresent()) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Object does not exist");
-        }
-        Component entity = optionalEntity.get();
+
+        Component entity = optionalEntity;
         ComponentDTO dto = this.componentMapper.map(entity);
 
         this.shortComponent(dto);
@@ -107,7 +100,6 @@ public class ComponentDesignerService {
     @Transactional
     public ComponentDTO postObject(ComponentDTO dto) {
         Component entity = this.componentMapper.mapWithPersistEntities(dto);
-
         Component createdEntity = this.componentRepository.save(entity);
         //return this.componentMapper.map(createdEntity);
         return null;
@@ -121,7 +113,10 @@ public class ComponentDesignerService {
     }
 
     public void deleteObject(String id) {
-        this.componentRepository.deleteById(id);
+        Component optionalComponent = this.componentRepository.findById(id)
+                .orElseThrow(() -> new DoesNotExistException("Component Does Not Exist"));
+
+        this.componentRepository.deleteById(optionalComponent.getId());
     }
 
     public ComponentPersistEntityDTO getComponentPersistEntityDataById(String id, String selectionId) {

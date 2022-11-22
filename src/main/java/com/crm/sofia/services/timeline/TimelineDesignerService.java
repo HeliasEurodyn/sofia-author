@@ -7,9 +7,7 @@ import com.crm.sofia.model.timeline.Timeline;
 import com.crm.sofia.repository.timeline.TimelineRepository;
 import com.crm.sofia.services.auth.JWTService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
@@ -35,12 +33,10 @@ public class TimelineDesignerService {
     }
 
     public TimelineDTO getObject(String id) {
-        Optional<Timeline> optionalEntity = timelineRepository.findById(id);
-        if (!optionalEntity.isPresent()) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Object does not exist");
-        }
-        Timeline entity = optionalEntity.get();
-        TimelineDTO dto = timelineMapper.map(entity);
+        Timeline optionalEntity = timelineRepository.findById(id)
+                .orElseThrow(() -> new DoesNotExistException("Timeline Does Not Exist"));
+
+        TimelineDTO dto = timelineMapper.map(optionalEntity);
 
         String encodedQuery = Base64.getEncoder().encodeToString(dto.getQuery().getBytes(StandardCharsets.UTF_8));
         dto.setQuery(encodedQuery);
@@ -67,11 +63,10 @@ public class TimelineDesignerService {
     }
 
     public void deleteObject(String id) {
-        Optional<Timeline> optionalEntity = timelineRepository.findById(id);
-        if (!optionalEntity.isPresent()) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Object does not exist");
-        }
-        timelineRepository.deleteById(optionalEntity.get().getId());
+       Timeline optionalEntity = timelineRepository.findById(id)
+                       .orElseThrow(() -> new DoesNotExistException("Timeline Does Not Exist"));
+
+        timelineRepository.deleteById(optionalEntity.getId());
     }
 
 

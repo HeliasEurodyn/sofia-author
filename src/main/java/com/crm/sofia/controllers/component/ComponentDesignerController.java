@@ -6,6 +6,7 @@ import com.crm.sofia.dto.component.ComponentPersistEntityFieldDTO;
 import com.crm.sofia.services.component.ComponentDesignerService;
 import com.crm.sofia.services.form.FormDynamicQueryService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,15 +18,12 @@ import java.util.stream.Collectors;
 @Validated
 @RequestMapping("/component-designer")
 public class ComponentDesignerController {
+    @Autowired
+    private  ComponentDesignerService componentDesignerService;
+    @Autowired
+    private  FormDynamicQueryService formDynamicQueryService;
 
-    private final ComponentDesignerService componentDesignerService;
-    private final FormDynamicQueryService formDynamicQueryService;
 
-    public ComponentDesignerController(ComponentDesignerService componentDesignerService,
-                                       FormDynamicQueryService formDynamicQueryService) {
-        this.componentDesignerService = componentDesignerService;
-        this.formDynamicQueryService = formDynamicQueryService;
-    }
 
     @GetMapping
     List<ComponentDTO> getObject() {

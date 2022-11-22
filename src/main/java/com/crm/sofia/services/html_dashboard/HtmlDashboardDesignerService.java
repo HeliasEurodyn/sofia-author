@@ -2,13 +2,13 @@ package com.crm.sofia.services.html_dashboard;
 
 
 import com.crm.sofia.dto.html_dashboard.HtmlDashboardDTO;
+import com.crm.sofia.exception.DoesNotExistException;
 import com.crm.sofia.mapper.html_dashboard.HtmlDashboardMapper;
 import com.crm.sofia.model.html_dashboard.HtmlDashboard;
 import com.crm.sofia.repository.html_dashboard.HtmlDashboardRepository;
 import com.crm.sofia.services.auth.JWTService;
-import org.springframework.http.HttpStatus;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import javax.transaction.Transactional;
 import java.time.Instant;
@@ -17,30 +17,24 @@ import java.util.Optional;
 
 @Service
 public class HtmlDashboardDesignerService {
+    @Autowired
+    private  HtmlDashboardMapper htmlDashboardMapper;
+    @Autowired
+    private  HtmlDashboardRepository htmlDashboardRepository;
+    @Autowired
+    private  JWTService jwtService;
 
-    private final HtmlDashboardMapper htmlDashboardMapper;
-    private final HtmlDashboardRepository htmlDashboardRepository;
-    private final JWTService jwtService;
-
-    public HtmlDashboardDesignerService(HtmlDashboardMapper htmlDashboardMapper,
-                                        HtmlDashboardRepository htmlDashboardRepository,
-                                        JWTService jwtService) {
-        this.htmlDashboardMapper = htmlDashboardMapper;
-        this.htmlDashboardRepository = htmlDashboardRepository;
-        this.jwtService = jwtService;
-    }
 
     public List<HtmlDashboardDTO> getObject() {
-        List<HtmlDashboard> entites = htmlDashboardRepository.findAll();
-        return htmlDashboardMapper.map(entites);
+        List<HtmlDashboard> entities = htmlDashboardRepository.findAll();
+        return htmlDashboardMapper.map(entities);
     }
 
     public HtmlDashboardDTO getObject(String id) {
-        Optional<HtmlDashboard> optionalEntity = htmlDashboardRepository.findById(id);
-        if (!optionalEntity.isPresent()) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Object does not exist");
-        }
-        HtmlDashboard entity = optionalEntity.get();
+        HtmlDashboard optionalEntity = htmlDashboardRepository.findById(id)
+                .orElseThrow(() -> new DoesNotExistException("HtmlDashboard Does Not Exist"));
+
+        HtmlDashboard entity = optionalEntity;
         HtmlDashboardDTO dto = htmlDashboardMapper.map(entity);
         return dto;
     }
@@ -63,7 +57,7 @@ public class HtmlDashboardDesignerService {
     public void deleteObject(String id) {
         Optional<HtmlDashboard> optionalEntity = htmlDashboardRepository.findById(id);
         if (!optionalEntity.isPresent()) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Object does not exist");
+            throw new DoesNotExistException("HtmlDashboard Does Not Exist");
         }
         htmlDashboardRepository.deleteById(optionalEntity.get().getId());
     }

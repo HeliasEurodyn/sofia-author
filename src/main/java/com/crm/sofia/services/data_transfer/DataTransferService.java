@@ -21,6 +21,7 @@ import com.crm.sofia.dto.xls_import.XlsImportDTO;
 import com.crm.sofia.exception.data_tranfer.DataImportException;
 import com.crm.sofia.exception.data_tranfer.ImportedFileAlreadyExistsException;
 import com.crm.sofia.exception.data_tranfer.WrongFileTypeException;
+import com.crm.sofia.exception.DoesNotExistException;
 import com.crm.sofia.mapper.data_transfer.DataTransferMapper;
 import com.crm.sofia.model.data_transfer.DataTransfer;
 import com.crm.sofia.repository.data_transfer.DataTransferRepository;
@@ -61,7 +62,6 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class DataTransferService {
@@ -137,16 +137,15 @@ public class DataTransferService {
 
 
     public List<DataTransferDTO> getObject() {
-        List<DataTransfer> entites = dataTransferRepository.findAll();
-        return dataTransferMapper.map(entites);
+        List<DataTransfer> entities = dataTransferRepository.findAll();
+        return dataTransferMapper.map(entities);
     }
 
     public DataTransferDTO getObject(String id) {
-        Optional<DataTransfer> optionalEntity = dataTransferRepository.findById(id);
-        if (!optionalEntity.isPresent()) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Object does not exist");
-        }
-        DataTransfer entity = optionalEntity.get();
+        DataTransfer optionalEntity = dataTransferRepository.findById(id)
+                .orElseThrow(() -> new DoesNotExistException("DataTransfer Does Not Exist"));
+
+        DataTransfer entity = optionalEntity;
         DataTransferDTO dto = dataTransferMapper.map(entity);
 
 
@@ -169,8 +168,9 @@ public class DataTransferService {
     }
 
     public void deleteObject(String id) {
+
         DataTransfer entity = dataTransferRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Object does not exist"));
+                .orElseThrow(() -> new DoesNotExistException("DataTransfer Does Not Exist"));
 
         dataTransferRepository.deleteById(entity.getId());
     }

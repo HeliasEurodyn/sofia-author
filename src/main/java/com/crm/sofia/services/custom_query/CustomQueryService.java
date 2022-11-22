@@ -1,6 +1,7 @@
 package com.crm.sofia.services.custom_query;
 
 import com.crm.sofia.dto.custom_query.CustomQueryDTO;
+import com.crm.sofia.exception.DoesNotExistException;
 import com.crm.sofia.mapper.custom_query.CustomQueryMapper;
 import com.crm.sofia.model.custom_query.CustomQuery;
 import com.crm.sofia.repository.custom_query.CustomQueryRepository;
@@ -20,7 +21,6 @@ import javax.transaction.Transactional;
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @Service
 public class CustomQueryService {
@@ -39,17 +39,15 @@ public class CustomQueryService {
     }
 
     public List<CustomQueryDTO> getObject() {
-        List<CustomQuery> entites = customQueryRepository.findAll();
-        return customQueryMapper.map(entites);
+        List<CustomQuery> entities = customQueryRepository.findAll();
+        return customQueryMapper.map(entities);
     }
 
     public CustomQueryDTO getObject(String id) {
-        Optional<CustomQuery> optionalEntity = customQueryRepository.findById(id);
-        if (!optionalEntity.isPresent()) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Object does not exist");
-        }
-        CustomQuery entity = optionalEntity.get();
-        CustomQueryDTO dto = customQueryMapper.map(entity);
+        CustomQuery optionalEntity = customQueryRepository.findById(id)
+                .orElseThrow(() -> new DoesNotExistException("CustomQuery Does Not Exist"));
+
+        CustomQueryDTO dto = customQueryMapper.map(optionalEntity);
         return dto;
     }
 
@@ -122,11 +120,10 @@ public class CustomQueryService {
     }
 
     public void deleteObject(String id) {
-        Optional<CustomQuery> optionalEntity = customQueryRepository.findById(id);
-        if (!optionalEntity.isPresent()) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Object does not exist");
-        }
-        customQueryRepository.deleteById(optionalEntity.get().getId());
+        CustomQuery optionalEntity = customQueryRepository.findById(id)
+                        .orElseThrow(() -> new DoesNotExistException("CustomQuery Does Not Exist"));
+
+        customQueryRepository.deleteById(optionalEntity.getId());
     }
 
 }

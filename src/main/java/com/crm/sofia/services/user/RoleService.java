@@ -1,6 +1,7 @@
 package com.crm.sofia.services.user;
 
 import com.crm.sofia.dto.user.RoleDTO;
+import com.crm.sofia.exception.DoesNotExistException;
 import com.crm.sofia.mapper.user.RoleMapper;
 import com.crm.sofia.model.user.Role;
 import com.crm.sofia.repository.user.RoleRepository;
@@ -39,7 +40,7 @@ public class RoleService {
     public RoleDTO getObject(String id)  {
         Optional<Role> optionalEntity = roleRepository.findById(id);
         if (!optionalEntity.isPresent()) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Object does not exist");
+            throw new DoesNotExistException("Role Does Not Exist");
         }
         Role entity = optionalEntity.get();
         RoleDTO dto = roleMapper.map(entity);
@@ -64,7 +65,7 @@ public class RoleService {
     public void deleteObject(String id) {
         Optional<Role> optionalEntity = roleRepository.findById(id);
         if (!optionalEntity.isPresent()) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Object does not exist");
+            throw new DoesNotExistException("Role Does Not Exist");
         }
         roleRepository.deleteById(id);
     }

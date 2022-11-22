@@ -1,6 +1,7 @@
 package com.crm.sofia.services.report;
 
 import com.crm.sofia.dto.report.ReportDTO;
+import com.crm.sofia.exception.DoesNotExistException;
 import com.crm.sofia.mapper.report.ReportMapper;
 import com.crm.sofia.model.report.Report;
 import com.crm.sofia.repository.report.ReportRepository;
@@ -8,6 +9,7 @@ import com.crm.sofia.services.auth.JWTService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -26,21 +28,17 @@ import java.util.*;
 
 @Service
 public class ReportDesignerService {
+    @Autowired
+    private  ReportRepository reportRepository;
+    @Autowired
+    private ReportMapper reportMapper;
+    @Autowired
+    private  JWTService jwtService;
 
-    private final ReportRepository reportRepository;
-    private final ReportMapper reportMapper;
-    private final JWTService jwtService;
-    private final DataSource dataSource;
+    @Autowired
+    private  DataSource dataSource;
 
-    public ReportDesignerService(ReportRepository reportRepository,
-                                 ReportMapper reportMapper,
-                                 JWTService jwtService,
-                                 DataSource dataSource) {
-        this.reportRepository = reportRepository;
-        this.reportMapper = reportMapper;
-        this.jwtService = jwtService;
-        this.dataSource = dataSource;
-    }
+
 
 
     public List<ReportDTO> getObject() {
@@ -49,11 +47,10 @@ public class ReportDesignerService {
     }
 
     public ReportDTO getObject(String id) {
-        Optional<Report> optionalEntity = this.reportRepository.findById(id);
-        if (!optionalEntity.isPresent()) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Object does not exist");
-        }
-        Report entity = optionalEntity.get();
+        Report optionalEntity = this.reportRepository.findById(id)
+                .orElseThrow(() -> new DoesNotExistException("Report Does Not Exist"));
+
+        Report entity = optionalEntity;
         ReportDTO dto = this.reportMapper.map(entity);
         return dto;
     }
@@ -100,7 +97,7 @@ public class ReportDesignerService {
 
             Optional<Report> optionalEntity = this.reportRepository.findById(reportDTO.getId());
             if (!optionalEntity.isPresent()) {
-                throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Object does not exist");
+                throw new DoesNotExistException("Report Does Not Exist");
             }
 
             // Save
@@ -149,11 +146,9 @@ public class ReportDesignerService {
     }
 
     public void deleteObject(String id) {
-        Optional<Report> optionalEntity = this.reportRepository.findById(id);
-        if (!optionalEntity.isPresent()) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Object does not exist");
-        }
-        this.reportRepository.deleteById(optionalEntity.get().getId());
+        Report optionalEntity = this.reportRepository.findById(id)
+                .orElseThrow(() -> new DoesNotExistException("Report Does Not Exist"));
+        this.reportRepository.deleteById(optionalEntity.getId());
     }
 
 //    @Transactional
@@ -250,11 +245,9 @@ public class ReportDesignerService {
 //    }
 
     public void getFileReport(HttpServletResponse response, String id) throws IOException {
-        Optional<Report> optionalReport = reportRepository.findById(id);
-        if (!optionalReport.isPresent()) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Report does not exist");
-        }
-        Report report = optionalReport.get();
+        Report optionalReport = reportRepository.findById(id)
+                .orElseThrow(() -> new DoesNotExistException("Report Does Not Exist"));
+        Report report = optionalReport;
 
         response.setContentType("application/octet-stream");
         response.setHeader("Content-disposition", "attachment;filename="+ report.getName());

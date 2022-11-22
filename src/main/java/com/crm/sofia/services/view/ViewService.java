@@ -2,20 +2,18 @@ package com.crm.sofia.services.view;
 
 import com.crm.sofia.dto.view.ViewDTO;
 import com.crm.sofia.dto.view.ViewFieldDTO;
+import com.crm.sofia.exception.DoesNotExistException;
 import com.crm.sofia.mapper.view.ViewMapper;
 import com.crm.sofia.model.persistEntity.PersistEntity;
 import com.crm.sofia.repository.persistEntity.PersistEntityRepository;
 import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -55,19 +53,17 @@ public class ViewService {
     }
 
     public ViewDTO getObject(String id) {
-        Optional<PersistEntity> optionalView = this.persistEntityRepository.findById(id);
-        if (!optionalView.isPresent()) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "View does not exist");
-        }
-        return this.viewMapper.map(optionalView.get());
+        PersistEntity optionalView = this.persistEntityRepository.findById(id)
+                .orElseThrow(() -> new DoesNotExistException("View Does Not Exist"));
+
+        return this.viewMapper.map(optionalView);
     }
 
     public void deleteObject(String id) {
-        Optional<PersistEntity> optionalView = this.persistEntityRepository.findById(id);
-        if (!optionalView.isPresent()) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "View does not exist");
-        }
-        this.persistEntityRepository.deleteById(optionalView.get().getId());
+        PersistEntity optionalView = this.persistEntityRepository.findById(id)
+                .orElseThrow(() -> new DoesNotExistException("View Does Not Exist"));
+
+        this.persistEntityRepository.deleteById(optionalView.getId());
     }
 
     @Transactional

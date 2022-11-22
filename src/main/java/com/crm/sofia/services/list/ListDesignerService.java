@@ -12,10 +12,8 @@ import com.crm.sofia.services.auth.JWTService;
 import com.crm.sofia.services.language.LanguageDesignerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.time.Instant;
 import java.util.Comparator;
@@ -23,27 +21,22 @@ import java.util.List;
 
 @Service
 public class ListDesignerService {
+    @Autowired
+    private  ListRepository listRepository;
+    @Autowired
+    private  ListMapper listMapper;
+    @Autowired
+    private  JWTService jwtService;
+    @Autowired
+    private  ListJavascriptService listJavascriptService;
+    @Autowired
+    private  LanguageDesignerService languageDesignerService;
 
-    private final ListRepository listRepository;
-    private final ListMapper listMapper;
-    private final JWTService jwtService;
-    private final ListJavascriptService listJavascriptService;
-    private final LanguageDesignerService languageDesignerService;
 
     @Autowired
     CacheManager cacheManager;
 
-    public ListDesignerService(ListRepository listRepository,
-                               ListMapper listMapper,
-                               JWTService jwtService,
-                               ListJavascriptService listJavascriptService,
-                               LanguageDesignerService languageDesignerService) {
-        this.listRepository = listRepository;
-        this.listMapper = listMapper;
-        this.jwtService = jwtService;
-        this.listJavascriptService = listJavascriptService;
-        this.languageDesignerService = languageDesignerService;
-    }
+
 
     @Transactional
     public ListDTO postObject(ListDTO listDTO) throws Exception {
@@ -109,7 +102,7 @@ public class ListDesignerService {
         ListEntity listEntity =
                 this.listRepository.findById(id)
                         .orElseThrow(() ->
-                                new DoesNotExistException("List Entity Does Not Exist")
+                                new DoesNotExistException("ListEntity Does Not Exist")
                         );
 
         ListDTO listDTO = this.listMapper.mapList(listEntity);
@@ -132,7 +125,7 @@ public class ListDesignerService {
     public ListDTO getObjectByName(String name) {
         ListEntity listEntity = this.listRepository.findFirstByName(name);
         if (listEntity == null) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "ListEntity does not exist");
+            throw new DoesNotExistException("ListEntity does not exist");
         }
 
         ListDTO listDTO = this.listMapper.mapList(listEntity);
@@ -154,7 +147,7 @@ public class ListDesignerService {
 
     public void deleteObject(String id) {
         ListEntity lienEntity = this.listRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "List does not exist"));
+                .orElseThrow(() -> new DoesNotExistException("List Does Not Exist"));
 
         cacheManager.getCache("list_ui_cache").evict(lienEntity.getId());
         cacheManager.getCache("list_ui_cache").evict(new Object[]{lienEntity.getId(), 0});

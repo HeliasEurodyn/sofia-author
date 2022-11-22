@@ -2,15 +2,15 @@ package com.crm.sofia.services.chart;
 
 import com.crm.sofia.dto.chart.ChartDTO;
 import com.crm.sofia.dto.chart.ChartFieldDTO;
+import com.crm.sofia.exception.DoesNotExistException;
 import com.crm.sofia.mapper.chart.ChartMapper;
 import com.crm.sofia.model.chart.Chart;
 import com.crm.sofia.native_repository.chart.ChartNativeRepository;
 import com.crm.sofia.repository.chart.ChartRepository;
 import com.crm.sofia.services.auth.JWTService;
-import org.springframework.http.HttpStatus;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
@@ -21,20 +21,16 @@ import java.util.Optional;
 @Service
 public class ChartDesignerService {
 
-    private final ChartRepository chartRepository;
-    private final ChartMapper chartMapper;
-    private final ChartNativeRepository chartNativeRepository;
-    private final JWTService jwtService;
+    @Autowired
+    private  ChartRepository chartRepository;
+    @Autowired
+    private  ChartMapper chartMapper;
+    @Autowired
+    private  ChartNativeRepository chartNativeRepository;
+    @Autowired
+    private  JWTService jwtService;
 
-    public ChartDesignerService(ChartRepository chartRepository,
-                                ChartMapper chartMapper,
-                                ChartNativeRepository chartNativeRepository,
-                                JWTService jwtService) {
-        this.chartRepository = chartRepository;
-        this.chartMapper = chartMapper;
-        this.chartNativeRepository = chartNativeRepository;
-        this.jwtService = jwtService;
-    }
+
 
     @Transactional
     public List<ChartFieldDTO> generateDataFields(String sql) {
@@ -58,12 +54,10 @@ public class ChartDesignerService {
     }
 
     public ChartDTO getObject(String id) {
-        Optional<Chart> optionalchart = this.chartRepository.findById(id);
-        if (!optionalchart.isPresent()) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Chart does not exist");
-        }
+        Chart optionalChart = this.chartRepository.findById(id)
+                .orElseThrow(() -> new DoesNotExistException("Chart Does Not Exist"));
 
-        ChartDTO chart = this.chartMapper.map(optionalchart.get());
+        ChartDTO chart = this.chartMapper.map(optionalChart);
         String encQuery = Base64.getEncoder().encodeToString(chart.getQuery().getBytes(StandardCharsets.UTF_8));
         chart.setQuery(encQuery);
         return chart;
@@ -81,11 +75,10 @@ public class ChartDesignerService {
     }
 
     public void deleteObject(String id) {
-        Optional<Chart> optionalChart = this.chartRepository.findById(id);
-        if (!optionalChart.isPresent()) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Chart does not exist");
-        }
-        this.chartRepository.deleteById(optionalChart.get().getId());
+        Chart optionalChart = this.chartRepository.findById(id)
+                .orElseThrow(() -> new DoesNotExistException("Chart Does Not Exist"));
+
+        this.chartRepository.deleteById(optionalChart.getId());
     }
 
 }

@@ -3,44 +3,36 @@ package com.crm.sofia.services.form;
 import com.crm.sofia.dto.component.ComponentPersistEntityDTO;
 import com.crm.sofia.dto.component.ComponentPersistEntityFieldDTO;
 import com.crm.sofia.dto.form.*;
+import com.crm.sofia.exception.DoesNotExistException;
 import com.crm.sofia.mapper.form.FormMapper;
 import com.crm.sofia.model.form.FormEntity;
 import com.crm.sofia.repository.form.FormRepository;
 import com.crm.sofia.services.auth.JWTService;
 import com.crm.sofia.services.component.ComponentPersistEntityFieldAssignmentService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.time.Instant;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 public class FormDesignerService {
+    @Autowired
+    private  FormRepository formRepository;
+    @Autowired
+    private  FormMapper formMapper;
+    @Autowired
+    private  JWTService jwtService;
+    @Autowired
+    private  ComponentPersistEntityFieldAssignmentService componentPersistEntityFieldAssignmentService;
+    @Autowired
+    private  FormJavascriptService formJavascriptService;
 
-    private final FormRepository formRepository;
-    private final FormMapper formMapper;
-    private final JWTService jwtService;
-    private final ComponentPersistEntityFieldAssignmentService componentPersistEntityFieldAssignmentService;
-    private final FormJavascriptService formJavascriptService;
-
-    public FormDesignerService(FormRepository formRepository,
-                               FormMapper formMapper,
-                               JWTService jwtService,
-                               ComponentPersistEntityFieldAssignmentService componentPersistEntityFieldAssignmentService,
-                               FormJavascriptService formJavascriptService) {
-        this.formRepository = formRepository;
-        this.formMapper = formMapper;
-        this.jwtService = jwtService;
-        this.componentPersistEntityFieldAssignmentService = componentPersistEntityFieldAssignmentService;
-        this.formJavascriptService = formJavascriptService;
-    }
 
     @Transactional
     public FormDTO postObject(FormDTO formDTO) throws Exception {
@@ -112,13 +104,12 @@ public class FormDesignerService {
     public FormDTO getObject(String id) {
 
         /* Retrieve */
-        Optional<FormEntity> optionalFormEntity = this.formRepository.findById(id);
-        if (!optionalFormEntity.isPresent()) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Form does not exist");
-        }
+        FormEntity optionalFormEntity = this.formRepository.findById(id)
+                .orElseThrow(() -> new DoesNotExistException("Form Does Not Exist"));
+
 
         /* Map */
-        FormDTO formDTO = this.formMapper.map(optionalFormEntity.get());
+        FormDTO formDTO = this.formMapper.map(optionalFormEntity);
 
         /* Retrieve Field Assignments */
         List<ComponentPersistEntityDTO> componentPersistEntityList =
@@ -214,12 +205,11 @@ public class FormDesignerService {
     @Transactional
     @Modifying
     public void deleteObject(String id) {
-        Optional<FormEntity> optionalFormEntity = this.formRepository.findById(id);
-        if (!optionalFormEntity.isPresent()) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "FormEntity does not exist");
-        }
-        this.componentPersistEntityFieldAssignmentService.deleteByIdAndEntityType(optionalFormEntity.get().getId(), "form");
-        this.formRepository.deleteById(optionalFormEntity.get().getId());
+        FormEntity optionalFormEntity = this.formRepository.findById(id)
+                .orElseThrow(() -> new DoesNotExistException("Form Does Not Exist"));
+
+        this.componentPersistEntityFieldAssignmentService.deleteByIdAndEntityType(optionalFormEntity.getId(), "form");
+        this.formRepository.deleteById(optionalFormEntity.getId());
     }
 
     public boolean clearCache() {

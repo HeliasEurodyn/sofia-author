@@ -2,37 +2,31 @@ package com.crm.sofia.services.search;
 
 
 import com.crm.sofia.dto.search.SearchDTO;
+import com.crm.sofia.exception.DoesNotExistException;
 import com.crm.sofia.mapper.search.SearchMapper;
 import com.crm.sofia.model.search.Search;
 import com.crm.sofia.repository.search.SearchRepository;
 import com.crm.sofia.services.auth.JWTService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 import javax.persistence.EntityManager;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class SearchDesignerService {
-    
-    private final SearchRepository searchRepository;
-    private final SearchMapper searchMapper;
-    private final JWTService jwtService;
-    private final EntityManager entityManager;
+    @Autowired
+    private  SearchRepository searchRepository;
+    @Autowired
+    private  SearchMapper searchMapper;
+    @Autowired
+    private  JWTService jwtService;
+    @Autowired
+    private  EntityManager entityManager;
 
-    public SearchDesignerService(SearchRepository searchRepository,
-                                 SearchMapper searchMapper,
-                                 JWTService jwtService,
-                                 EntityManager entityManager) {
-        this.searchRepository = searchRepository;
-        this.searchMapper = searchMapper;
-        this.jwtService = jwtService;
-        this.entityManager = entityManager;
-    }
+
 
     public List<SearchDTO> getObject() {
         List<Search> searcies = this.searchRepository.findAll();
@@ -40,11 +34,10 @@ public class SearchDesignerService {
     }
 
     public SearchDTO getObject(String id) {
-        Optional<Search> optionalSearch = this.searchRepository.findById(id);
-        if (!optionalSearch.isPresent()) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Info card does not exist");
-        }
-        return this.searchMapper.map(optionalSearch.get());
+        Search optionalSearch = this.searchRepository.findById(id)
+                .orElseThrow(() -> new DoesNotExistException("Search Does Not Exist"));
+
+        return this.searchMapper.map(optionalSearch);
     }
 
     @Transactional
@@ -56,11 +49,9 @@ public class SearchDesignerService {
     }
 
     public void deleteObject(String id) {
-        Optional<Search> optionalSearch = this.searchRepository.findById(id);
-        if (!optionalSearch.isPresent()) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Search does not exist");
-        }
-        this.searchRepository.deleteById(optionalSearch.get().getId());
+        Search optionalSearch = this.searchRepository.findById(id)
+                .orElseThrow(() -> new DoesNotExistException("Search Does Not Exist"));
+        this.searchRepository.deleteById(optionalSearch.getId());
     }
 
 }

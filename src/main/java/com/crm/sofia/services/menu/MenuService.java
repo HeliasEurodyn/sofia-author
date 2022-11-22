@@ -2,14 +2,14 @@ package com.crm.sofia.services.menu;
 
 import com.crm.sofia.dto.menu.MenuDTO;
 import com.crm.sofia.dto.menu.MenuFieldDTO;
+import com.crm.sofia.exception.DoesNotExistException;
 import com.crm.sofia.mapper.menu.MenuMapper;
 import com.crm.sofia.model.menu.Menu;
 import com.crm.sofia.repository.menu.MenuRepository;
 import com.crm.sofia.services.auth.JWTService;
-import org.springframework.http.HttpStatus;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.time.Instant;
 import java.util.Comparator;
@@ -19,23 +19,16 @@ import java.util.stream.Collectors;
 
 @Service
 public class MenuService {
+    @Autowired
+    private  MenuRepository menuRepository;
 
-    private final MenuRepository menuRepository;
+    @Autowired
+    private  MenuMapper menuMapper;
+    @Autowired
+    private  MenuFieldService menuFieldService;
+    @Autowired
+    private  JWTService jwtService;
 
-    private final MenuMapper menuMapper;
-    private final MenuFieldService menuFieldService;
-    private final JWTService jwtService;
-
-    public MenuService(MenuRepository menuRepository,
-                       MenuMapper menuMapper,
-                       MenuFieldService menuFieldService,
-                       JWTService jwtService) {
-
-        this.menuRepository = menuRepository;
-        this.menuMapper = menuMapper;
-        this.menuFieldService = menuFieldService;
-        this.jwtService = jwtService;
-    }
 
     public List<MenuDTO> getObject() {
         List<Menu> entites = this.menuRepository.findAll();
@@ -47,10 +40,12 @@ public class MenuService {
     public MenuDTO getObject(String id, String languageId) {
 
         Optional<Menu> optionalEntity = this.menuRepository.findTreeById(id);
+
         if (!optionalEntity.isPresent()) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Object does not exist");
+            throw new DoesNotExistException("Menu Does Not Exist");
         }
         Menu entity = optionalEntity.get();
+        System.out.println(entity);
         MenuDTO dto = this.menuMapper.mapMenu(entity, languageId);
 
         List<MenuFieldDTO> menuFieldList =
@@ -70,11 +65,10 @@ public class MenuService {
     }
 
     public void deleteObject(String id) {
-        Optional<Menu> optionalEntity = this.menuRepository.findById(id);
-        if (!optionalEntity.isPresent()) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Object does not exist");
-        }
-        this.menuRepository.deleteById(optionalEntity.get().getId());
+        Menu optionalEntity = this.menuRepository.findById(id)
+                .orElseThrow(() -> new DoesNotExistException("Menu Does Not Exist"));
+
+        this.menuRepository.deleteById(optionalEntity.getId());
     }
 
     @Transactional
@@ -92,11 +86,10 @@ public class MenuService {
     @Transactional
     public MenuDTO putObject(MenuDTO componentDTO) {
 
-        Optional<Menu> optionalComponent = this.menuRepository.findById(componentDTO.getId());
-        if (!optionalComponent.isPresent()) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Object does not exist");
-        }
-        Menu entity = optionalComponent.get();
+       Menu optionalComponent = this.menuRepository.findById(componentDTO.getId())
+               .orElseThrow(() -> new DoesNotExistException("Menu Does Not Exist"));
+
+        Menu entity = optionalComponent;
 
         menuMapper.mapDtoToEntity(componentDTO, entity);
 

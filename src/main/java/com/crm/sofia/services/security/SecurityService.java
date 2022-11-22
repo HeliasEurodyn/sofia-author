@@ -1,19 +1,17 @@
 package com.crm.sofia.services.security;
 
 import com.crm.sofia.dto.security.SecurityDTO;
+import com.crm.sofia.exception.DoesNotExistException;
 import com.crm.sofia.mapper.security.AccessControlMapper;
 import com.crm.sofia.model.security.Security;
 import com.crm.sofia.repository.security.SecurityRepository;
 import com.crm.sofia.services.auth.JWTService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.time.Instant;
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @Service
@@ -31,12 +29,10 @@ public class SecurityService {
         return accessControlMapper.map(entities);
     }
     public SecurityDTO getObject(String id) {
-        Optional<Security> optionalEntity = securityRepository.findById(id);
-        if (!optionalEntity.isPresent()) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Object does not exist");
-        }
-        Security entity = optionalEntity.get();
-        SecurityDTO dto = accessControlMapper.map(entity);
+        Security optionalEntity = securityRepository.findById(id)
+                .orElseThrow(() -> new DoesNotExistException("Security Does Not Exist"));
+
+        SecurityDTO dto = accessControlMapper.map(optionalEntity);
         return dto;
     }
 
@@ -55,10 +51,9 @@ public class SecurityService {
     }
 
     public void deleteObject(String id) {
-        Optional<Security> optionalEntity = securityRepository.findById(id);
-        if (!optionalEntity.isPresent()) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Object does not exist");
-        }
-        securityRepository.deleteById(optionalEntity.get().getId());
+        Security optionalEntity = securityRepository.findById(id)
+                        .orElseThrow(() -> new DoesNotExistException("Security Does Not Exist"));
+
+        securityRepository.deleteById(optionalEntity.getId());
     }
 }
