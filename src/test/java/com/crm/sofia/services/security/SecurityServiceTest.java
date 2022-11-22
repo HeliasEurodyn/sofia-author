@@ -1,6 +1,7 @@
 package com.crm.sofia.services.security;
 
 import com.crm.sofia.dto.security.SecurityDTO;
+import com.crm.sofia.exception.DoesNotExistException;
 import com.crm.sofia.mapper.security.AccessControlMapper;
 import com.crm.sofia.model.security.Security;
 import com.crm.sofia.repository.security.SecurityRepository;
@@ -10,7 +11,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,38 +69,38 @@ public class SecurityServiceTest {
     @Test
     public void getObjectByIdWhenEmptyTest() {
         given(securityRepository.findById(ArgumentMatchers.anyString())).willReturn(Optional.empty());
-        Exception exception = assertThrows(ResponseStatusException.class, () -> {
+        Exception exception = assertThrows(DoesNotExistException.class, () -> {
             securityService.getObject("6L");
         });
-        String expectedMessage = "500 INTERNAL_SERVER_ERROR \"Object does not exist\"";
+        String expectedMessage = "Security Does Not Exist";
         String actualMessage = exception.getMessage();
 
-        assertEquals(actualMessage,expectedMessage);
+        assertEquals(actualMessage, expectedMessage);
     }
 
     @Test
-    public void postObjectTest(){
+    public void postObjectTest() {
         given(securityRepository.save(ArgumentMatchers.any(Security.class))).willReturn(security);
         given(accessControlMapper.map(ArgumentMatchers.any(SecurityDTO.class))).willReturn(security);
         securityService.postObject(securityDto);
     }
 
     @Test
-    public void getDeleteByIdTest(){
+    public void getDeleteByIdTest() {
         given(securityRepository.findById(ArgumentMatchers.anyString())).willReturn(Optional.of(security));
         securityService.deleteObject("6L");
 
     }
 
     @Test
-    public void getDeleteByIdWhenEmptyTest(){
+    public void getDeleteByIdWhenEmptyTest() {
         given(securityRepository.findById(ArgumentMatchers.anyString())).willReturn(Optional.empty());
-        Exception exception = assertThrows(ResponseStatusException.class, () -> {
+        Exception exception = assertThrows(DoesNotExistException.class, () -> {
             securityService.deleteObject("6L");
         });
-        String expectedMessage = "500 INTERNAL_SERVER_ERROR \"Object does not exist\"";
+        String expectedMessage = "Security Does Not Exist";
         String actualMessage = exception.getMessage();
-        assertEquals(actualMessage,expectedMessage);
+        assertEquals(actualMessage, expectedMessage);
     }
 
 

@@ -1,8 +1,8 @@
-package com.crm.sofia.controllers.custom_query;
+package com.crm.sofia.controllers.list;
 
-import com.crm.sofia.dto.custom_query.CustomQueryDTO;
-import com.crm.sofia.filters.JWTAuthFilter;
-import com.crm.sofia.services.custom_query.CustomQueryService;
+
+import com.crm.sofia.dto.list.ListDTO;
+import com.crm.sofia.services.list.ListDesignerService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,88 +28,87 @@ import static org.mockito.Mockito.doNothing;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
 @ExtendWith(MockitoExtension.class)
-public class CustomQueryControllerTest {
+public class ListDesignerControllerTest {
 
     private MockMvc mvc;
-    private CustomQueryDTO dto;
+
+    private ListDTO dto;
 
     @InjectMocks
     @Autowired
     private ObjectMapper objectMapper;
 
     @Mock
-    private CustomQueryService customQueryService;
+    private ListDesignerService listDesignerService;
 
-    private List<CustomQueryDTO> customQueryDTOList;
-
-    @Mock
-    private JWTAuthFilter filter;
+    private List<ListDTO> listDTOList;
 
     @InjectMocks
-    private CustomQueryDesignerController customQueryDesignerController;
+    private ListDesignerController listDesignerController;
 
     @BeforeEach
-    void setUp() {
-        this.customQueryDTOList = new ArrayList<>();
-        dto = new CustomQueryDTO();
-        dto.setName("Query");
-        dto.setQuery("what is the query");
-        this.customQueryDTOList.add(dto);
+    void setup() {
 
-        mvc = MockMvcBuilders.standaloneSetup(customQueryDesignerController)
+        this.listDTOList = new ArrayList<>();
+        dto = new ListDTO().setName("dummyNameDTO");
+        this.listDTOList.add(dto);
+
+        mvc = MockMvcBuilders.standaloneSetup(listDesignerController)
                 .build();
     }
 
     @Test
     void getObjectTest() throws Exception {
 
-        given(customQueryService.getObject()).willReturn(customQueryDTOList);
-        MockHttpServletResponse response = mvc.perform(get("/custom-query-designer")
+        given(listDesignerService.getObject()).willReturn(listDTOList);
+        MockHttpServletResponse response = mvc.perform(get("/list-designer")
                 .accept(MediaType.APPLICATION_JSON)).andReturn().getResponse();
         assertEquals(response.getStatus(), HttpStatus.OK.value());
-        assertEquals(JsonPath.parse(response.getContentAsString()).read("$[0].name"), "Query");
+        assertEquals(JsonPath.parse(response.getContentAsString()).read("$[0].name"), "dummyNameDTO");
     }
 
+
     @Test
-    void getDownloadByIdTest() throws Exception {
-        given(customQueryService.getObject(any())).willReturn(dto);
-        MockHttpServletResponse response = mvc.perform(get("/custom-query-designer/by-id?id=0")
+    void getByIdTest() throws Exception {
+        given(listDesignerService.getObject(any())).willReturn(dto);
+        MockHttpServletResponse response = mvc.perform(get("/list-designer/by-id?id=0")
                 .accept(MediaType.APPLICATION_JSON)).andReturn().getResponse();
         assertEquals(response.getStatus(), HttpStatus.OK.value());
-        assertEquals(JsonPath.parse(response.getContentAsString()).read("$.name"), "Query");
+        assertEquals(JsonPath.parse(response.getContentAsString()).read("$.name"), "dummyNameDTO");
     }
+
 
     @Test
     void postObjectTest() throws Exception {
-        given(customQueryService.postObject(any())).willReturn(dto);
-        MockHttpServletResponse response = mvc.perform(post("/custom-query-designer")
+        given(listDesignerService.postObject(any())).willReturn(dto);
+        MockHttpServletResponse response = mvc.perform(post("/list-designer")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(dto))
                 .accept(MediaType.APPLICATION_JSON_VALUE)).andReturn().getResponse();
         assertEquals(response.getStatus(), HttpStatus.OK.value());
-        assertEquals(JsonPath.parse(response.getContentAsString()).read("$.name"), "Query");
+        assertEquals(JsonPath.parse(response.getContentAsString()).read("$.name"), "dummyNameDTO");
     }
 
 
     @Test
     void putObjectTest() throws Exception {
-        given(customQueryService.postObject(any())).willReturn(dto);
-        MockHttpServletResponse response = mvc.perform(put("/custom-query-designer")
+        given(listDesignerService.putObject(any())).willReturn(dto);
+        MockHttpServletResponse response = mvc.perform(put("/list-designer")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(dto))
                 .accept(MediaType.APPLICATION_JSON_VALUE)).andReturn().getResponse();
         assertEquals(response.getStatus(), HttpStatus.OK.value());
-        assertEquals(JsonPath.parse(response.getContentAsString()).read("$.name"), "Query");
+        assertEquals(JsonPath.parse(response.getContentAsString()).read("$.name"), "dummyNameDTO");
     }
+
 
     @Test
     void deleteObjectTest() throws Exception {
-        doNothing().when(customQueryService).deleteObject(any());
-        MockHttpServletResponse response = mvc.perform(delete("/custom-query-designer?id=0")
+        doNothing().when(listDesignerService).deleteObject(any());
+        MockHttpServletResponse response = mvc.perform(delete("/list-designer?id=0")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(dto))
                 .accept(MediaType.APPLICATION_JSON_VALUE)).andReturn().getResponse();
         assertEquals(response.getStatus(), HttpStatus.OK.value());
     }
-
 }

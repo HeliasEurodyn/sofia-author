@@ -51,57 +51,46 @@ public class BusinessUnitDesignerControllerTest {
         businessUnitDTO = new BusinessUnitDTO().setTitle("dummyTitleDTO").setDescription("dummyDescriptionDTO");
         this.businessUnitDTOList.add(businessUnitDTO);
 
-        mvc = MockMvcBuilders.standaloneSetup(businessUnitDesignerController)
-                .build();
+        mvc = MockMvcBuilders.standaloneSetup(businessUnitDesignerController).build();
     }
 
     @Test
     void getObjectTest() throws Exception {
 
         given(businessUnitDesignerService.getObject()).willReturn(businessUnitDTOList);
-        MockHttpServletResponse response = mvc.perform(get("/business-unit-designer")
-                .accept(MediaType.APPLICATION_JSON)).andReturn().getResponse();
+        MockHttpServletResponse response = mvc.perform(get("/business-unit-designer").accept(MediaType.APPLICATION_JSON)).andReturn().getResponse();
         assertEquals(response.getStatus(), HttpStatus.OK.value());
-        assertEquals(JsonPath.parse(response.getContentAsString()).read("$[0].title")  ,"dummyTitleDTO");
+        assertEquals(JsonPath.parse(response.getContentAsString()).read("$[0].title"), "dummyTitleDTO");
     }
 
     @Test
     void getByIdTest() throws Exception {
         given(businessUnitDesignerService.getObject(any())).willReturn(businessUnitDTO);
-        MockHttpServletResponse response = mvc.perform(get("/business-unit-designer/by-id?id=0")
-                .accept(MediaType.APPLICATION_JSON)).andReturn().getResponse();
+        MockHttpServletResponse response = mvc.perform(get("/business-unit-designer/by-id?id=0").accept(MediaType.APPLICATION_JSON)).andReturn().getResponse();
         assertEquals(response.getStatus(), HttpStatus.OK.value());
-        assertEquals(JsonPath.parse(response.getContentAsString()).read("$.title")  ,"dummyTitleDTO");
+        assertEquals(JsonPath.parse(response.getContentAsString()).read("$.title"), "dummyTitleDTO");
     }
 
     @Test
     void postObjectTest() throws Exception {
         given(businessUnitDesignerService.postObject(any())).willReturn(businessUnitDTO);
-        MockHttpServletResponse response = mvc.perform(post("/business-unit-designer")
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .content(objectMapper.writeValueAsString(businessUnitDTO))
-                .accept(MediaType.APPLICATION_JSON_VALUE)).andReturn().getResponse();
+        MockHttpServletResponse response = mvc.perform(post("/business-unit-designer").contentType(MediaType.APPLICATION_JSON_VALUE).content(objectMapper.writeValueAsString(businessUnitDTO)).accept(MediaType.APPLICATION_JSON_VALUE)).andReturn().getResponse();
         assertEquals(response.getStatus(), HttpStatus.OK.value());
-        assertEquals(JsonPath.parse(response.getContentAsString()).read("$.title")  ,"dummyTitleDTO");
+        assertEquals(JsonPath.parse(response.getContentAsString()).read("$.title"), "dummyTitleDTO");
     }
+
     @Test
     void putObjectTest() throws Exception {
         given(businessUnitDesignerService.postObject(any())).willReturn(businessUnitDTO);
-        MockHttpServletResponse response = mvc.perform(put("/business-unit-designer")
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .content(objectMapper.writeValueAsString(businessUnitDTO))
-                .accept(MediaType.APPLICATION_JSON_VALUE)).andReturn().getResponse();
+        MockHttpServletResponse response = mvc.perform(put("/business-unit-designer").contentType(MediaType.APPLICATION_JSON_VALUE).content(objectMapper.writeValueAsString(businessUnitDTO)).accept(MediaType.APPLICATION_JSON_VALUE)).andReturn().getResponse();
         assertEquals(response.getStatus(), HttpStatus.OK.value());
-        assertEquals(JsonPath.parse(response.getContentAsString()).read("$.title")  ,"dummyTitleDTO");
+        assertEquals(JsonPath.parse(response.getContentAsString()).read("$.title"), "dummyTitleDTO");
     }
 
     @Test
     void deleteObjectTest() throws Exception {
         doNothing().when(businessUnitDesignerService).deleteObject(any());
-        MockHttpServletResponse response = mvc.perform(delete("/business-unit-designer?id=0")
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .content(objectMapper.writeValueAsString(businessUnitDTO))
-                .accept(MediaType.APPLICATION_JSON_VALUE)).andReturn().getResponse();
+        MockHttpServletResponse response = mvc.perform(delete("/business-unit-designer?id=0").contentType(MediaType.APPLICATION_JSON_VALUE).content(objectMapper.writeValueAsString(businessUnitDTO)).accept(MediaType.APPLICATION_JSON_VALUE)).andReturn().getResponse();
         assertEquals(response.getStatus(), HttpStatus.OK.value());
     }
 

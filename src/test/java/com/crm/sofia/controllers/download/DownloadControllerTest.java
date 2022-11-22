@@ -60,57 +60,46 @@ public class DownloadControllerTest {
         dto.setName("dummy");
         this.downloadDTOList.add(dto);
 
-        mvc = MockMvcBuilders.standaloneSetup(downloadController)
-                .build();
+        mvc = MockMvcBuilders.standaloneSetup(downloadController).build();
     }
 
     @Test
     void getObjectTest() throws Exception {
 
         given(downloadService.getObject()).willReturn(downloadDTOList);
-        MockHttpServletResponse response = mvc.perform(get("/download")
-                .accept(MediaType.APPLICATION_JSON)).andReturn().getResponse();
+        MockHttpServletResponse response = mvc.perform(get("/download").accept(MediaType.APPLICATION_JSON)).andReturn().getResponse();
         assertEquals(response.getStatus(), HttpStatus.OK.value());
-        assertEquals(JsonPath.parse(response.getContentAsString()).read("$[0].name")  ,"dummy");
+        assertEquals(JsonPath.parse(response.getContentAsString()).read("$[0].name"), "dummy");
     }
 
     @Test
     void getDownloadByIdTest() throws Exception {
         given(downloadService.getObject(any())).willReturn(dto);
-        MockHttpServletResponse response = mvc.perform(get("/download/by-id?id=0")
-                .accept(MediaType.APPLICATION_JSON)).andReturn().getResponse();
+        MockHttpServletResponse response = mvc.perform(get("/download/by-id?id=0").accept(MediaType.APPLICATION_JSON)).andReturn().getResponse();
         assertEquals(response.getStatus(), HttpStatus.OK.value());
-        assertEquals(JsonPath.parse(response.getContentAsString()).read("$.name")  ,"dummy");
+        assertEquals(JsonPath.parse(response.getContentAsString()).read("$.name"), "dummy");
     }
 
     @Test
     void postObjectTest() throws Exception {
         given(downloadService.postObject(any())).willReturn(dto);
-        MockHttpServletResponse response = mvc.perform(post("/download")
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .content(objectMapper.writeValueAsString(dto))
-                .accept(MediaType.APPLICATION_JSON_VALUE)).andReturn().getResponse();
+        MockHttpServletResponse response = mvc.perform(post("/download").contentType(MediaType.APPLICATION_JSON_VALUE).content(objectMapper.writeValueAsString(dto)).accept(MediaType.APPLICATION_JSON_VALUE)).andReturn().getResponse();
         assertEquals(response.getStatus(), HttpStatus.OK.value());
-        assertEquals(JsonPath.parse(response.getContentAsString()).read("$.name")  ,"dummy");
+        assertEquals(JsonPath.parse(response.getContentAsString()).read("$.name"), "dummy");
     }
+
     @Test
     void putObjectTest() throws Exception {
         given(downloadService.postObject(any())).willReturn(dto);
-        MockHttpServletResponse response = mvc.perform(put("/download")
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .content(objectMapper.writeValueAsString(dto))
-                .accept(MediaType.APPLICATION_JSON_VALUE)).andReturn().getResponse();
+        MockHttpServletResponse response = mvc.perform(put("/download").contentType(MediaType.APPLICATION_JSON_VALUE).content(objectMapper.writeValueAsString(dto)).accept(MediaType.APPLICATION_JSON_VALUE)).andReturn().getResponse();
         assertEquals(response.getStatus(), HttpStatus.OK.value());
-        assertEquals(JsonPath.parse(response.getContentAsString()).read("$.name")  ,"dummy");
+        assertEquals(JsonPath.parse(response.getContentAsString()).read("$.name"), "dummy");
     }
 
     @Test
     void deleteObjectTest() throws Exception {
         doNothing().when(downloadService).deleteObject(any());
-        MockHttpServletResponse response = mvc.perform(delete("/download?id=0")
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .content(objectMapper.writeValueAsString(dto))
-                .accept(MediaType.APPLICATION_JSON_VALUE)).andReturn().getResponse();
+        MockHttpServletResponse response = mvc.perform(delete("/download?id=0").contentType(MediaType.APPLICATION_JSON_VALUE).content(objectMapper.writeValueAsString(dto)).accept(MediaType.APPLICATION_JSON_VALUE)).andReturn().getResponse();
         assertEquals(response.getStatus(), HttpStatus.OK.value());
     }
 

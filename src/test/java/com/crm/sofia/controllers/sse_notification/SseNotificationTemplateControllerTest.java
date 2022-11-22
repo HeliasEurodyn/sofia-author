@@ -51,57 +51,46 @@ public class SseNotificationTemplateControllerTest {
         dto = new SseNotificationDTO().setTitle("dummyTitleDTO").setQuery("dummyQueryDTO");
         this.sseNotificationDTOList.add(dto);
 
-        mvc = MockMvcBuilders.standaloneSetup(sseNotificationTemplateController)
-                .build();
+        mvc = MockMvcBuilders.standaloneSetup(sseNotificationTemplateController).build();
     }
 
     @Test
     void getObjectTest() throws Exception {
 
         given(sseNotificationTemplateService.getObject()).willReturn(sseNotificationDTOList);
-        MockHttpServletResponse response = mvc.perform(get("/sse-notification-template")
-                .accept(MediaType.APPLICATION_JSON)).andReturn().getResponse();
+        MockHttpServletResponse response = mvc.perform(get("/sse-notification-template").accept(MediaType.APPLICATION_JSON)).andReturn().getResponse();
         assertEquals(response.getStatus(), HttpStatus.OK.value());
-        assertEquals(JsonPath.parse(response.getContentAsString()).read("$[0].title")  ,"dummyTitleDTO");
+        assertEquals(JsonPath.parse(response.getContentAsString()).read("$[0].title"), "dummyTitleDTO");
     }
 
     @Test
     void getByIdTest() throws Exception {
         given(sseNotificationTemplateService.getObject(any())).willReturn(dto);
-        MockHttpServletResponse response = mvc.perform(get("/sse-notification-template/by-id?id=0")
-                .accept(MediaType.APPLICATION_JSON)).andReturn().getResponse();
+        MockHttpServletResponse response = mvc.perform(get("/sse-notification-template/by-id?id=0").accept(MediaType.APPLICATION_JSON)).andReturn().getResponse();
         assertEquals(response.getStatus(), HttpStatus.OK.value());
-        assertEquals(JsonPath.parse(response.getContentAsString()).read("$.title")  ,"dummyTitleDTO");
+        assertEquals(JsonPath.parse(response.getContentAsString()).read("$.title"), "dummyTitleDTO");
     }
 
     @Test
     void postObjectTest() throws Exception {
         given(sseNotificationTemplateService.postObject(any())).willReturn(dto);
-        MockHttpServletResponse response = mvc.perform(post("/sse-notification-template")
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .content(objectMapper.writeValueAsString(dto))
-                .accept(MediaType.APPLICATION_JSON_VALUE)).andReturn().getResponse();
+        MockHttpServletResponse response = mvc.perform(post("/sse-notification-template").contentType(MediaType.APPLICATION_JSON_VALUE).content(objectMapper.writeValueAsString(dto)).accept(MediaType.APPLICATION_JSON_VALUE)).andReturn().getResponse();
         assertEquals(response.getStatus(), HttpStatus.OK.value());
-        assertEquals(JsonPath.parse(response.getContentAsString()).read("$.title")  ,"dummyTitleDTO");
+        assertEquals(JsonPath.parse(response.getContentAsString()).read("$.title"), "dummyTitleDTO");
     }
+
     @Test
     void putObjectTest() throws Exception {
         given(sseNotificationTemplateService.postObject(any())).willReturn(dto);
-        MockHttpServletResponse response = mvc.perform(put("/sse-notification-template")
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .content(objectMapper.writeValueAsString(dto))
-                .accept(MediaType.APPLICATION_JSON_VALUE)).andReturn().getResponse();
+        MockHttpServletResponse response = mvc.perform(put("/sse-notification-template").contentType(MediaType.APPLICATION_JSON_VALUE).content(objectMapper.writeValueAsString(dto)).accept(MediaType.APPLICATION_JSON_VALUE)).andReturn().getResponse();
         assertEquals(response.getStatus(), HttpStatus.OK.value());
-        assertEquals(JsonPath.parse(response.getContentAsString()).read("$.title")  ,"dummyTitleDTO");
+        assertEquals(JsonPath.parse(response.getContentAsString()).read("$.title"), "dummyTitleDTO");
     }
 
     @Test
     void deleteObjectTest() throws Exception {
         doNothing().when(sseNotificationTemplateService).deleteObject(any());
-        MockHttpServletResponse response = mvc.perform(delete("/sse-notification-template?id=0")
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .content(objectMapper.writeValueAsString(dto))
-                .accept(MediaType.APPLICATION_JSON_VALUE)).andReturn().getResponse();
+        MockHttpServletResponse response = mvc.perform(delete("/sse-notification-template?id=0").contentType(MediaType.APPLICATION_JSON_VALUE).content(objectMapper.writeValueAsString(dto)).accept(MediaType.APPLICATION_JSON_VALUE)).andReturn().getResponse();
         assertEquals(response.getStatus(), HttpStatus.OK.value());
     }
 

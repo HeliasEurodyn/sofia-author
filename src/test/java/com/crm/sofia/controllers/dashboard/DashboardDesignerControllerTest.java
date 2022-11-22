@@ -1,8 +1,8 @@
-package com.crm.sofia.controllers.custom_query;
+package com.crm.sofia.controllers.dashboard;
 
-import com.crm.sofia.dto.custom_query.CustomQueryDTO;
-import com.crm.sofia.filters.JWTAuthFilter;
-import com.crm.sofia.services.custom_query.CustomQueryService;
+
+import com.crm.sofia.dto.dashboard.DashboardDTO;
+import com.crm.sofia.services.dashboard.DashboardDesignerService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,88 +28,87 @@ import static org.mockito.Mockito.doNothing;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
 @ExtendWith(MockitoExtension.class)
-public class CustomQueryControllerTest {
+public class DashboardDesignerControllerTest {
 
     private MockMvc mvc;
-    private CustomQueryDTO dto;
+
+    private DashboardDTO dto;
 
     @InjectMocks
     @Autowired
     private ObjectMapper objectMapper;
 
     @Mock
-    private CustomQueryService customQueryService;
+    private DashboardDesignerService dashboardDesignerService;
 
-    private List<CustomQueryDTO> customQueryDTOList;
-
-    @Mock
-    private JWTAuthFilter filter;
+    private List<DashboardDTO> dashboardDTOList;
 
     @InjectMocks
-    private CustomQueryDesignerController customQueryDesignerController;
+    private DashboardDesignerController dashboardDesignerController;
 
     @BeforeEach
-    void setUp() {
-        this.customQueryDTOList = new ArrayList<>();
-        dto = new CustomQueryDTO();
-        dto.setName("Query");
-        dto.setQuery("what is the query");
-        this.customQueryDTOList.add(dto);
+    void setup() {
 
-        mvc = MockMvcBuilders.standaloneSetup(customQueryDesignerController)
+        this.dashboardDTOList = new ArrayList<>();
+        dto = new DashboardDTO().setDescription("dummyDescriptionDTO");
+        this.dashboardDTOList.add(dto);
+
+        mvc = MockMvcBuilders.standaloneSetup(dashboardDesignerController)
                 .build();
     }
 
     @Test
     void getObjectTest() throws Exception {
 
-        given(customQueryService.getObject()).willReturn(customQueryDTOList);
-        MockHttpServletResponse response = mvc.perform(get("/custom-query-designer")
+        given(dashboardDesignerService.getObject()).willReturn(dashboardDTOList);
+        MockHttpServletResponse response = mvc.perform(get("/dashboard-designer")
                 .accept(MediaType.APPLICATION_JSON)).andReturn().getResponse();
         assertEquals(response.getStatus(), HttpStatus.OK.value());
-        assertEquals(JsonPath.parse(response.getContentAsString()).read("$[0].name"), "Query");
+        assertEquals(JsonPath.parse(response.getContentAsString()).read("$[0].description"), "dummyDescriptionDTO");
     }
 
+
     @Test
-    void getDownloadByIdTest() throws Exception {
-        given(customQueryService.getObject(any())).willReturn(dto);
-        MockHttpServletResponse response = mvc.perform(get("/custom-query-designer/by-id?id=0")
+    void getByIdTest() throws Exception {
+        given(dashboardDesignerService.getObject(any())).willReturn(dto);
+        MockHttpServletResponse response = mvc.perform(get("/dashboard-designer/by-id?id=0")
                 .accept(MediaType.APPLICATION_JSON)).andReturn().getResponse();
         assertEquals(response.getStatus(), HttpStatus.OK.value());
-        assertEquals(JsonPath.parse(response.getContentAsString()).read("$.name"), "Query");
+        assertEquals(JsonPath.parse(response.getContentAsString()).read("$.description"), "dummyDescriptionDTO");
     }
+
 
     @Test
     void postObjectTest() throws Exception {
-        given(customQueryService.postObject(any())).willReturn(dto);
-        MockHttpServletResponse response = mvc.perform(post("/custom-query-designer")
+        given(dashboardDesignerService.postObject(any())).willReturn(dto);
+        MockHttpServletResponse response = mvc.perform(post("/dashboard-designer")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(dto))
                 .accept(MediaType.APPLICATION_JSON_VALUE)).andReturn().getResponse();
         assertEquals(response.getStatus(), HttpStatus.OK.value());
-        assertEquals(JsonPath.parse(response.getContentAsString()).read("$.name"), "Query");
+        assertEquals(JsonPath.parse(response.getContentAsString()).read("$.description"), "dummyDescriptionDTO");
     }
 
 
     @Test
     void putObjectTest() throws Exception {
-        given(customQueryService.postObject(any())).willReturn(dto);
-        MockHttpServletResponse response = mvc.perform(put("/custom-query-designer")
+        given(dashboardDesignerService.postObject(any())).willReturn(dto);
+        MockHttpServletResponse response = mvc.perform(put("/dashboard-designer")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(dto))
                 .accept(MediaType.APPLICATION_JSON_VALUE)).andReturn().getResponse();
         assertEquals(response.getStatus(), HttpStatus.OK.value());
-        assertEquals(JsonPath.parse(response.getContentAsString()).read("$.name"), "Query");
+        assertEquals(JsonPath.parse(response.getContentAsString()).read("$.description"), "dummyDescriptionDTO");
     }
+
 
     @Test
     void deleteObjectTest() throws Exception {
-        doNothing().when(customQueryService).deleteObject(any());
-        MockHttpServletResponse response = mvc.perform(delete("/custom-query-designer?id=0")
+        doNothing().when(dashboardDesignerService).deleteObject(any());
+        MockHttpServletResponse response = mvc.perform(delete("/dashboard-designer?id=0")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(dto))
                 .accept(MediaType.APPLICATION_JSON_VALUE)).andReturn().getResponse();
         assertEquals(response.getStatus(), HttpStatus.OK.value());
     }
-
 }

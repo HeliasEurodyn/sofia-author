@@ -58,57 +58,46 @@ public class SecurityControllerTest {
         dto.setType("Admin");
         dto.setUpdate(Boolean.FALSE);
         this.securityDTOList.add(dto);
-        mvc = MockMvcBuilders.standaloneSetup(securityController)
-                .build();
+        mvc = MockMvcBuilders.standaloneSetup(securityController).build();
     }
 
     @Test
     void getObjectTest() throws Exception {
 
         given(securityService.getObject()).willReturn(securityDTOList);
-        MockHttpServletResponse response = mvc.perform(get("/security")
-                .accept(MediaType.APPLICATION_JSON)).andReturn().getResponse();
+        MockHttpServletResponse response = mvc.perform(get("/security").accept(MediaType.APPLICATION_JSON)).andReturn().getResponse();
         assertEquals(response.getStatus(), HttpStatus.OK.value());
-        assertEquals(JsonPath.parse(response.getContentAsString()).read("$[0].read")  ,Boolean.TRUE);
+        assertEquals(JsonPath.parse(response.getContentAsString()).read("$[0].read"), Boolean.TRUE);
     }
 
     @Test
     void getSecurityByIdTest() throws Exception {
         given(securityService.getObject(any())).willReturn(dto);
-        MockHttpServletResponse response = mvc.perform(get("/security/by-id?id=0")
-                .accept(MediaType.APPLICATION_JSON)).andReturn().getResponse();
+        MockHttpServletResponse response = mvc.perform(get("/security/by-id?id=0").accept(MediaType.APPLICATION_JSON)).andReturn().getResponse();
         assertEquals(response.getStatus(), HttpStatus.OK.value());
-        assertEquals(JsonPath.parse(response.getContentAsString()).read("$.read")  ,Boolean.TRUE);
+        assertEquals(JsonPath.parse(response.getContentAsString()).read("$.read"), Boolean.TRUE);
     }
 
     @Test
     void postObjectTest() throws Exception {
         given(securityService.postObject(any())).willReturn(dto);
-        MockHttpServletResponse response = mvc.perform(post("/security")
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .content(objectMapper.writeValueAsString(dto))
-                .accept(MediaType.APPLICATION_JSON_VALUE)).andReturn().getResponse();
+        MockHttpServletResponse response = mvc.perform(post("/security").contentType(MediaType.APPLICATION_JSON_VALUE).content(objectMapper.writeValueAsString(dto)).accept(MediaType.APPLICATION_JSON_VALUE)).andReturn().getResponse();
         assertEquals(response.getStatus(), HttpStatus.OK.value());
-        assertEquals(JsonPath.parse(response.getContentAsString()).read("$.type")  ,"Admin");
+        assertEquals(JsonPath.parse(response.getContentAsString()).read("$.type"), "Admin");
     }
+
     @Test
     void putObjectTest() throws Exception {
         given(securityService.postObject(any())).willReturn(dto);
-        MockHttpServletResponse response = mvc.perform(put("/security")
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .content(objectMapper.writeValueAsString(dto))
-                .accept(MediaType.APPLICATION_JSON_VALUE)).andReturn().getResponse();
+        MockHttpServletResponse response = mvc.perform(put("/security").contentType(MediaType.APPLICATION_JSON_VALUE).content(objectMapper.writeValueAsString(dto)).accept(MediaType.APPLICATION_JSON_VALUE)).andReturn().getResponse();
         assertEquals(response.getStatus(), HttpStatus.OK.value());
-        assertEquals(JsonPath.parse(response.getContentAsString()).read("$.read")  ,Boolean.TRUE);
+        assertEquals(JsonPath.parse(response.getContentAsString()).read("$.read"), Boolean.TRUE);
     }
 
     @Test
     void deleteObjectTest() throws Exception {
         doNothing().when(securityService).deleteObject(any());
-        MockHttpServletResponse response = mvc.perform(delete("/security?id=0")
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .content(objectMapper.writeValueAsString(dto))
-                .accept(MediaType.APPLICATION_JSON_VALUE)).andReturn().getResponse();
+        MockHttpServletResponse response = mvc.perform(delete("/security?id=0").contentType(MediaType.APPLICATION_JSON_VALUE).content(objectMapper.writeValueAsString(dto)).accept(MediaType.APPLICATION_JSON_VALUE)).andReturn().getResponse();
         assertEquals(response.getStatus(), HttpStatus.OK.value());
     }
 

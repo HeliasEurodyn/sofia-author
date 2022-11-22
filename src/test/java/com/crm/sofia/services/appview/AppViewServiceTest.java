@@ -1,6 +1,7 @@
 package com.crm.sofia.services.appview;
 
 import com.crm.sofia.dto.appview.AppViewDTO;
+import com.crm.sofia.exception.DoesNotExistException;
 import com.crm.sofia.mapper.appview.AppViewMapper;
 import com.crm.sofia.model.persistEntity.PersistEntity;
 import com.crm.sofia.repository.persistEntity.PersistEntityRepository;
@@ -9,7 +10,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.web.server.ResponseStatusException;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
@@ -25,25 +25,21 @@ import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
 public class AppViewServiceTest {
+    List<PersistEntity> persistEntityList;
+    List<Object[]> data;
     @Mock
     private PersistEntityRepository appViewRepository;
-
     @InjectMocks
     private AppViewService appViewService;
-
     private AppViewDTO appViewDTO;
     private List<AppViewDTO> appViewDTOlist;
-
-    @Mock(answer = Answers.CALLS_REAL_METHODS)
-    private AppViewMapper appViewMapper ;
-
+    @Mock
+    private AppViewMapper appViewMapper;
     private PersistEntity persistEntity;
     @Mock
     private EntityManager entityManager;
     @Mock
     private Query query;
-    List<PersistEntity> persistEntityList;
-    List<Object[]> data ;
 
     public AppViewServiceTest() {
     }
@@ -63,7 +59,7 @@ public class AppViewServiceTest {
         persistEntityList.add(persistEntity);
 
         data = new ArrayList<>();
-        Object[] oj =new Object[2];
+        Object[] oj = new Object[2];
         oj[0] = 1;
         oj[1] = "2(2))";
         data.add(oj);
@@ -77,96 +73,104 @@ public class AppViewServiceTest {
 //    }
 
     @Test
-    public void getObjectTest(){
+    public void getObjectTest() {
         given(appViewRepository.findByEntitytypeOrderByModifiedOn(ArgumentMatchers.anyString())).willReturn(persistEntityList);
+        given(appViewMapper.map(ArgumentMatchers.any(List.class))).willReturn(List.of(appViewDTO));
         List<AppViewDTO> list = appViewService.getObject();
         assertThat(list).isNotNull();
+        assertThat(list.size()).isEqualTo(1);
+        assertThat(list.get(0).getName()).isEqualTo("Frodo Baggins");
     }
 
     @Test
-    public void getObjectByIdTest(){
+    public void getObjectByIdTest() {
         given(appViewRepository.findById(ArgumentMatchers.anyString())).willReturn(Optional.of(persistEntity));
         AppViewDTO dto = appViewService.getObject("6L");
 
     }
 
     @Test
-    public void getObjectByIdWhenEmptyTest(){
+    public void getObjectByIdWhenEmptyTest() {
         given(appViewRepository.findById(ArgumentMatchers.anyString())).willReturn(Optional.empty());
-        Exception exception = assertThrows(ResponseStatusException.class, () -> {
+        Exception exception = assertThrows(DoesNotExistException.class, () -> {
             appViewService.getObject("6L");
         });
 
-        String expectedMessage = "500 INTERNAL_SERVER_ERROR \"View does not exist\"";
+        String expectedMessage = "View Does Not Exist";
         String actualMessage = exception.getMessage();
 
-        assertEquals(actualMessage,expectedMessage);
+        assertEquals(actualMessage, expectedMessage);
     }
+
     @Test
-    public void getDeleteByIdTest(){
+    public void getDeleteByIdTest() {
         given(appViewRepository.findById(ArgumentMatchers.anyString())).willReturn(Optional.of(persistEntity));
         appViewService.deleteObject("6L");
 
     }
+
     @Test
-    public void getDeleteByIdWhenEmptyTest(){
+    public void getDeleteByIdWhenEmptyTest() {
         given(appViewRepository.findById(ArgumentMatchers.anyString())).willReturn(Optional.empty());
-        Exception exception = assertThrows(ResponseStatusException.class, () -> {
+        Exception exception = assertThrows(DoesNotExistException.class, () -> {
             appViewService.deleteObject("6L");
         });
-        String expectedMessage = "500 INTERNAL_SERVER_ERROR \"View does not exist\"";
+        String expectedMessage = "View Does Not Exist";
         String actualMessage = exception.getMessage();
-        assertEquals(actualMessage,expectedMessage);
+        assertEquals(actualMessage, expectedMessage);
     }
 
 
     @Test
-    public void getViewsTest(){
+    public void getViewsTest() {
         Mockito.when(entityManager.createNativeQuery(ArgumentMatchers.anyString())).thenReturn(query);
         given(query.getResultList()).willReturn(anyList());
         appViewService.getViews();
     }
+
     @Test
-    public void getViewFieldsTest(){
+    public void getViewFieldsTest() {
         Mockito.when(entityManager.createNativeQuery(ArgumentMatchers.anyString())).thenReturn(query);
         given(query.getResultList()).willReturn(anyList());
         appViewService.getViewFields("dummy");
     }
 
     @Test
-    public void deteleDatabaseViewTest(){
+    public void deteleDatabaseViewTest() {
         Mockito.when(entityManager.createNativeQuery(ArgumentMatchers.anyString())).thenReturn(query);
         given(query.executeUpdate()).willReturn(1);
         appViewService.deteleDatabaseView("dummy");
     }
+
     @Test
-    public void viewOnDatabaseTest(){
+    public void viewOnDatabaseTest() {
         Mockito.when(entityManager.createNativeQuery(ArgumentMatchers.anyString())).thenReturn(query);
         given(query.getResultList()).willReturn(anyList());
         appViewService.viewOnDatabase("dummy");
     }
 
     @Test
-    public void generateViewFieldsTest(){
+    public void generateViewFieldsTest() {
         Mockito.when(entityManager.createNativeQuery(ArgumentMatchers.anyString())).thenReturn(query);
         given(query.getResultList()).willReturn(data);
         appViewService.generateViewFields("Select * from table");
     }
 
     @Test
-    public void dropViewTest(){
+    public void dropViewTest() {
         Mockito.when(entityManager.createNativeQuery(ArgumentMatchers.anyString())).thenReturn(query);
         appViewService.dropView("table");
     }
 
     @Test
-    public void alterViewTest(){
+    public void alterViewTest() {
         Mockito.when(entityManager.createNativeQuery(ArgumentMatchers.anyString())).thenReturn(query);
-        appViewService.alterView("table","query");
+        appViewService.alterView("table", "query");
     }
+
     @Test
-    public void createViewTest(){
+    public void createViewTest() {
         Mockito.when(entityManager.createNativeQuery(ArgumentMatchers.anyString())).thenReturn(query);
-        appViewService.createView("table","query");
+        appViewService.createView("table", "query");
     }
 }

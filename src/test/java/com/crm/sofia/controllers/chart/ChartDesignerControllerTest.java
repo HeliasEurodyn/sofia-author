@@ -1,8 +1,7 @@
-package com.crm.sofia.controllers.calendar;
+package com.crm.sofia.controllers.chart;
 
-
-import com.crm.sofia.dto.calendar.CalendarDTO;
-import com.crm.sofia.services.calendar.CalendarDesignerService;
+import com.crm.sofia.dto.chart.ChartDTO;
+import com.crm.sofia.services.chart.ChartDesignerService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,41 +27,42 @@ import static org.mockito.Mockito.doNothing;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
 @ExtendWith(MockitoExtension.class)
-public class CalendarDesignerControllerTest {
-
+public class ChartDesignerControllerTest {
 
     private MockMvc mvc;
 
-    private CalendarDTO dto;
+    private ChartDTO dto;
 
     @InjectMocks
     @Autowired
     private ObjectMapper objectMapper;
 
     @Mock
-    private CalendarDesignerService calendarDesignerService;
+    private ChartDesignerService chartDesignerService;
 
-    private List<CalendarDTO> calendarDTOList;
+    private List<ChartDTO> chartDTOList;
 
     @InjectMocks
-    private CalendarDesignerController calendarDesignerController;
+    private ChartDesignerController chartDesignerController;
 
     @BeforeEach
     void setup() {
 
-        this.calendarDTOList = new ArrayList<>();
-        dto = new CalendarDTO().setTitle("dummyTitleDTO").setQuery("dummyQueryDTO");
-        this.calendarDTOList.add(dto);
+        this.chartDTOList = new ArrayList<>();
+        dto = new ChartDTO().setTitle("dummyTitleDTO").setQuery("dummyQueryDTO");
+        this.chartDTOList.add(dto);
 
-        mvc = MockMvcBuilders.standaloneSetup(calendarDesignerController).build();
+        mvc = MockMvcBuilders.standaloneSetup(chartDesignerController)
+                .build();
     }
 
 
     @Test
     void getObjectTest() throws Exception {
 
-        given(calendarDesignerService.getObject()).willReturn(calendarDTOList);
-        MockHttpServletResponse response = mvc.perform(get("/calendar-designer").accept(MediaType.APPLICATION_JSON)).andReturn().getResponse();
+        given(chartDesignerService.getObject()).willReturn(chartDTOList);
+        MockHttpServletResponse response = mvc.perform(get("/chart-designer")
+                .accept(MediaType.APPLICATION_JSON)).andReturn().getResponse();
         assertEquals(response.getStatus(), HttpStatus.OK.value());
         assertEquals(JsonPath.parse(response.getContentAsString()).read("$[0].title"), "dummyTitleDTO");
     }
@@ -70,8 +70,9 @@ public class CalendarDesignerControllerTest {
 
     @Test
     void getByIdTest() throws Exception {
-        given(calendarDesignerService.getObject(any())).willReturn(dto);
-        MockHttpServletResponse response = mvc.perform(get("/calendar-designer/by-id?id=0").accept(MediaType.APPLICATION_JSON)).andReturn().getResponse();
+        given(chartDesignerService.getObject(any())).willReturn(dto);
+        MockHttpServletResponse response = mvc.perform(get("/chart-designer/by-id?id=0")
+                .accept(MediaType.APPLICATION_JSON)).andReturn().getResponse();
         assertEquals(response.getStatus(), HttpStatus.OK.value());
         assertEquals(JsonPath.parse(response.getContentAsString()).read("$.title"), "dummyTitleDTO");
     }
@@ -79,8 +80,11 @@ public class CalendarDesignerControllerTest {
 
     @Test
     void postObjectTest() throws Exception {
-        given(calendarDesignerService.postObject(any())).willReturn(dto);
-        MockHttpServletResponse response = mvc.perform(post("/calendar-designer").contentType(MediaType.APPLICATION_JSON_VALUE).content(objectMapper.writeValueAsString(dto)).accept(MediaType.APPLICATION_JSON_VALUE)).andReturn().getResponse();
+        given(chartDesignerService.postObject(any())).willReturn(dto);
+        MockHttpServletResponse response = mvc.perform(post("/chart-designer")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(objectMapper.writeValueAsString(dto))
+                .accept(MediaType.APPLICATION_JSON_VALUE)).andReturn().getResponse();
         assertEquals(response.getStatus(), HttpStatus.OK.value());
         assertEquals(JsonPath.parse(response.getContentAsString()).read("$.title"), "dummyTitleDTO");
     }
@@ -88,8 +92,11 @@ public class CalendarDesignerControllerTest {
 
     @Test
     void putObjectTest() throws Exception {
-        given(calendarDesignerService.postObject(any())).willReturn(dto);
-        MockHttpServletResponse response = mvc.perform(put("/calendar-designer").contentType(MediaType.APPLICATION_JSON_VALUE).content(objectMapper.writeValueAsString(dto)).accept(MediaType.APPLICATION_JSON_VALUE)).andReturn().getResponse();
+        given(chartDesignerService.postObject(any())).willReturn(dto);
+        MockHttpServletResponse response = mvc.perform(put("/chart-designer")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(objectMapper.writeValueAsString(dto))
+                .accept(MediaType.APPLICATION_JSON_VALUE)).andReturn().getResponse();
         assertEquals(response.getStatus(), HttpStatus.OK.value());
         assertEquals(JsonPath.parse(response.getContentAsString()).read("$.title"), "dummyTitleDTO");
     }
@@ -97,10 +104,11 @@ public class CalendarDesignerControllerTest {
 
     @Test
     void deleteObjectTest() throws Exception {
-        doNothing().when(calendarDesignerService).deleteObject(any());
-        MockHttpServletResponse response = mvc.perform(delete("/calendar-designer?id=0").contentType(MediaType.APPLICATION_JSON_VALUE).content(objectMapper.writeValueAsString(dto)).accept(MediaType.APPLICATION_JSON_VALUE)).andReturn().getResponse();
+        doNothing().when(chartDesignerService).deleteObject(any());
+        MockHttpServletResponse response = mvc.perform(delete("/chart-designer?id=0")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(objectMapper.writeValueAsString(dto))
+                .accept(MediaType.APPLICATION_JSON_VALUE)).andReturn().getResponse();
         assertEquals(response.getStatus(), HttpStatus.OK.value());
     }
-
-
 }

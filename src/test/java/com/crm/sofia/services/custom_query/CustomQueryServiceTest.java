@@ -1,6 +1,7 @@
 package com.crm.sofia.services.custom_query;
 
 import com.crm.sofia.dto.custom_query.CustomQueryDTO;
+import com.crm.sofia.exception.DoesNotExistException;
 import com.crm.sofia.mapper.custom_query.CustomQueryMapper;
 import com.crm.sofia.model.custom_query.CustomQuery;
 import com.crm.sofia.repository.custom_query.CustomQueryRepository;
@@ -8,9 +9,11 @@ import com.crm.sofia.services.auth.JWTService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.*;
+import org.mockito.ArgumentMatchers;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,8 +38,8 @@ public class CustomQueryServiceTest {
     private CustomQuery customQuery;
     private CustomQueryDTO customQueryDto;
 
-    @Mock(answer = Answers.CALLS_REAL_METHODS)
-    private CustomQueryMapper customQueryMapper ;
+    @Mock
+    private CustomQueryMapper customQueryMapper;
 
     @BeforeEach
     void setUp() {
@@ -49,61 +52,63 @@ public class CustomQueryServiceTest {
         customQueryList.add(customQuery);
         customQueryDto.setName("dummy");
         customQueryDto.setQuery("LOTR");
+        customQueryDto.setId("1");
     }
 
 
     @Test
     public void getObjectTest() {
         given(customQueryRepository.findAll()).willReturn(customQueryList);
+        given(customQueryMapper.map(ArgumentMatchers.any(List.class))).willReturn(List.of(customQueryDto));
         List<CustomQueryDTO> list = customQueryService.getObject();
         assertThat(list).isNotNull();
+        assertThat(list.size()).isEqualTo(1);
+        assertThat(list.get(0).getName()).isEqualTo("dummy");
     }
 
     @Test
-    public void getObjectByIdTest(){
+    public void getObjectByIdTest() {
         given(customQueryRepository.findById(ArgumentMatchers.anyString())).willReturn(Optional.of(customQuery));
-        CustomQueryDTO dto = customQueryService.getObject("6L");
+        given(customQueryMapper.map(ArgumentMatchers.any(CustomQuery.class))).willReturn(customQueryDto);
+        CustomQueryDTO dto = customQueryService.getObject("1");
+        assertThat(dto).isNotNull();
+        assertThat(dto.getId().equals("1"));
     }
 
     @Test
-    public void getObjectByIdWhenEmptyTest(){
+    public void getObjectByIdWhenEmptyTest() {
         given(customQueryRepository.findById(ArgumentMatchers.anyString())).willReturn(Optional.empty());
-        Exception exception = assertThrows(ResponseStatusException.class, () -> {
-            customQueryService.getObject("6L");
+        Exception exception = assertThrows(DoesNotExistException.class, () -> {
+            customQueryService.getObject("1");
         });
 
-        String expectedMessage = "500 INTERNAL_SERVER_ERROR \"Object does not exist\"";
+        String expectedMessage = "CustomQuery Does Not Exist";
         String actualMessage = exception.getMessage();
 
-        assertEquals(actualMessage,expectedMessage);
+        assertEquals(actualMessage, expectedMessage);
     }
 
     @Test
-    public void postObjectTest(){
-        given(customQueryRepository.save(ArgumentMatchers.any(CustomQuery.class))).willReturn(customQuery);
+    public void postObjectTest() {
         given(customQueryMapper.map(ArgumentMatchers.any(CustomQueryDTO.class))).willReturn(customQuery);
-        customQueryService.postObject(customQueryDto);
+        given(customQueryRepository.save(ArgumentMatchers.any(CustomQuery.class))).willReturn(customQuery);
+        given(customQueryMapper.map(ArgumentMatchers.any(CustomQuery.class))).willReturn(customQueryDto);
+        CustomQueryDTO dto = customQueryService.postObject(customQueryDto);
+        assertThat(dto).isNotNull();
+        assertThat(dto.getId().equals("1"));
     }
 
-    @Test
-    public void getDeleteByIdTest(){
-        given(customQueryRepository.findById(ArgumentMatchers.anyString())).willReturn(Optional.of(customQuery));
-        customQueryService.deleteObject("6L");
-
-    }
 
     @Test
-    public void getDeleteByIdWhenEmptyTest(){
+    public void getDeleteByIdWhenEmptyTest() {
         given(customQueryRepository.findById(ArgumentMatchers.anyString())).willReturn(Optional.empty());
-        Exception exception = assertThrows(ResponseStatusException.class, () -> {
+        Exception exception = assertThrows(DoesNotExistException.class, () -> {
             customQueryService.deleteObject("6L");
         });
-        String expectedMessage = "500 INTERNAL_SERVER_ERROR \"Object does not exist\"";
+        String expectedMessage = "CustomQuery Does Not Exist";
         String actualMessage = exception.getMessage();
-        assertEquals(actualMessage,expectedMessage);
+        assertEquals(actualMessage, expectedMessage);
     }
-
-
 
 
 }
