@@ -1,4 +1,4 @@
-package com.crm.sofia.dto.appview.controllers.calendar;
+package com.crm.sofia.controllers.calendar;
 
 import com.crm.sofia.dto.calendar.CalendarDTO;
 import com.crm.sofia.model.calendar.Calendar;

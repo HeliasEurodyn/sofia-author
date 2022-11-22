@@ -2,21 +2,19 @@ package com.crm.sofia.services.appview;
 
 import com.crm.sofia.dto.appview.AppViewDTO;
 import com.crm.sofia.dto.appview.AppViewFieldDTO;
+import com.crm.sofia.exception.DoesNotExistException;
 import com.crm.sofia.mapper.appview.AppViewMapper;
 import com.crm.sofia.model.persistEntity.PersistEntity;
 import com.crm.sofia.repository.persistEntity.PersistEntityRepository;
 import com.crm.sofia.services.component.ComponentDesignerService;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -81,19 +79,17 @@ public class AppViewService {
     }
 
     public AppViewDTO getObject(String id) {
-        Optional<PersistEntity> optionalView = this.appViewRepository.findById(id);
-        if (!optionalView.isPresent()) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "View does not exist");
-        }
-        return this.appViewMapper.map(optionalView.get());
+        PersistEntity optionalView = this.appViewRepository.findById(id)
+                .orElseThrow(() -> new DoesNotExistException("View Does Not Exist"));
+
+        return this.appViewMapper.map(optionalView);
     }
 
     public void deleteObject(String id) {
-        Optional<PersistEntity> optionalView = this.appViewRepository.findById(id);
-        if (!optionalView.isPresent()) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "View does not exist");
-        }
-        this.appViewRepository.deleteById(optionalView.get().getId());
+        PersistEntity optionalView = this.appViewRepository.findById(id)
+                .orElseThrow(() -> new DoesNotExistException("View Does Not Exist"));
+
+        this.appViewRepository.deleteById(optionalView.getId());
     }
 
     @Transactional

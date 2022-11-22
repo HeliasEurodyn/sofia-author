@@ -1,18 +1,16 @@
 package com.crm.sofia.services.business_unit;
 
 import com.crm.sofia.dto.business_unit.BusinessUnitDTO;
+import com.crm.sofia.exception.DoesNotExistException;
 import com.crm.sofia.mapper.business_unit.BusinessUnitMapper;
 import com.crm.sofia.model.business_unit.BusinessUnit;
 import com.crm.sofia.repository.business_unit.BusinessUnitRepository;
 import com.crm.sofia.services.auth.JWTService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.time.Instant;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class BusinessUnitDesignerService {
@@ -32,12 +30,10 @@ public class BusinessUnitDesignerService {
     }
 
     public BusinessUnitDTO getObject(String id) {
-        Optional<BusinessUnit> optionalEntity = businessUnitRepository.findById(id);
-        if (!optionalEntity.isPresent()) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Object does not exist");
-        }
-        BusinessUnit entity = optionalEntity.get();
-        BusinessUnitDTO dto = businessUnitMapper.map(entity);
+        BusinessUnit optionalEntity = businessUnitRepository.findById(id)
+                .orElseThrow(() -> new DoesNotExistException("BusinessUnit Does Not Exist"));
+
+        BusinessUnitDTO dto = businessUnitMapper.map(optionalEntity);
 
         return dto;
     }
@@ -57,11 +53,10 @@ public class BusinessUnitDesignerService {
     }
 
     public void deleteObject(String id) {
-        Optional<BusinessUnit> optionalEntity = businessUnitRepository.findById(id);
-        if (!optionalEntity.isPresent()) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Object does not exist");
-        }
-        businessUnitRepository.deleteById(optionalEntity.get().getId());
+        BusinessUnit optionalEntity = businessUnitRepository.findById(id)
+                        .orElseThrow(() -> new DoesNotExistException("BusinessUnit Does Not Exist"));
+
+        businessUnitRepository.deleteById(optionalEntity.getId());
     }
 
 }
