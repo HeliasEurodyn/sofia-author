@@ -35,6 +35,7 @@ public abstract class FormMapper extends BaseMapper<FormDTO, FormEntity> {
     @Mapping(ignore = true, target = "formCssList")
     @Mapping(ignore = true, target = "instanceVersion")
     @Mapping(ignore = true, target = "formActionButtons")
+    @Mapping(ignore = true, target = "accessControls")
     @Mapping(ignore = true, target = "component.componentPersistEntityList")
     public abstract FormDTO mapEntityForList(FormEntity entity);
 

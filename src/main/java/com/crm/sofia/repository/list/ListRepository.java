@@ -1,5 +1,6 @@
 package com.crm.sofia.repository.list;
 
+import com.crm.sofia.dto.list.ListDTO;
 import com.crm.sofia.model.list.ListEntity;
 import com.crm.sofia.model.list.ListView;
 import com.crm.sofia.repository.common.BaseRepository;
@@ -64,6 +65,7 @@ public interface ListRepository extends BaseRepository<ListEntity> {
             " WHERE l.jsonUrl <> '' AND l.jsonUrl is not null ")
     public List<ListEntity> getIdsByExistingJsonUrls();
 
-    @Query("SELECT l FROM ListEntity l JOIN FETCH l.component c")
-    List<ListView> findAllProjectedBy();
+    @Query("SELECT new com.crm.sofia.dto.list.ListDTO(l.id, l.name, l.createdOn, c.id, c.name) FROM ListEntity l INNER JOIN l.component c")
+    List<ListDTO> getObject();
+
 }

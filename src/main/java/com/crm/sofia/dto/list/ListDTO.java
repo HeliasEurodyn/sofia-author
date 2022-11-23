@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 import lombok.experimental.Accessors;
 
+import java.time.Instant;
 import java.util.List;
 
 @Getter
@@ -55,9 +56,7 @@ public class ListDTO extends BaseDTO {
     private List<AccessControlDTO> accessControls;
     private List<ListScriptDTO> listScripts;
     private List<ListCssDTO> listCssList;
-
     private List<ListTranslationDTO> translations;
-
     private List<ListActionButtonDTO> listActionButtons;
     private List<ListComponentFieldDTO> listComponentColumnFieldList;
     private List<ListComponentFieldDTO> listComponentFilterFieldList;
@@ -65,5 +64,14 @@ public class ListDTO extends BaseDTO {
     private List<ListComponentFieldDTO> listComponentTopGroupFieldList;
     private List<ListComponentFieldDTO> listComponentOrderByFieldList;
     private List<ListComponentFieldDTO> listComponentActionFieldList;
+    public ListDTO(String id, String name, Instant createdOn, String componentId, String componentName) {
+        this.setId(id);
+        this.setName(name);
+        this.setCreatedOn(createdOn);
+        ComponentDTO component = new ComponentDTO();
+        component.setId(componentId);
+        component.setName(componentName);
+        this.setComponent(component);
+    }
 
 }

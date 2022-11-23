@@ -9,6 +9,5 @@ public interface ListView{
     String getName();
     Instant getCreatedOn();
     ComponentView getComponent();
-
 }
 

@@ -32,7 +32,7 @@ public class ListEntity extends MainEntity implements Serializable {
     @Column
     private String headerTitle;
 
-    @Column(length=1024)
+    @Column(length = 1024)
     private String HeaderDescription;
 
     @Column
@@ -41,7 +41,7 @@ public class ListEntity extends MainEntity implements Serializable {
     @Column
     private String title;
 
-    @Column(length=1024)
+    @Column(length = 1024)
     private String description;
 
     @Column
@@ -50,7 +50,7 @@ public class ListEntity extends MainEntity implements Serializable {
     @Column
     private String groupingTitle;
 
-    @Column(length=1024)
+    @Column(length = 1024)
     private String groupingDescription;
 
     @Column
@@ -171,7 +171,7 @@ public class ListEntity extends MainEntity implements Serializable {
     @JoinColumn(name = "action_list_component_id")
     private List<ListComponentField> listComponentActionFieldList;
 
-    @Column(columnDefinition ="BIGINT(20) default 0")
+    @Column(columnDefinition = "BIGINT(20) default 0")
     private Long instanceVersion;
 
     @Column
