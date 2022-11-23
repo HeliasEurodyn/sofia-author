@@ -1,6 +1,8 @@
 package com.crm.sofia.repository.user;
 
+import com.crm.sofia.model.list.ListView;
 import com.crm.sofia.model.user.Role;
+import com.crm.sofia.model.user.RoleView;
 import com.crm.sofia.repository.common.BaseRepository;
 import org.springframework.stereotype.Repository;
 
@@ -12,4 +14,6 @@ public interface RoleRepository extends BaseRepository<Role> {
     Role findFirstByName(String name);
 
     List<Role> findAllByOrderByModifiedOn();
+
+    List<RoleView> findAllProjectedByOrderByModifiedOn();
 }

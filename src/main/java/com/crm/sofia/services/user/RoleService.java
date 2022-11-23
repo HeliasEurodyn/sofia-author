@@ -4,6 +4,7 @@ import com.crm.sofia.dto.user.RoleDTO;
 import com.crm.sofia.exception.DoesNotExistException;
 import com.crm.sofia.mapper.user.RoleMapper;
 import com.crm.sofia.model.user.Role;
+import com.crm.sofia.model.user.RoleView;
 import com.crm.sofia.repository.user.RoleRepository;
 import com.crm.sofia.services.auth.JWTService;
 import lombok.extern.slf4j.Slf4j;
@@ -32,9 +33,9 @@ public class RoleService {
         this.jwtService = jwtService;
     }
 
-    public List<RoleDTO> getObject() {
-        List<Role> entites = roleRepository.findAllByOrderByModifiedOn();
-        return roleMapper.map(entites);
+    public List<RoleView> getObject() {
+        List<RoleView> projectionList = roleRepository.findAllProjectedByOrderByModifiedOn();
+        return projectionList;
     }
 
     public RoleDTO getObject(String id)  {
