@@ -80,8 +80,7 @@ public class ListDesignerServiceTest {
 
     @Test
     public void getObjectTest() {
-        given(listRepository.findAllByOrderByModifiedOn()).willReturn(Collections.singletonList(listEntity));
-        given(listMapper.mapEntitiesForList(ArgumentMatchers.any(List.class))).willReturn(listDTOList);
+        given(listRepository.getObject()).willReturn(Collections.singletonList(listDTO));
         List<ListDTO> list = listDesignerService.getObject();
         assertThat(list).isNotEmpty();
         assertThat(list.size()).isEqualTo(1);

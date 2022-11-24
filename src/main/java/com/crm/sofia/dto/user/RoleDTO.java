@@ -15,4 +15,9 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class RoleDTO extends BaseDTO {
     private String name;
+
+    public RoleDTO(String id,String name) {
+        this.setId(id);
+        this.name = name;
+    }
 }

@@ -2,7 +2,6 @@ package com.crm.sofia.repository.list;
 
 import com.crm.sofia.dto.list.ListDTO;
 import com.crm.sofia.model.list.ListEntity;
-import com.crm.sofia.model.list.ListView;
 import com.crm.sofia.repository.common.BaseRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -65,7 +64,7 @@ public interface ListRepository extends BaseRepository<ListEntity> {
             " WHERE l.jsonUrl <> '' AND l.jsonUrl is not null ")
     public List<ListEntity> getIdsByExistingJsonUrls();
 
-    @Query("SELECT new com.crm.sofia.dto.list.ListDTO(l.id, l.name, l.createdOn, c.id, c.name) FROM ListEntity l INNER JOIN l.component c")
+    @Query("SELECT new com.crm.sofia.dto.list.ListDTO(l.id, l.name, l.createdOn, c.id, c.name) FROM ListEntity l INNER JOIN l.component c ORDER BY l.modifiedOn ASC")
     List<ListDTO> getObject();
 
 }

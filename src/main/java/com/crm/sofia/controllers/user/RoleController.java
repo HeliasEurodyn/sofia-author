@@ -1,7 +1,6 @@
 package com.crm.sofia.controllers.user;
 
 import com.crm.sofia.dto.user.RoleDTO;
-import com.crm.sofia.model.user.RoleView;
 import com.crm.sofia.services.user.RoleService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +20,7 @@ public class RoleController {
     }
 
     @GetMapping
-    List<RoleView> getObject() {
+    List<RoleDTO> getObject() {
         return roleService.getObject();
     }
 

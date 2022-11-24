@@ -4,13 +4,10 @@ import com.crm.sofia.dto.user.RoleDTO;
 import com.crm.sofia.exception.DoesNotExistException;
 import com.crm.sofia.mapper.user.RoleMapper;
 import com.crm.sofia.model.user.Role;
-import com.crm.sofia.model.user.RoleView;
 import com.crm.sofia.repository.user.RoleRepository;
 import com.crm.sofia.services.auth.JWTService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import javax.transaction.Transactional;
 import java.time.Instant;
@@ -33,10 +30,7 @@ public class RoleService {
         this.jwtService = jwtService;
     }
 
-    public List<RoleView> getObject() {
-        List<RoleView> projectionList = roleRepository.findAllProjectedByOrderByModifiedOn();
-        return projectionList;
-    }
+    public List<RoleDTO> getObject() {return roleRepository.getObject();}
 
     public RoleDTO getObject(String id)  {
         Optional<Role> optionalEntity = roleRepository.findById(id);

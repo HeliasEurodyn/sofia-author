@@ -1,9 +1,9 @@
 package com.crm.sofia.repository.user;
 
-import com.crm.sofia.model.list.ListView;
+import com.crm.sofia.dto.user.RoleDTO;
 import com.crm.sofia.model.user.Role;
-import com.crm.sofia.model.user.RoleView;
 import com.crm.sofia.repository.common.BaseRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -15,5 +15,6 @@ public interface RoleRepository extends BaseRepository<Role> {
 
     List<Role> findAllByOrderByModifiedOn();
 
-    List<RoleView> findAllProjectedByOrderByModifiedOn();
+    @Query("SELECT  new com.crm.sofia.dto.user.RoleDTO(r.id,r.name) FROM Role r ORDER BY r.modifiedOn ASC ")
+    List<RoleDTO> getObject();
 }
