@@ -1,5 +1,6 @@
 package com.crm.sofia.services.menu;
 
+import com.crm.sofia.dto.common.BaseDTO;
 import com.crm.sofia.dto.menu.MenuDTO;
 import com.crm.sofia.dto.menu.MenuFieldDTO;
 import com.crm.sofia.exception.DoesNotExistException;
@@ -31,10 +32,10 @@ public class MenuService {
 
 
     public List<MenuDTO> getObject() {
-        List<Menu> entites = this.menuRepository.findAll();
-        entites = entites.stream().sorted((o1, o2) -> o1.getCreatedOn().compareTo(o2.getCreatedOn()))
+        List<MenuDTO> menuList = this.menuRepository.getObject();
+        menuList = menuList.stream().sorted(Comparator.comparing(BaseDTO::getCreatedOn))
                 .collect(Collectors.toList());
-        return this.menuMapper.map(entites);
+        return menuList;
     }
 
     public MenuDTO getObject(String id, String languageId) {

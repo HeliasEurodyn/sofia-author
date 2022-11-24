@@ -1,5 +1,6 @@
 package com.crm.sofia.repository.menu;
 
+import com.crm.sofia.dto.menu.MenuDTO;
 import com.crm.sofia.model.menu.Menu;
 import com.crm.sofia.repository.common.BaseRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -20,4 +21,7 @@ public interface MenuRepository extends BaseRepository<Menu> {
     Optional<Menu> findTreeById(@Param("id") String id);
 
     Menu findFirstByName(String author_menu);
+
+    @Query("SELECT new com.crm.sofia.dto.menu.MenuDTO(m.id,m.name,m.createdOn) FROM Menu m")
+    List<MenuDTO> getObject();
 }

@@ -84,8 +84,7 @@ public class MenuServiceTest {
 
     @Test
     public void getObjectTest() {
-        given(menuRepository.findAll()).willReturn(menuList);
-        given(menuMapper.map(ArgumentMatchers.any(List.class))).willReturn(List.of(menuDTO));
+        given(menuRepository.getObject()).willReturn(Collections.singletonList(menuDTO));
         List<MenuDTO> list = menuService.getObject();
         assertThat(list).isNotEmpty();
         assertThat(list.size()).isEqualTo(1);

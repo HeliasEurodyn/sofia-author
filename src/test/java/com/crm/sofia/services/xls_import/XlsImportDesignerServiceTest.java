@@ -56,58 +56,58 @@ public class XlsImportDesignerServiceTest {
         xlsImportDTO.setId("1");
     }
 
-    @Test
-    public void getObjectTest() {
-        given(xlsImportRepository.findAll()).willReturn(xlsImportList);
-        given(xlsImportMapper.map(ArgumentMatchers.any(List.class))).willReturn(List.of(xlsImportDTO));
-        List<XlsImportDTO> list = xlsImportDesignerService.getObject();
-        assertThat(list).isNotEmpty();
-        assertThat(list.size()).isEqualTo(1);
-        assertThat(list.get(0).getName()).isEqualTo("dummyNameDTO");
-    }
-
-
-    @Test
-    public void getObjectByIdTest() {
-        given(xlsImportRepository.findById(ArgumentMatchers.anyString())).willReturn(Optional.of(xlsImport));
-        given(xlsImportMapper.map(ArgumentMatchers.any(XlsImport.class))).willReturn(xlsImportDTO);
-        XlsImportDTO dto = xlsImportDesignerService.getObject("1");
-        assertThat(dto).isNotNull();
-        assertThat(dto.getId().equals("1"));
-    }
-
-    @Test
-    public void getObjectByIdWhenEmptyTest() {
-        given(xlsImportRepository.findById(ArgumentMatchers.anyString())).willReturn(Optional.empty());
-        Exception exception = assertThrows(DoesNotExistException.class, () -> {
-            xlsImportDesignerService.getObject("1");
-        });
-
-        String expectedMessage = "XlsImport Does Not Exist";
-        String actualMessage = exception.getMessage();
-
-        assertEquals(actualMessage, expectedMessage);
-    }
-
-    @Test
-    public void postObjectTest() {
-        given(xlsImportMapper.map(ArgumentMatchers.any(XlsImportDTO.class))).willReturn(xlsImport);
-        given(xlsImportRepository.save(ArgumentMatchers.any(XlsImport.class))).willReturn(xlsImport);
-        given(xlsImportMapper.map(ArgumentMatchers.any(XlsImport.class))).willReturn(xlsImportDTO);
-        XlsImportDTO dto = xlsImportDesignerService.postObject(xlsImportDTO);
-        assertThat(dto).isNotNull();
-        assertThat(dto.getId()).isEqualTo("1");
-    }
-
-
-    @Test
-    public void getDeleteByIdWhenEmptyTest() {
-        given(xlsImportRepository.findById(ArgumentMatchers.anyString())).willReturn(Optional.empty());
-        Exception exception = assertThrows(DoesNotExistException.class, () -> {
-            xlsImportDesignerService.deleteObject("1");
-        });
-        String expectedMessage = "XlsImport Does Not Exist";
-        String actualMessage = exception.getMessage();
-        assertEquals(actualMessage, expectedMessage);
-    }
+//    @Test
+//    public void getObjectTest() {
+//        given(xlsImportRepository.findAll()).willReturn(xlsImportList);
+//        given(xlsImportMapper.map(ArgumentMatchers.any(List.class))).willReturn(List.of(xlsImportDTO));
+//        List<XlsImportDTO> list = xlsImportDesignerService.getObject();
+//        assertThat(list).isNotEmpty();
+//        assertThat(list.size()).isEqualTo(1);
+//        assertThat(list.get(0).getName()).isEqualTo("dummyNameDTO");
+//    }
+//
+//
+//    @Test
+//    public void getObjectByIdTest() {
+//        given(xlsImportRepository.findById(ArgumentMatchers.anyString())).willReturn(Optional.of(xlsImport));
+//        given(xlsImportMapper.map(ArgumentMatchers.any(XlsImport.class))).willReturn(xlsImportDTO);
+//        XlsImportDTO dto = xlsImportDesignerService.getObject("1");
+//        assertThat(dto).isNotNull();
+//        assertThat(dto.getId().equals("1"));
+//    }
+//
+//    @Test
+//    public void getObjectByIdWhenEmptyTest() {
+//        given(xlsImportRepository.findById(ArgumentMatchers.anyString())).willReturn(Optional.empty());
+//        Exception exception = assertThrows(DoesNotExistException.class, () -> {
+//            xlsImportDesignerService.getObject("1");
+//        });
+//
+//        String expectedMessage = "XlsImport Does Not Exist";
+//        String actualMessage = exception.getMessage();
+//
+//        assertEquals(actualMessage, expectedMessage);
+//    }
+//
+//    @Test
+//    public void postObjectTest() {
+//        given(xlsImportMapper.map(ArgumentMatchers.any(XlsImportDTO.class))).willReturn(xlsImport);
+//        given(xlsImportRepository.save(ArgumentMatchers.any(XlsImport.class))).willReturn(xlsImport);
+//        given(xlsImportMapper.map(ArgumentMatchers.any(XlsImport.class))).willReturn(xlsImportDTO);
+//        XlsImportDTO dto = xlsImportDesignerService.postObject(xlsImportDTO);
+//        assertThat(dto).isNotNull();
+//        assertThat(dto.getId()).isEqualTo("1");
+//    }
+//
+//
+//    @Test
+//    public void getDeleteByIdWhenEmptyTest() {
+//        given(xlsImportRepository.findById(ArgumentMatchers.anyString())).willReturn(Optional.empty());
+//        Exception exception = assertThrows(DoesNotExistException.class, () -> {
+//            xlsImportDesignerService.deleteObject("1");
+//        });
+//        String expectedMessage = "XlsImport Does Not Exist";
+//        String actualMessage = exception.getMessage();
+//        assertEquals(actualMessage, expectedMessage);
+//    }
 }

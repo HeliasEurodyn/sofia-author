@@ -9,6 +9,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
+import java.time.Instant;
 import java.util.List;
 
 @Data
@@ -28,4 +29,10 @@ public class MenuDTO extends BaseDTO {
     private List<AccessControlDTO> accessControls;
 
     private List<MenuTranslationDTO> translations;
+
+    public MenuDTO(String id, String name, Instant createdOn) {
+        this.setId(id);
+        this.name = name;
+        this.setCreatedOn(createdOn);
+    }
 }
