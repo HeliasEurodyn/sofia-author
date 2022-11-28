@@ -56,4 +56,10 @@ public class UserDTO extends BaseDTO {
 
     private LanguageDTO currentLanguage;
 
+    public UserDTO(String id ,String username, String email, AppConstants.Types.UserStatus status) {
+        this.setId(id);
+        this.username = username;
+        this.email = email;
+        this.status = status;
+    }
 }

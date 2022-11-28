@@ -69,8 +69,8 @@ public class UserService {
     }
 
     public List<UserDTO> getAllUsers() {
-        List<User> users = userRepository.findAllByStatusIsNotLikeOrderByCreatedOn(AppConstants.Types.UserStatus.deleted);
-        return userMapper.mapUsersToDtos(users);
+        List<UserDTO> users = userRepository.getAllUsers(AppConstants.Types.UserStatus.deleted);
+        return users;
     }
 
     public UserDTO getUser(String id) {
