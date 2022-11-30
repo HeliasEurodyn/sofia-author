@@ -17,10 +17,7 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -60,8 +57,7 @@ public class ChartDesignerServiceTest {
 
     @Test
     public void getObjectTest() {
-        given(chartRepository.findAll()).willReturn(chartList);
-        given(chartMapper.map(ArgumentMatchers.any(List.class))).willReturn(List.of(chartDTO));
+        given(chartRepository.getObject()).willReturn(Collections.singletonList(chartDTO));
         List<ChartDTO> list = chartDesignerService.getObject();
         assertThat(list).isNotEmpty();
         assertThat(list.size()).isEqualTo(1);

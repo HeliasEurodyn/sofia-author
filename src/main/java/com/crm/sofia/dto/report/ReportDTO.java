@@ -9,6 +9,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
+import java.time.Instant;
 import java.util.List;
 
 @Data
@@ -36,4 +37,11 @@ public class ReportDTO extends BaseDTO {
     private Boolean accessControlEnabled;
 
     private List<AccessControlDTO> accessControls;
+
+    public ReportDTO(String id, String code, String name, Instant createdOn) {
+        this.setId(id);
+        this.code = code;
+        this.name = name;
+        this.setCreatedOn(createdOn);
+    }
 }

@@ -9,6 +9,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
+import java.time.Instant;
 import java.util.List;
 
 @Data
@@ -40,4 +41,10 @@ public class InfoCardDTO extends BaseDTO {
     private Integer executionInterval;
 
     private List<ListScriptDTO> scripts;
+
+    public InfoCardDTO(String id, String title, Instant createdOn) {
+        this.setId(id);
+        this.title = title;
+        this.setCreatedOn(createdOn);
+    }
 }

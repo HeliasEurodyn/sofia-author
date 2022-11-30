@@ -1,5 +1,6 @@
 package com.crm.sofia.repository.info_card;
 
+import com.crm.sofia.dto.info_card.InfoCardDTO;
 import com.crm.sofia.model.info_card.InfoCard;
 import com.crm.sofia.repository.common.BaseRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -26,6 +27,8 @@ public interface InfoCardRepository extends BaseRepository<InfoCard> {
     @Modifying
     @Query(value = "UPDATE InfoCard SET script = :script , scriptMin = :scriptMin  WHERE id = :id")
     void updateScripts(@Param("id") String id, @Param("script") String script , @Param("scriptMin") String scriptMin);
+    @Query("SELECT new com.crm.sofia.dto.info_card.InfoCardDTO(i.id,i.title,i.createdOn) FROM InfoCard i")
+    List<InfoCardDTO> getObject();
 
 
 }

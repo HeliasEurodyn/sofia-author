@@ -23,7 +23,7 @@ public class AppViewController {
 
     @GetMapping
     List<AppViewDTO> getObject() {
-        return this.appViewService.getObject();
+        return this.appViewService.getObjectAppView();
     }
 
     @GetMapping(path = "/by-id")

@@ -73,9 +73,9 @@ public class AppViewService {
     }
 
 
-    public List<AppViewDTO> getObject() {
-        List<PersistEntity> views = this.appViewRepository.findByEntitytypeOrderByModifiedOn("AppView");
-        return this.appViewMapper.map(views);
+    public List<AppViewDTO> getObjectAppView() {
+        List<AppViewDTO> viewsList = this.appViewRepository.getObjectAppView("AppView");
+        return viewsList;
     }
 
     public AppViewDTO getObject(String id) {

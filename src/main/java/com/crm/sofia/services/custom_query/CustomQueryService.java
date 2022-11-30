@@ -39,8 +39,8 @@ public class CustomQueryService {
     }
 
     public List<CustomQueryDTO> getObject() {
-        List<CustomQuery> entities = customQueryRepository.findAll();
-        return customQueryMapper.map(entities);
+        List<CustomQueryDTO> customQueryList = customQueryRepository.getObject();
+        return customQueryList;
     }
 
     public CustomQueryDTO getObject(String id) {

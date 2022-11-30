@@ -17,6 +17,7 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -59,8 +60,7 @@ public class LanguageDesignerServiceTest {
 
     @Test
     public void getObjectTest() {
-        given(languageRepository.findAll()).willReturn(languageList);
-        given(languageMapper.map(ArgumentMatchers.any(List.class))).willReturn(List.of(languageDTO));
+        given(languageRepository.getObject()).willReturn(Collections.singletonList(languageDTO));
         List<LanguageDTO> list = languageDesignerService.getObject();
         assertThat(list).isNotEmpty();
         assertThat(list.size()).isEqualTo(1);

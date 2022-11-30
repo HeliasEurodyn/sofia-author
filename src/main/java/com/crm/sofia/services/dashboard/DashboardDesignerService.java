@@ -25,8 +25,8 @@ public class DashboardDesignerService {
 
 
     public List<DashboardDTO> getObject() {
-        List<Dashboard> dashboards = this.dashboardRepository.findAll();
-        return this.dashboardMapper.map(dashboards);
+        List<DashboardDTO> dashboardsList = this.dashboardRepository.getObject();
+        return dashboardsList;
     }
 
     public DashboardDTO getObject(String id) {

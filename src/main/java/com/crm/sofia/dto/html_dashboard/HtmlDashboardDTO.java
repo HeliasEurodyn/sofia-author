@@ -10,7 +10,6 @@ import lombok.experimental.Accessors;
 
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Accessors(chain = true)
@@ -22,4 +21,9 @@ public class HtmlDashboardDTO extends BaseDTO {
 
     private String html;
 
+    public HtmlDashboardDTO(String id,String code, String name) {
+        this.setId(id);
+        this.code = code;
+        this.name = name;
+    }
 }

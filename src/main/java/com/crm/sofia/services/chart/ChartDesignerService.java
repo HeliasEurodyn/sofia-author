@@ -49,8 +49,8 @@ public class ChartDesignerService {
     }
 
     public List<ChartDTO> getObject() {
-        List<Chart> charts = this.chartRepository.findAll();
-        return this.chartMapper.map(charts);
+        List<ChartDTO> chartsList = this.chartRepository.getObject();
+        return chartsList;
     }
 
     public ChartDTO getObject(String id) {

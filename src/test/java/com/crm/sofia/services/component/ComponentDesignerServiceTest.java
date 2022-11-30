@@ -16,10 +16,7 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -60,9 +57,8 @@ public class ComponentDesignerServiceTest {
 
     @Test
     public void getListTest() {
-        given(componentRepository.findAll()).willReturn(componentList);
-        given(componentMapper.map(ArgumentMatchers.any(List.class))).willReturn(List.of(componentDTO));
-        List<ComponentDTO> list = componentDesignerService.getList();
+        given(componentRepository.getObject()).willReturn(Collections.singletonList(componentDTO));
+        List<ComponentDTO> list = componentDesignerService.getObject();
         assertThat(list).isNotEmpty();
         assertThat(list.size()).isEqualTo(1);
         assertThat(list.get(0).getName()).isEqualTo("dummyNameDTO");

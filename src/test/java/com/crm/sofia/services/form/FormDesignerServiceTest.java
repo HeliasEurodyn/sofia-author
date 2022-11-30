@@ -81,8 +81,7 @@ public class FormDesignerServiceTest {
 
     @Test
     public void getObjectTest() {
-        given(formRepository.findAllByOrderByModifiedOn()).willReturn(formEntityList);
-        given(formMapper.mapEntitiesForList(ArgumentMatchers.any(List.class))).willReturn(formDTOList);
+        given(formRepository.getObject()).willReturn(Collections.singletonList(formDTO));
         List<FormDTO> list = formDesignerService.getObject();
         assertThat(list).isNotEmpty();
         assertThat(list.size()).isEqualTo(1);

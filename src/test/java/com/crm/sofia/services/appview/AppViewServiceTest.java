@@ -14,6 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -74,9 +75,8 @@ public class AppViewServiceTest {
 
     @Test
     public void getObjectTest() {
-        given(appViewRepository.findByEntitytypeOrderByModifiedOn(ArgumentMatchers.anyString())).willReturn(persistEntityList);
-        given(appViewMapper.map(ArgumentMatchers.any(List.class))).willReturn(List.of(appViewDTO));
-        List<AppViewDTO> list = appViewService.getObject();
+        given(appViewRepository.getObjectAppView(ArgumentMatchers.anyString())).willReturn(Collections.singletonList(appViewDTO));
+        List<AppViewDTO> list = appViewService.getObjectAppView();
         assertThat(list).isNotNull();
         assertThat(list.size()).isEqualTo(1);
         assertThat(list.get(0).getName()).isEqualTo("Frodo Baggins");

@@ -34,8 +34,8 @@ public class XlsImportDesignerService {
     }
 
     public List<XlsImportDTO> getObject() {
-        List<XlsImport> charts = this.xlsImportRepository.findAll();
-        return this.xlsImportMapper.map(charts);
+        List<XlsImportDTO> chartsList = this.xlsImportRepository.getObject();
+        return chartsList;
     }
 
     public XlsImportDTO getObject(String id) {

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 import lombok.experimental.Accessors;
 
+import java.time.Instant;
 import java.util.List;
 
 @Getter
@@ -31,4 +32,11 @@ public class TableDTO extends BaseDTO {
 
     private String entitytype;
 
+    public TableDTO(String id,String name,Instant createdOn) {
+        this.setId(id);
+        this.name = name;
+        this.setCreatedOn(createdOn);
+
+
+    }
 }

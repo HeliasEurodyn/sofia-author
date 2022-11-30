@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 import lombok.experimental.Accessors;
 
+import java.time.Instant;
 import java.util.List;
 
 @Getter
@@ -36,4 +37,11 @@ public class XlsImportDTO extends BaseDTO {
     private Boolean accessControlEnabled;
 
     private List<AccessControlDTO> accessControls;
+
+    public XlsImportDTO(String id, String name, String description, Instant createdOn) {
+        this.setId(id);
+        this.name = name;
+        this.description = description;
+        this.setCreatedOn(createdOn);
+    }
 }

@@ -42,8 +42,8 @@ public class ReportDesignerService {
 
 
     public List<ReportDTO> getObject() {
-        List<Report> entites = this.reportRepository.findAll();
-        return this.reportMapper.map(entites);
+        List<ReportDTO> reportList = this.reportRepository.getObject();
+        return reportList;
     }
 
     public ReportDTO getObject(String id) {

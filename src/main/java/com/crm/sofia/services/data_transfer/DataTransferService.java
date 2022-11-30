@@ -137,8 +137,8 @@ public class DataTransferService {
 
 
     public List<DataTransferDTO> getObject() {
-        List<DataTransfer> entities = dataTransferRepository.findAll();
-        return dataTransferMapper.map(entities);
+        List<DataTransferDTO> dataTransferList = dataTransferRepository.getObject();
+        return dataTransferList;
     }
 
     public DataTransferDTO getObject(String id) {

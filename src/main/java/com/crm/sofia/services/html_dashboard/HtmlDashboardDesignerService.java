@@ -26,8 +26,8 @@ public class HtmlDashboardDesignerService {
 
 
     public List<HtmlDashboardDTO> getObject() {
-        List<HtmlDashboard> entities = htmlDashboardRepository.findAll();
-        return htmlDashboardMapper.map(entities);
+        List<HtmlDashboardDTO> htmlDashboardList = htmlDashboardRepository.getObject();
+        return htmlDashboardList;
     }
 
     public HtmlDashboardDTO getObject(String id) {

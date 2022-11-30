@@ -74,8 +74,7 @@ public class ReportDesignerServiceTest {
 
     @Test
     public void getObjectTest() {
-        given(reportRepository.findAll()).willReturn(reportList);
-        given(reportMapper.map(ArgumentMatchers.any(List.class))).willReturn(List.of(reportDTO));
+        given(reportRepository.getObject()).willReturn(Collections.singletonList(reportDTO));
         List<ReportDTO> list = reportDesignerService.getObject();
         assertThat(list).isNotEmpty();
         assertThat(list.size()).isEqualTo(1);

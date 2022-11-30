@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
+import java.time.Instant;
 import java.util.List;
 
 @Data
@@ -47,4 +48,16 @@ public class FormDTO extends BaseDTO {
     private Long instanceVersion;
 
     private List<AccessControlDTO> accessControls;
+
+    public FormDTO(String id, String name, Instant createdOn,String jsonUrl,String componentId,String componentName) {
+        this.setId(id);
+        this.name = name;
+        this.setCreatedOn(createdOn);
+        this.setJsonUrl(jsonUrl);
+        ComponentDTO componentDTO = new ComponentDTO();
+        componentDTO.setId(componentId);
+        componentDTO.setName(componentName);
+        this.setComponent(componentDTO);
+
+    }
 }

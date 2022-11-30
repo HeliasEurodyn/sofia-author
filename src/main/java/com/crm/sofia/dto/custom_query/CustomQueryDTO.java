@@ -32,4 +32,11 @@ public class CustomQueryDTO  extends BaseDTO {
     private Boolean accessControlEnabled;
 
     private List<AccessControlDTO> accessControls;
+
+    public CustomQueryDTO(String id,String code, String name, String query) {
+        this.setId(id);
+        this.code = code;
+        this.name = name;
+        this.query = query;
+    }
 }

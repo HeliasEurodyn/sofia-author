@@ -1,5 +1,6 @@
 package com.crm.sofia.repository.form;
 
+import com.crm.sofia.dto.form.FormDTO;
 import com.crm.sofia.model.form.FormEntity;
 import com.crm.sofia.repository.common.BaseRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -60,5 +61,8 @@ public interface FormRepository extends BaseRepository<FormEntity> {
     @Modifying
     @Query(value = "UPDATE FormEntity SET script = :script , scriptMin = :scriptMin  WHERE id = :id")
     void updateScripts(@Param("id") String id, @Param("script") String script , @Param("scriptMin") String scriptMin);
+
+    @Query("SELECT new com.crm.sofia.dto.form.FormDTO(f.id, f.name, f.createdOn,f.jsonUrl, c.id, c.name) FROM FormEntity f INNER JOIN f.component c ORDER BY f.modifiedOn ASC")
+    List<FormDTO> getObject();
 
 }

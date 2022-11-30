@@ -16,10 +16,7 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -62,8 +59,7 @@ public class InfoCardDesignerServiceTest {
 
     @Test
     public void getObjectTest() {
-        given(infoCardRepository.findAll()).willReturn(infoCardList);
-        given(infoCardMapper.map(ArgumentMatchers.any(List.class))).willReturn(List.of(infoCardDTO));
+        given(infoCardRepository.getObject()).willReturn(Collections.singletonList(infoCardDTO));
         List<InfoCardDTO> list = infoCardDesignerService.getObject();
         assertThat(list).isNotEmpty();
         assertThat(list.size()).isEqualTo(1);

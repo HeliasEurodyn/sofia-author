@@ -1,5 +1,6 @@
 package com.crm.sofia.services.component;
 
+import com.crm.sofia.dto.common.BaseDTO;
 import com.crm.sofia.dto.component.ComponentDTO;
 import com.crm.sofia.dto.component.ComponentPersistEntityDTO;
 import com.crm.sofia.dto.component.ComponentPersistEntityFieldDTO;
@@ -35,12 +36,12 @@ public class ComponentDesignerService {
 
 
 
-    public List<ComponentDTO> getList() {
-        List<Component> entities = this.componentRepository.findAll();
-        entities = entities.stream().sorted(Comparator.comparing(MainEntity::getCreatedOn))
+    public List<ComponentDTO> getObject() {
+        List<ComponentDTO> componentList = this.componentRepository.getObject();
+        componentList = componentList.stream().sorted(Comparator.comparing(BaseDTO::getCreatedOn))
                 .collect(Collectors.toList());
 
-        return this.componentMapper.map(entities);
+        return componentList;
     }
 
     public ComponentDTO getObject(String id) {

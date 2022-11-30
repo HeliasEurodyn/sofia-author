@@ -16,6 +16,7 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -58,8 +59,7 @@ public class SearchDesignerServiceTest {
 
     @Test
     public void getObjectTest() {
-        given(searchRepository.findAll()).willReturn(searchList);
-        given(searchMapper.map(ArgumentMatchers.any(List.class))).willReturn(List.of(searchDTO));
+        given(searchRepository.getObject()).willReturn(Collections.singletonList(searchDTO));
         List<SearchDTO> list = searchDesignerService.getObject();
         assertThat(list).isNotEmpty();
         assertThat(list.size()).isEqualTo(1);

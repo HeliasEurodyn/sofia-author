@@ -47,9 +47,9 @@ public class ViewService {
     }
 
 
-    public List<ViewDTO> getObject() {
-        List<PersistEntity> views = this.persistEntityRepository.findByEntitytypeOrderByModifiedOn("View");
-        return this.viewMapper.map(views);
+    public List<ViewDTO> getObjectView() {
+        List<ViewDTO> viewsList = this.persistEntityRepository.getObjectView("View");
+        return viewsList;
     }
 
     public ViewDTO getObject(String id) {

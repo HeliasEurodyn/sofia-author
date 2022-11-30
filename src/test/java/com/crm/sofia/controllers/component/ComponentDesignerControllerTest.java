@@ -60,7 +60,7 @@ public class ComponentDesignerControllerTest {
     @Test
     void getListTest() throws Exception {
 
-        given(componentDesignerService.getList()).willReturn(componentDTOList);
+        given(componentDesignerService.getObject()).willReturn(componentDTOList);
         MockHttpServletResponse response = mvc.perform(get("/component-designer")
                 .accept(MediaType.APPLICATION_JSON)).andReturn().getResponse();
         assertEquals(response.getStatus(), HttpStatus.OK.value());

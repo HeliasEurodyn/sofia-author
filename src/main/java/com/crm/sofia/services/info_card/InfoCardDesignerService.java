@@ -38,10 +38,9 @@ public class InfoCardDesignerService {
 
 
     public List<InfoCardDTO> getObject() {
-        List<InfoCard> infoCards = this.infoCardRepository.findAll();
-        List<InfoCardDTO> infoCardDTOS = this.infoCardMapper.map(infoCards);
-        infoCardDTOS.forEach(infoCardDTO -> infoCardDTO.setQuery(""));
-        return infoCardDTOS;
+        List<InfoCardDTO> infoCardList = this.infoCardRepository.getObject();
+        infoCardList.forEach(infoCardDTO -> infoCardDTO.setQuery(""));
+        return infoCardList;
     }
 
     public InfoCardDTO getObject(String id) {

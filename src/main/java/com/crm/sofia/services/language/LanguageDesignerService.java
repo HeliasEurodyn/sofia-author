@@ -25,8 +25,8 @@ public class LanguageDesignerService {
     private JWTService jwtService;
 
     public List<LanguageDTO> getObject() {
-        List<Language> entities = languageRepository.findAll();
-        return languageMapper.map(entities);
+        List<LanguageDTO> languageList = languageRepository.getObject();
+        return languageList;
     }
 
     public LanguageDTO getObject(String id) {

@@ -17,6 +17,7 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -58,8 +59,7 @@ public class HtmlDashboardDesignerServiceTest {
 
     @Test
     public void getObjectTest() {
-        given(htmlDashboardRepository.findAll()).willReturn(htmlDashboardList);
-        given(htmlDashboardMapper.map(ArgumentMatchers.any(List.class))).willReturn(List.of(htmlDashboardDTO));
+        given(htmlDashboardRepository.getObject()).willReturn(Collections.singletonList(htmlDashboardDTO));
         List<HtmlDashboardDTO> list = htmlDashboardDesignerService.getObject();
         assertThat(list).isNotEmpty();
         assertThat(list.size()).isEqualTo(1);

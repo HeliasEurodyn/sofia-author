@@ -16,10 +16,7 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -59,8 +56,7 @@ public class DataTransferServiceTest {
 
     @Test
     public void getObjectTest() {
-        given(dataTransferRepository.findAll()).willReturn(dataTransferList);
-        given(dataTransferMapper.map(ArgumentMatchers.any(List.class))).willReturn(List.of(dataTransferDTO));
+        given(dataTransferRepository.getObject()).willReturn(Collections.singletonList(dataTransferDTO));
         List<DataTransferDTO> list = dataTransferService.getObject();
         assertThat(list).isNotEmpty();
         assertThat(list.size()).isEqualTo(1);

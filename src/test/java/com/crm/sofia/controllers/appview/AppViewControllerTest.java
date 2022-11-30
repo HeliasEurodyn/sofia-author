@@ -85,7 +85,7 @@ public class AppViewControllerTest {
     @Test
     void getObjectTest() throws Exception {
 
-        given(appViewService.getObject()).willReturn(appViewDTOList);
+        given(appViewService.getObjectAppView()).willReturn(appViewDTOList);
         MockHttpServletResponse response = mvc.perform(get("/appview")
                 .accept(MediaType.APPLICATION_JSON)).andReturn().getResponse();
         assertEquals(response.getStatus(), HttpStatus.OK.value());

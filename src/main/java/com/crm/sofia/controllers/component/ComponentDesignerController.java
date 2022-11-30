@@ -27,7 +27,7 @@ public class ComponentDesignerController {
 
     @GetMapping
     List<ComponentDTO> getObject() {
-        return this.componentDesignerService.getList();
+        return this.componentDesignerService.getObject();
     }
 
     @GetMapping(path = "/by-id")

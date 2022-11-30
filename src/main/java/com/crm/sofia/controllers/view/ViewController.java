@@ -23,7 +23,7 @@ public class ViewController {
 
     @GetMapping
     List<ViewDTO> getObject() {
-        return this.viewService.getObject();
+        return this.viewService.getObjectView();
     }
 
     @GetMapping(path = "/generate-view-fields")

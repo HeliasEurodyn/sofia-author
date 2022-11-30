@@ -29,8 +29,8 @@ public class SearchDesignerService {
 
 
     public List<SearchDTO> getObject() {
-        List<Search> searcies = this.searchRepository.findAll();
-        return this.searchMapper.map(searcies);
+        List<SearchDTO> searciesList = this.searchRepository.getObject();
+        return searciesList;
     }
 
     public SearchDTO getObject(String id) {

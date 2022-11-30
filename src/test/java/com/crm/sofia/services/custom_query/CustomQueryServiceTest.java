@@ -16,6 +16,7 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -58,8 +59,7 @@ public class CustomQueryServiceTest {
 
     @Test
     public void getObjectTest() {
-        given(customQueryRepository.findAll()).willReturn(customQueryList);
-        given(customQueryMapper.map(ArgumentMatchers.any(List.class))).willReturn(List.of(customQueryDto));
+        given(customQueryRepository.getObject()).willReturn(Collections.singletonList(customQueryDto));
         List<CustomQueryDTO> list = customQueryService.getObject();
         assertThat(list).isNotNull();
         assertThat(list.size()).isEqualTo(1);

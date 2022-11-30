@@ -26,6 +26,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
+import java.time.Instant;
 import java.util.List;
 
 @Data
@@ -84,4 +85,9 @@ public class DataTransferDTO extends BaseDTO {
     List<RoleDTO> roles;
     List<UserDTO> users;
 
+    public DataTransferDTO(String id, String name, Instant createdOn) {
+        this.setId(id);
+        this.name = name;
+        this.setCreatedOn(createdOn);
+    }
 }

@@ -24,7 +24,7 @@ public class TableController {
 
     @GetMapping
     List<TableDTO> getObject() {
-        return this.tableService.getObject();
+        return this.tableService.getObjectTable();
     }
 
     @PostMapping

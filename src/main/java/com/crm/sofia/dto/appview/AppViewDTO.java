@@ -8,6 +8,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
+import java.time.Instant;
 import java.util.List;
 
 @Data
@@ -32,4 +33,10 @@ public class AppViewDTO extends BaseDTO {
 
     private String entitytype;
 
+    public AppViewDTO(String id, String name, Instant createdOn) {
+        this.setId(id);
+        this.name = name;
+        this.setCreatedOn(createdOn);
+
+    }
 }

@@ -1,5 +1,6 @@
 package com.crm.sofia.services.table;
 
+import com.crm.sofia.dto.persistEntity.PersistEntityDTO;
 import com.crm.sofia.dto.table.TableDTO;
 import com.crm.sofia.dto.table.TableFieldDTO;
 import com.crm.sofia.exception.DoesNotExistException;
@@ -63,13 +64,9 @@ public class TableService {
         return this.tableMapper.map(entity);
     }
 
-    public List<TableDTO> getObject() {
-        List<PersistEntity> tables = this.persistEntityRepository.findByEntitytypeOrderByModifiedOn("Table");
-        List<TableDTO> dtos = this.tableMapper.map(tables);
-        dtos.forEach(tableDTO -> {
-            this.shortTableFields(tableDTO);
-        });
-        return dtos;
+    public List<TableDTO> getObjectTable() {
+        List<TableDTO> tablesList = this.persistEntityRepository.getObjectTable("Table");
+        return tablesList;
     }
 
     public TableDTO getObject(String id) {
