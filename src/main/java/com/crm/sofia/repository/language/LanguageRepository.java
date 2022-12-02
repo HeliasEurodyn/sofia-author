@@ -10,6 +10,6 @@ import java.util.List;
 
 @Repository
 public interface LanguageRepository extends BaseRepository<Language> {
-    @Query("SELECT new com.crm.sofia.dto.language.LanguageDTO(l.id,l.code,l.name) FROM Language l")
+    @Query("SELECT new com.crm.sofia.dto.language.LanguageDTO(l.id,l.code,l.name) FROM Language l ORDER BY l.modifiedOn DESC")
     List<LanguageDTO> getObject();
 }

@@ -64,7 +64,7 @@ public interface ListRepository extends BaseRepository<ListEntity> {
             " WHERE l.jsonUrl <> '' AND l.jsonUrl is not null ")
     public List<ListEntity> getIdsByExistingJsonUrls();
 
-    @Query("SELECT new com.crm.sofia.dto.list.ListDTO(l.id, l.name, l.createdOn, c.id, c.name) FROM ListEntity l INNER JOIN l.component c ORDER BY l.modifiedOn ASC")
+    @Query("SELECT new com.crm.sofia.dto.list.ListDTO(l.id, l.name, l.createdOn, c.id, c.name) FROM ListEntity l INNER JOIN l.component c ORDER BY l.modifiedOn DESC")
     List<ListDTO> getObject();
 
 }

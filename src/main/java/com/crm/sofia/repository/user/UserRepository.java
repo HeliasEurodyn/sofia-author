@@ -61,7 +61,7 @@ public interface UserRepository extends BaseRepository<User> {
 
 
     @Query("SELECT new com.crm.sofia.dto.user.UserDTO(u.id,u.username,u.email,u.status) FROM User u " +
-            "WHERE u.status <> :userStatus ORDER BY u.createdOn ASC")
+            "WHERE u.status <> :userStatus ORDER BY u.modifiedOn DESC")
     List<UserDTO> getAllUsers(AppConstants.Types.UserStatus userStatus);
 
 }

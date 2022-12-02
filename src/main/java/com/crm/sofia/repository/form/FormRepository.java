@@ -62,7 +62,7 @@ public interface FormRepository extends BaseRepository<FormEntity> {
     @Query(value = "UPDATE FormEntity SET script = :script , scriptMin = :scriptMin  WHERE id = :id")
     void updateScripts(@Param("id") String id, @Param("script") String script , @Param("scriptMin") String scriptMin);
 
-    @Query("SELECT new com.crm.sofia.dto.form.FormDTO(f.id, f.name, f.createdOn,f.jsonUrl, c.id, c.name) FROM FormEntity f INNER JOIN f.component c ORDER BY f.modifiedOn ASC")
+    @Query("SELECT new com.crm.sofia.dto.form.FormDTO(f.id, f.name, f.createdOn,f.jsonUrl, c.id, c.name) FROM FormEntity f INNER JOIN f.component c ORDER BY f.modifiedOn DESC")
     List<FormDTO> getObject();
 
 }

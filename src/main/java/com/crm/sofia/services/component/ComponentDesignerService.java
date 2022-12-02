@@ -15,6 +15,7 @@ import com.crm.sofia.model.persistEntity.PersistEntity;
 import com.crm.sofia.repository.component.ComponentPersistEntityRepository;
 import com.crm.sofia.repository.component.ComponentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,8 +39,6 @@ public class ComponentDesignerService {
 
     public List<ComponentDTO> getObject() {
         List<ComponentDTO> componentList = this.componentRepository.getObject();
-        componentList = componentList.stream().sorted(Comparator.comparing(BaseDTO::getCreatedOn))
-                .collect(Collectors.toList());
 
         return componentList;
     }

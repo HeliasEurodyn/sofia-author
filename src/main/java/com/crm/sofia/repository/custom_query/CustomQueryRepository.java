@@ -9,6 +9,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 @Repository
 public interface CustomQueryRepository extends BaseRepository<CustomQuery> {
-    @Query("SELECT new com.crm.sofia.dto.custom_query.CustomQueryDTO(c.id,c.code,c.name,c.query) FROM CustomQuery c")
+    @Query("SELECT new com.crm.sofia.dto.custom_query.CustomQueryDTO(c.id,c.code,c.name,c.query) FROM CustomQuery c ORDER BY c.modifiedOn DESC")
     List<CustomQueryDTO> getObject();
 }

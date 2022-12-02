@@ -33,8 +33,6 @@ public class MenuService {
 
     public List<MenuDTO> getObject() {
         List<MenuDTO> menuList = this.menuRepository.getObject();
-        menuList = menuList.stream().sorted(Comparator.comparing(BaseDTO::getCreatedOn))
-                .collect(Collectors.toList());
         return menuList;
     }
 
