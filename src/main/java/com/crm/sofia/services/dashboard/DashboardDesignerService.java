@@ -81,6 +81,20 @@ public class DashboardDesignerService {
     @Modifying
     public DashboardDTO postObject(DashboardDTO dto) {
         Dashboard dashboard = this.dashboardMapper.map(dto);
+        dashboard.getDashboardAreaList().forEach(dashboardArea -> {
+            dashboardArea.setId(null);
+            dashboardArea.getDashboardItemList().forEach(dashboardItem -> {
+                 dashboardItem.setId(null);
+            });
+        });
+        Dashboard createdDashboard = this.dashboardRepository.save(dashboard);
+        return this.dashboardMapper.map(createdDashboard);
+    }
+
+    @Transactional
+    @Modifying
+    public DashboardDTO putObject(DashboardDTO dto) {
+        Dashboard dashboard = this.dashboardMapper.map(dto);
         Dashboard createdDashboard = this.dashboardRepository.save(dashboard);
         return this.dashboardMapper.map(createdDashboard);
     }

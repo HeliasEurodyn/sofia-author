@@ -37,7 +37,7 @@ public class DashboardDesignerController {
 
     @PutMapping
     public DashboardDTO putObject(@RequestBody DashboardDTO dto) {
-        return this.dashboardDesignerService.postObject(dto);
+        return this.dashboardDesignerService.putObject(dto);
     }
 
     @DeleteMapping
