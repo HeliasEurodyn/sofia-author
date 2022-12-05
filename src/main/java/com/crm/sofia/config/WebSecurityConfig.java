@@ -72,8 +72,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authenticationEntryPoint(new RestAuthenticationEntryPoint())
                 .and()
                 .authorizeRequests()
-//               .antMatchers("*").permitAll();
-                .antMatchers("/", "/error",
+                .antMatchers("*").permitAll();
+               /* .antMatchers("/", "/error",
                         "/all",
                         "/auth/**",
                         "/settings/**",
@@ -96,8 +96,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         "/v3/api-docs.yaml",
                         "/swagger-ui/**",
                         "/swagger-ui.html"
-                ).permitAll()
-                .antMatchers(HttpMethod.GET,"/form/instance-version/**").hasAnyAuthority("unrestricted_role", "read_role")
+                ).permitAll()*/
+               /* .antMatchers(HttpMethod.GET,"/form/instance-version/**").hasAnyAuthority("unrestricted_role", "read_role")
                 .antMatchers(HttpMethod.GET,"/form/clone-data/**").hasAnyAuthority("unrestricted_role", "read_role")
                 .antMatchers(HttpMethod.GET,"/form/ui/**").hasAnyAuthority("unrestricted_role", "read_role")
                 .antMatchers(HttpMethod.GET,"/form/data/**").hasAnyAuthority("unrestricted_role", "read_role")
@@ -147,7 +147,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .accessTokenResponseClient(authorizationCodeTokenResponseClient())
                 .and()
                 .successHandler(oAuth2AuthenticationSuccessHandler)
-                .failureHandler(oAuth2AuthenticationFailureHandler);
+                .failureHandler(oAuth2AuthenticationFailureHandler);*/
 
         // Add our custom Token based authentication filter
         http.addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
