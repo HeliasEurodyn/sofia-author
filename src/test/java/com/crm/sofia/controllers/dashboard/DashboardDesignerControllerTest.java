@@ -92,7 +92,7 @@ public class DashboardDesignerControllerTest {
 
     @Test
     void putObjectTest() throws Exception {
-        given(dashboardDesignerService.postObject(any())).willReturn(dto);
+        given(dashboardDesignerService.putObject(any())).willReturn(dto);
         MockHttpServletResponse response = mvc.perform(put("/dashboard-designer")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(dto))
