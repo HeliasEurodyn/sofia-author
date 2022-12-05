@@ -23,6 +23,6 @@ public interface MenuRepository extends BaseRepository<Menu> {
 
     Menu findFirstByName(String author_menu);
 
-    @Query("SELECT new com.crm.sofia.dto.menu.MenuDTO(m.id,m.name,m.createdOn) FROM Menu m ORDER BY m.modifiedOn DESC")
+    @Query("SELECT new com.crm.sofia.dto.menu.MenuDTO(m.id,m.name,m.modifiedOn) FROM Menu m ORDER BY m.modifiedOn DESC")
     List<MenuDTO> getObject();
 }

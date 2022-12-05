@@ -16,6 +16,9 @@ public abstract class BaseDTO implements Serializable {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private String createdBy;
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private Instant modifiedOn;
+
     private Long version;
 
     private Long shortOrder;

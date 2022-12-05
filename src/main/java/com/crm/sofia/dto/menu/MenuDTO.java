@@ -30,9 +30,9 @@ public class MenuDTO extends BaseDTO {
 
     private List<MenuTranslationDTO> translations;
 
-    public MenuDTO(String id, String name, Instant createdOn) {
+    public MenuDTO(String id, String name, Instant modifiedOn) {
         this.setId(id);
         this.name = name;
-        this.setCreatedOn(createdOn);
+        this.setModifiedOn(modifiedOn);
     }
 }
