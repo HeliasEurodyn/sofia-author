@@ -33,10 +33,10 @@ public class AppViewDTO extends BaseDTO {
 
     private String entitytype;
 
-    public AppViewDTO(String id, String name, Instant createdOn) {
+    public AppViewDTO(String id, String name, Instant modifiedOn) {
         this.setId(id);
         this.name = name;
-        this.setCreatedOn(createdOn);
+        this.setModifiedOn(modifiedOn);
 
     }
 }

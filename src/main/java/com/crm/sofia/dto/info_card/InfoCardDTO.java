@@ -42,9 +42,9 @@ public class InfoCardDTO extends BaseDTO {
 
     private List<ListScriptDTO> scripts;
 
-    public InfoCardDTO(String id, String title, Instant createdOn) {
+    public InfoCardDTO(String id, String title, Instant modifiedOn) {
         this.setId(id);
         this.title = title;
-        this.setCreatedOn(createdOn);
+        this.setModifiedOn(modifiedOn);
     }
 }

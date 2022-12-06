@@ -38,10 +38,10 @@ public class XlsImportDTO extends BaseDTO {
 
     private List<AccessControlDTO> accessControls;
 
-    public XlsImportDTO(String id, String name, String description, Instant createdOn) {
+    public XlsImportDTO(String id, String name, String description, Instant modifiedOn) {
         this.setId(id);
         this.name = name;
         this.description = description;
-        this.setCreatedOn(createdOn);
+        this.setModifiedOn(modifiedOn);
     }
 }

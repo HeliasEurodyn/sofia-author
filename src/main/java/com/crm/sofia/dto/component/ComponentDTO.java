@@ -30,9 +30,9 @@ public class ComponentDTO extends BaseDTO {
 
     private List<AccessControlDTO> accessControls;
 
-    public ComponentDTO(String id, String name, Instant createdOn) {
+    public ComponentDTO(String id, String name, Instant modifiedOn) {
         this.setId(id);
         this.name = name;
-        this.setCreatedOn(createdOn);
+        this.setModifiedOn(modifiedOn);
     }
 }

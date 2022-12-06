@@ -49,10 +49,10 @@ public class FormDTO extends BaseDTO {
 
     private List<AccessControlDTO> accessControls;
 
-    public FormDTO(String id, String name, Instant createdOn,String jsonUrl,String componentId,String componentName) {
+    public FormDTO(String id, String name, Instant modifiedOn,String jsonUrl,String componentId,String componentName) {
         this.setId(id);
         this.name = name;
-        this.setCreatedOn(createdOn);
+        this.setModifiedOn(modifiedOn);
         this.setJsonUrl(jsonUrl);
         ComponentDTO componentDTO = new ComponentDTO();
         componentDTO.setId(componentId);

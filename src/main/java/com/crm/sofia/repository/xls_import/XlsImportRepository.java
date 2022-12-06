@@ -10,6 +10,6 @@ import java.util.List;
 
 @Repository
 public interface XlsImportRepository extends BaseRepository<XlsImport> {
-    @Query("SELECT new com.crm.sofia.dto.xls_import.XlsImportDTO(x.id,x.name,x.description,x.createdOn) FROM XlsImport x ORDER BY x.modifiedOn DESC")
+    @Query("SELECT new com.crm.sofia.dto.xls_import.XlsImportDTO(x.id,x.name,x.description,x.modifiedOn) FROM XlsImport x ORDER BY x.modifiedOn DESC")
     List<XlsImportDTO> getObject();
 }

@@ -15,7 +15,7 @@ public interface DataTransferRepository extends BaseRepository<DataTransfer> {
     @Query(" SELECT DISTINCT d.currentVersion FROM DataTransfer d " +
             " WHERE d.id =:id ")
     public Integer getCurrentVersion(@Param("id") String id);
-    @Query("SELECT new com.crm.sofia.dto.data_transfer.DataTransferDTO(d.id,d.name,d.createdOn) FROM DataTransfer d ORDER BY d.modifiedOn DESC")
+    @Query("SELECT new com.crm.sofia.dto.data_transfer.DataTransferDTO(d.id,d.name,d.modifiedOn) FROM DataTransfer d ORDER BY d.modifiedOn DESC")
     List<DataTransferDTO> getObject();
 
 }

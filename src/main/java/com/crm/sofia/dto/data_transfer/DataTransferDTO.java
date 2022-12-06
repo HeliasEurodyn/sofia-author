@@ -85,9 +85,9 @@ public class DataTransferDTO extends BaseDTO {
     List<RoleDTO> roles;
     List<UserDTO> users;
 
-    public DataTransferDTO(String id, String name, Instant createdOn) {
+    public DataTransferDTO(String id, String name, Instant modifiedOn) {
         this.setId(id);
         this.name = name;
-        this.setCreatedOn(createdOn);
+        this.setModifiedOn(modifiedOn);
     }
 }

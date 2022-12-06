@@ -28,7 +28,7 @@ public interface ReportRepository extends BaseRepository<Report> {
     @Query(" SELECT r.reportParameterList FROM Report r " +
             " WHERE r.id =:id ")
     List<ReportParameter> getReportParametersById(String id);
-    @Query("SELECT new com.crm.sofia.dto.report.ReportDTO(r.id,r.code,r.name,r.createdOn) FROM Report r ORDER BY r.modifiedOn DESC")
+    @Query("SELECT new com.crm.sofia.dto.report.ReportDTO(r.id,r.code,r.name,r.modifiedOn) FROM Report r ORDER BY r.modifiedOn DESC")
     List<ReportDTO> getObject();
 
 }

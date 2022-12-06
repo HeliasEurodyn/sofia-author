@@ -28,9 +28,9 @@ public class DashboardDTO extends BaseDTO {
 
     private List<AccessControlDTO> accessControls;
 
-    public DashboardDTO(String id, String description, Instant createdOn) {
+    public DashboardDTO(String id, String description, Instant modifiedOn) {
         this.setId(id);
         this.description = description;
-        this.setCreatedOn(createdOn);
+        this.setModifiedOn(modifiedOn);
     }
 }

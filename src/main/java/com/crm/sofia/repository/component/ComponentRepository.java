@@ -11,6 +11,6 @@ import java.util.List;
 @Repository
 public interface ComponentRepository extends BaseRepository<Component> {
 
-    @Query("SELECT new com.crm.sofia.dto.component.ComponentDTO(c.id,c.name,c.createdOn) FROM Component c ORDER BY c.modifiedOn DESC")
+    @Query("SELECT new com.crm.sofia.dto.component.ComponentDTO(c.id,c.name,c.modifiedOn) FROM Component c ORDER BY c.modifiedOn DESC")
     List<ComponentDTO> getObject();
 }

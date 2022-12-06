@@ -10,6 +10,6 @@ import java.util.List;
 
 @Repository
 public interface ChartRepository extends BaseRepository<Chart> {
-    @Query("SELECT new com.crm.sofia.dto.chart.ChartDTO(c.id,c.title,c.createdOn) FROM Chart c ORDER BY c.modifiedOn DESC")
+    @Query("SELECT new com.crm.sofia.dto.chart.ChartDTO(c.id,c.title,c.modifiedOn) FROM Chart c ORDER BY c.modifiedOn DESC")
     List<ChartDTO> getObject();
 }

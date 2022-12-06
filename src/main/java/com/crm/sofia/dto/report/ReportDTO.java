@@ -38,10 +38,10 @@ public class ReportDTO extends BaseDTO {
 
     private List<AccessControlDTO> accessControls;
 
-    public ReportDTO(String id, String code, String name, Instant createdOn) {
+    public ReportDTO(String id, String code, String name, Instant modifiedOn) {
         this.setId(id);
         this.code = code;
         this.name = name;
-        this.setCreatedOn(createdOn);
+        this.setModifiedOn(modifiedOn);
     }
 }

@@ -32,10 +32,10 @@ public class TableDTO extends BaseDTO {
 
     private String entitytype;
 
-    public TableDTO(String id,String name,Instant createdOn) {
+    public TableDTO(String id,String name,Instant modifiedOn) {
         this.setId(id);
         this.name = name;
-        this.setCreatedOn(createdOn);
+        this.setModifiedOn(modifiedOn);
 
 
     }

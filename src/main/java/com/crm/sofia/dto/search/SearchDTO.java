@@ -28,9 +28,9 @@ public class SearchDTO extends BaseDTO {
 
     private List<AccessControlDTO> accessControls;
 
-    public SearchDTO(String id, String name, Instant createdOn) {
+    public SearchDTO(String id, String name, Instant modifiedOn) {
         this.setId(id);
         this.name = name;
-        this.setCreatedOn(createdOn);
+        this.setModifiedOn(modifiedOn);
     }
 }

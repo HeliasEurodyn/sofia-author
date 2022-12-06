@@ -44,9 +44,9 @@ public class ChartDTO extends BaseDTO {
 
     private List<ListComponentFieldDTO> filterList;
 
-    public ChartDTO(String id,String title,Instant createdOn) {
+    public ChartDTO(String id,String title,Instant modifiedOn) {
         this.setId(id);
         this.title = title;
-        this.setCreatedOn(createdOn);
+        this.setModifiedOn(modifiedOn);
     }
 }
