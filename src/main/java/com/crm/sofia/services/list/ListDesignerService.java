@@ -31,11 +31,8 @@ public class ListDesignerService {
     @Autowired
     private  LanguageDesignerService languageDesignerService;
 
-
     @Autowired
     CacheManager cacheManager;
-
-
 
     @Transactional
     public ListDTO postObject(ListDTO listDTO) throws Exception {
