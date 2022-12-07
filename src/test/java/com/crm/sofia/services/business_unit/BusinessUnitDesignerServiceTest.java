@@ -16,6 +16,7 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -61,8 +62,7 @@ public class BusinessUnitDesignerServiceTest {
 
     @Test
     public void getObjectTest() {
-        given(businessUnitRepository.findAll()).willReturn(businessUnitList);
-        given(businessUnitMapper.map(ArgumentMatchers.any(List.class))).willReturn(businessUnitDTOList);
+        given(businessUnitRepository.getObject()).willReturn(Collections.singletonList(businessUnitDTO));
         List<BusinessUnitDTO> list = businessUnitDesignerService.getObject();
         assertThat(list).isNotEmpty();
         assertThat(list.size()).isEqualTo(1);

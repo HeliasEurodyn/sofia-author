@@ -25,8 +25,8 @@ public class BusinessUnitDesignerService {
     private JWTService jwtService;
 
     public List<BusinessUnitDTO> getObject() {
-        List<BusinessUnit> entities = businessUnitRepository.findAll();
-        return businessUnitMapper.map(entities);
+        List<BusinessUnitDTO> businessUnitList = businessUnitRepository.getObject();
+        return businessUnitList;
     }
 
     public BusinessUnitDTO getObject(String id) {

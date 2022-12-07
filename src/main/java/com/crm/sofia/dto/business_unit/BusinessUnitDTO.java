@@ -10,6 +10,7 @@ import lombok.experimental.Accessors;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.time.Instant;
 
 @Data
 @NoArgsConstructor
@@ -26,5 +27,9 @@ public class BusinessUnitDTO extends BaseDTO {
 
     private String description;
 
-
+    public BusinessUnitDTO(String id, String title, Instant modifiedOn) {
+        this.setId(id);
+        this.title = title;
+        this.setModifiedOn(modifiedOn);
+    }
 }

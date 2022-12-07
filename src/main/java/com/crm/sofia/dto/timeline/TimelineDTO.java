@@ -11,6 +11,7 @@ import lombok.experimental.Accessors;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.time.Instant;
 import java.util.List;
 
 @Data
@@ -38,4 +39,9 @@ public class TimelineDTO extends BaseDTO {
 
     private List<ListComponentFieldDTO> filterList;
 
+    public TimelineDTO(String id, String title, Instant modifiedOn) {
+        this.setId(id);
+        this.title = title;
+        this.setModifiedOn(modifiedOn);
+    }
 }

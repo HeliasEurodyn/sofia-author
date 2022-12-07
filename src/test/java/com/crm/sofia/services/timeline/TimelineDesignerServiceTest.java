@@ -16,10 +16,7 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -58,8 +55,7 @@ public class TimelineDesignerServiceTest {
 
     @Test
     public void getObjectTest() {
-        given(timelineRepository.findAll()).willReturn(timelineList);
-        given(timelineMapper.mapEntitiesForList(ArgumentMatchers.any(List.class))).willReturn(List.of(timelineDTO));
+        given(timelineRepository.getObject()).willReturn(Collections.singletonList(timelineDTO));
         List<TimelineDTO> list = timelineDesignerService.getObject();
         assertThat(list).isNotEmpty();
         assertThat(list.size()).isEqualTo(1);

@@ -28,8 +28,8 @@ public class TimelineDesignerService {
 
 
     public List<TimelineDTO> getObject() {
-        List<Timeline> entities = timelineRepository.findAll();
-        return timelineMapper.mapEntitiesForList(entities);
+        List<TimelineDTO> timelineList = timelineRepository.getObject();
+        return timelineList;
     }
 
     public TimelineDTO getObject(String id) {
