@@ -60,7 +60,7 @@ public interface UserRepository extends BaseRepository<User> {
     void updateCurrentLanguage(@Param("id") String id, @Param("language_id") Long languageId);
 
 
-    @Query("SELECT new com.crm.sofia.dto.user.UserDTO(u.id,u.username,u.email,u.status) FROM User u " +
+    @Query("SELECT new com.crm.sofia.dto.user.UserDTO(u.id,u.username,u.email,u.status,u.modifiedOn) FROM User u " +
             "WHERE u.status <> :userStatus ORDER BY u.modifiedOn DESC")
     List<UserDTO> getAllUsers(AppConstants.Types.UserStatus userStatus);
 

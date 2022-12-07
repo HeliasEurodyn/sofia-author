@@ -8,6 +8,8 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
+import java.time.Instant;
+
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
@@ -21,9 +23,10 @@ public class HtmlDashboardDTO extends BaseDTO {
 
     private String html;
 
-    public HtmlDashboardDTO(String id,String code, String name) {
+    public HtmlDashboardDTO(String id, String code, String name, Instant modifiedOn) {
         this.setId(id);
         this.code = code;
         this.name = name;
+        this.setModifiedOn(modifiedOn);
     }
 }

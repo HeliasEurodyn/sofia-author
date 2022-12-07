@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 import lombok.experimental.Accessors;
 
+import java.time.Instant;
+
 @Data
 @Getter
 @Setter
@@ -20,9 +22,10 @@ public class LanguageDTO extends BaseDTO {
 
     private String image;
 
-    public LanguageDTO(String id,String code, String name) {
+    public LanguageDTO(String id, String code, String name, Instant modifiedOn) {
         this.setId(id);
         this.setCode(code);
         this.setName(name);
+        this.setModifiedOn(modifiedOn);
     }
 }

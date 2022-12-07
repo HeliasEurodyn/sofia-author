@@ -9,6 +9,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
+import java.time.Instant;
 import java.util.List;
 
 @Data
@@ -33,10 +34,11 @@ public class CustomQueryDTO  extends BaseDTO {
 
     private List<AccessControlDTO> accessControls;
 
-    public CustomQueryDTO(String id,String code, String name, String query) {
+    public CustomQueryDTO(String id, String code, String name, String query, Instant modifiedOn) {
         this.setId(id);
         this.code = code;
         this.name = name;
         this.query = query;
+        this.setModifiedOn(modifiedOn);
     }
 }

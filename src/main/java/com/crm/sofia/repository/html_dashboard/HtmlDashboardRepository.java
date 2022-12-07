@@ -10,6 +10,6 @@ import java.util.List;
 
 @Repository
 public interface HtmlDashboardRepository extends BaseRepository<HtmlDashboard> {
-    @Query("SELECT new com.crm.sofia.dto.html_dashboard.HtmlDashboardDTO(h.id,h.code,h.name) FROM HtmlDashboard h ORDER BY h.modifiedOn DESC")
+    @Query("SELECT new com.crm.sofia.dto.html_dashboard.HtmlDashboardDTO(h.id,h.code,h.name,h.modifiedOn) FROM HtmlDashboard h ORDER BY h.modifiedOn DESC")
     List<HtmlDashboardDTO> getObject();
 }

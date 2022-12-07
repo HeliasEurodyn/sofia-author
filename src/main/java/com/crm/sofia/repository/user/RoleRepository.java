@@ -15,6 +15,6 @@ public interface RoleRepository extends BaseRepository<Role> {
 
     List<Role> findAllByOrderByModifiedOn();
 
-    @Query("SELECT  new com.crm.sofia.dto.user.RoleDTO(r.id,r.name) FROM Role r ORDER BY r.modifiedOn DESC ")
+    @Query("SELECT  new com.crm.sofia.dto.user.RoleDTO(r.id,r.name,r.modifiedOn) FROM Role r ORDER BY r.modifiedOn DESC ")
     List<RoleDTO> getObject();
 }
