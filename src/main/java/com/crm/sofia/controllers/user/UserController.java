@@ -2,6 +2,7 @@ package com.crm.sofia.controllers.user;
 
 import com.crm.sofia.config.CurrentUser;
 import com.crm.sofia.dto.auth.LoginDTO;
+import com.crm.sofia.dto.auth.LogoutDTO;
 import com.crm.sofia.dto.user.UserDTO;
 import com.crm.sofia.model.user.LocalUser;
 import com.crm.sofia.security.jwt.TokenProvider;
@@ -77,8 +78,8 @@ public class UserController {
     }
 
     @PostMapping(value = "/logout")
-    public ResponseEntity<?> logout(@RequestBody String  jwt) {
-        blacklistingService.blackListJwt(jwt);
+    public ResponseEntity<?> logout(@RequestBody LogoutDTO logoutDTO) {
+        blacklistingService.blackListJwt(logoutDTO.getJwt());
         return  new ResponseEntity<>(HttpStatus.OK);
     }
 
