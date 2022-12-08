@@ -22,10 +22,11 @@ public class LanguageDTO extends BaseDTO {
 
     private String image;
 
-    public LanguageDTO(String id, String code, String name, Instant modifiedOn) {
+    public LanguageDTO(String id, String code, String name, String image, Instant modifiedOn) {
         this.setId(id);
         this.setCode(code);
         this.setName(name);
+        this.setImage(image);
         this.setModifiedOn(modifiedOn);
     }
 }
