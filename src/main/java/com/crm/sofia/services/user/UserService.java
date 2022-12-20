@@ -2,7 +2,6 @@ package com.crm.sofia.services.user;
 
 import com.crm.sofia.config.AppConstants;
 import com.crm.sofia.dto.user.*;
-import com.crm.sofia.exception.DoesNotExistException;
 import com.crm.sofia.exception.OAuth2AuthenticationProcessingException;
 import com.crm.sofia.exception.UserAlreadyExistAuthenticationException;
 import com.crm.sofia.exception.login.IncorrectPasswordException;
@@ -33,6 +32,8 @@ import org.springframework.security.oauth2.core.oidc.OidcUserInfo;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import javax.transaction.Transactional;
 import javax.validation.constraints.NotBlank;
 import java.nio.charset.Charset;
@@ -50,6 +51,7 @@ public class UserService {
     private final RoleRepository roleRepository;
     private final AuthenticationManager authenticationManager;
     private final TokenProvider tokenProvider;
+    private final EntityManager entityManager;
 
     public UserService(UserRepository userRepository,
                        UserMapper userMapper,
@@ -58,7 +60,8 @@ public class UserService {
                        MenuFieldService menuFieldService,
                        RoleRepository roleRepository,
                        AuthenticationManager authenticationManager,
-                       TokenProvider tokenProvider) {
+                       TokenProvider tokenProvider,
+                       EntityManager entityManager) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
         this.passwordEncoder = passwordEncoder;
@@ -66,6 +69,7 @@ public class UserService {
         this.roleRepository = roleRepository;
         this.authenticationManager = authenticationManager;
         this.tokenProvider = tokenProvider;
+        this.entityManager = entityManager;
     }
 
     public List<UserDTO> getAllUsers() {
@@ -205,7 +209,7 @@ public class UserService {
     }
 
     @Transactional
-    public User registerNewUser(final SignUpRequest signUpRequest) throws UserAlreadyExistAuthenticationException {
+    public User registerThirdPartyUser(final SignUpRequest signUpRequest) throws UserAlreadyExistAuthenticationException {
         User user = buildUser(signUpRequest);
 
         user.setCreatedOn(Instant.now());
@@ -214,6 +218,45 @@ public class UserService {
         user = userRepository.save(user);
         userRepository.initiateUserInfo(user.getId());
         return user;
+    }
+
+    public void nativeQueryTest(){
+
+        String queryString =
+                " SELECT " +
+                        " ac.create_entity, " +
+                        " ac.delete_entity, " +
+                        " ac.read_entity, " +
+                        " ac.update_entity " +
+                        " FROM access_control ac " +
+                        " WHERE ac.type = :type " +
+                        " AND ac.entity_id = :entityId " +
+                        " AND ac.role_id IN ( SELECT role_id FROM user_role WHERE user_id = :userId);   ";
+
+        Query query = entityManager.createNativeQuery(queryString);
+
+//        query.setParameter("type", type);
+//        query.setParameter("entityId", entityId);
+//        query.setParameter("userId", userId);
+
+        List<Object[]> fields = query.getResultList();
+
+        Boolean createEntity = false;
+        Boolean deleteEntity = false;
+        Boolean readEntity   = false;
+        Boolean updateEntity = false;
+
+        for (Object[] field : fields) {
+            Boolean createEntityRow = (Boolean) field[0];
+            Boolean deleteEntityRow = (Boolean) field[1];
+            Boolean readEntityRow   = (Boolean) field[2];
+            Boolean updateEntityRow = (Boolean) field[3];
+
+            if(createEntityRow) createEntity = true;
+            if(deleteEntityRow) deleteEntity = true;
+            if(readEntityRow) readEntity = true;
+            if(updateEntityRow) updateEntity = true;
+        }
     }
 
     private User buildUser(final SignUpRequest formDTO) {
@@ -243,14 +286,15 @@ public class UserService {
     public LocalUser processUserRegistration(String registrationId, Map<String, Object> attributes, OidcIdToken idToken, OidcUserInfo userInfo) throws UserAlreadyExistAuthenticationException {
         OAuth2UserInfo oAuth2UserInfo = OAuth2UserInfoFactory.getOAuth2UserInfo(registrationId, attributes);
         SignUpRequest userDetails = toUserRegistrationObject(registrationId, oAuth2UserInfo);
-        User user = findUserByProviderId(oAuth2UserInfo.getProvider(), oAuth2UserInfo.getId());
+      //  User user = findUserByProviderId(oAuth2UserInfo.getProvider(), oAuth2UserInfo.getId());
+        User user = findUserByUsername(oAuth2UserInfo.getName());
         if (user != null) {
             if (!user.getProvider().equals(registrationId) && !user.getProvider().equals(SocialProvider.LOCAL.getProviderType())) {
                 throw new OAuth2AuthenticationProcessingException(
                         "Looks like you're signed up with " + user.getProvider() + " account. Please use your " + user.getProvider() + " account to login.");
             }
         } else {
-            user = registerNewUser(userDetails);
+            user = registerThirdPartyUser(userDetails);
         }
         return LocalUser.create(user, attributes, idToken, userInfo);
     }
