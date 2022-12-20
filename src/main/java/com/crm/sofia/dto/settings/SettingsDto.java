@@ -23,4 +23,5 @@ public class SettingsDto extends BaseDTO {
 
     String icon;
 
+    String oauth_prototype_user_id;
 }
