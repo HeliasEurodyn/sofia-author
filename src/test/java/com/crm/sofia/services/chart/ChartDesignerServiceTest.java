@@ -4,16 +4,13 @@ package com.crm.sofia.services.chart;
 import com.crm.sofia.dto.chart.ChartDTO;
 import com.crm.sofia.exception.DoesNotExistException;
 import com.crm.sofia.mapper.chart.ChartMapper;
+import com.crm.sofia.mapper.chart.ChartMapperImpl;
 import com.crm.sofia.model.chart.Chart;
 import com.crm.sofia.repository.chart.ChartRepository;
-import com.crm.sofia.services.auth.JWTService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentMatchers;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.nio.charset.StandardCharsets;
@@ -33,17 +30,14 @@ public class ChartDesignerServiceTest {
     @InjectMocks
     private ChartDesignerService chartDesignerService;
 
-    @Mock
-    private JWTService jwtService;
+    @Spy
+    private final ChartMapper chartMapper = new ChartMapperImpl();
 
     private List<Chart> chartList;
 
     private Chart chart;
 
     private ChartDTO chartDTO;
-
-    @Mock
-    private ChartMapper chartMapper;
 
     @BeforeEach
     void setUp() {
@@ -67,7 +61,6 @@ public class ChartDesignerServiceTest {
     @Test
     public void getObjectByIdTest() {
         given(chartRepository.findById(ArgumentMatchers.anyString())).willReturn(Optional.of(chart));
-        given(chartMapper.map(ArgumentMatchers.any(Chart.class))).willReturn(chartDTO);
         ChartDTO dto = chartDesignerService.getObject("1");
         assertThat(chartDTO).isNotNull();
         assertThat(chartDTO.getId().equals("1"));
@@ -88,13 +81,11 @@ public class ChartDesignerServiceTest {
 
     @Test
     public void postObjectTest() {
-        given(chartMapper.map(ArgumentMatchers.any(ChartDTO.class))).willReturn(chart);
         given(chartRepository.save(ArgumentMatchers.any(Chart.class))).willReturn(chart);
         chartDesignerService.postObject(chartDTO);
         assertThat(chartDTO).isNotNull();
         assertThat(chartDTO.getId().equals("1"));
     }
-
 
     @Test
     public void getDeleteByIdWhenEmptyTest() {
