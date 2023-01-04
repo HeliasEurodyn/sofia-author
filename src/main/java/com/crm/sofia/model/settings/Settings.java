@@ -27,6 +27,8 @@ public class Settings extends BaseEntity {
     String icon;
 
     @Column(columnDefinition = "VARCHAR(36)")
-    String oauth_prototype_user_id;
+    String oauthPrototypeUserId;
 
+    @Column
+    String oauthPrototypeUserName;
 }
