@@ -10,6 +10,7 @@ import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import java.io.Serializable;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -27,7 +28,7 @@ public class Role extends MainEntity implements Serializable {
 
     private String name;
 
-    // bi-directional many-to-many association to User
+    // bidirectional many-to-many association to User
     @ManyToMany(mappedBy = "roles")
     private Set<User> users;
 

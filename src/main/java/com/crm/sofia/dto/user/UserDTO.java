@@ -64,4 +64,9 @@ public class UserDTO extends BaseDTO {
         this.status = status;
         this.setModifiedOn(modifiedOn);
     }
+
+    public UserDTO(String id , String username) {
+        this.setId(id);
+        this.username = username;
+    }
 }

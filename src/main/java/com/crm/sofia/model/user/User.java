@@ -91,4 +91,16 @@ public class User extends MainEntity implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY, targetEntity = Language.class)
     @JoinColumn(name = "current_language_id", referencedColumnName = "id")
     private Language currentLanguage;
+
+    public User addRole(Role role){
+        this.roles.add(role);
+        return this;
+    }
+
+    public User removeRole(Role role){
+        this.roles.remove(role);
+        return this;
+    }
+
+
 }

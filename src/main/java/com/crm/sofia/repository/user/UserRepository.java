@@ -2,6 +2,7 @@ package com.crm.sofia.repository.user;
 
 import com.crm.sofia.config.AppConstants;
 import com.crm.sofia.dto.user.UserDTO;
+import com.crm.sofia.model.user.Role;
 import com.crm.sofia.model.user.User;
 import com.crm.sofia.repository.common.BaseRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -63,5 +64,12 @@ public interface UserRepository extends BaseRepository<User> {
     @Query("SELECT new com.crm.sofia.dto.user.UserDTO(u.id,u.username,u.email,u.status,u.modifiedOn) FROM User u " +
             "WHERE u.status <> :userStatus ORDER BY u.modifiedOn DESC")
     List<UserDTO> getAllUsers(AppConstants.Types.UserStatus userStatus);
+
+
+    @Query("SELECT DISTINCT new com.crm.sofia.dto.user.UserDTO(u.id,u.username) FROM User u INNER JOIN u.roles role WHERE role.id =:roleId")
+    List<UserDTO> findUsersByRoleId(String roleId);
+
+    @Query("SELECT DISTINCT new com.crm.sofia.dto.user.UserDTO(u.id,u.username) FROM User u WHERE :role NOT MEMBER OF u.roles")
+    List<UserDTO> findUsersWithoutTheGivenRole(Role role);
 
 }
