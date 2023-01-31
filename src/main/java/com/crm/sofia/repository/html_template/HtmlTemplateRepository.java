@@ -12,6 +12,6 @@ import java.util.List;
 @Repository
 public interface HtmlTemplateRepository extends BaseRepository<HtmlTemplate> {
 
-    @Query("SELECT new com.crm.sofia.dto.html_template.HtmlTemplateDTO(h.id,h.title,h.modifiedOn,c.id, c.name) FROM HtmlTemplate h LEFT JOIN h.component c ORDER BY h.modifiedOn DESC")
+    @Query("SELECT new com.crm.sofia.dto.html_template.HtmlTemplateDTO(h.id,h.title,h.html,h.modifiedOn,c.id, c.name) FROM HtmlTemplate h LEFT JOIN h.component c ORDER BY h.modifiedOn DESC")
     List<HtmlTemplateDTO> getObject();
 }

@@ -31,9 +31,10 @@ public class HtmlTemplateDTO extends BaseDTO {
     @NotNull
     private String html;
 
-    public HtmlTemplateDTO(String id,String title,Instant modifiedOn,String componentId,String componentName ){
+    public HtmlTemplateDTO(String id,String title,String html,Instant modifiedOn,String componentId,String componentName ){
         this.setId(id);
         this.setTitle(title);
+        this.setHtml(html);
         this.setModifiedOn(modifiedOn);
         ComponentDTO componentDTO = new ComponentDTO();
         componentDTO.setId(componentId);
