@@ -80,10 +80,18 @@ public class ListDesignerService {
         String scriptMin = this.listJavascriptService.minify(script);
         this.listRepository.updateScripts(createdListDTO.getId(), script, scriptMin);
 
-        cacheManager.getCache("list_ui_cache").evict(createdListEntity.getId());
-        cacheManager.getCache("list_ui_cache").evict(new Object[]{createdListEntity.getId(), 0});
+        cacheManager.getCache("list_cache").evict(createdListEntity.getId());
+        cacheManager.getCache("list_cache").evict(new Object[]{createdListEntity.getId(), 0});
         languageDesignerService.getObject().forEach(language -> {
-            cacheManager.getCache("list_ui_cache").evict(new Object[]{createdListEntity.getId(), language.getId()});
+            cacheManager.getCache("list_cache").evict(new Object[]{createdListEntity.getId(), language.getId()});
+        });
+
+        createdListEntity.getListComponentColumnFieldList().forEach(x -> {
+            cacheManager.getCache("expression").evict(x.getId());
+        });
+
+        createdListEntity.getListComponentFilterFieldList().forEach(x -> {
+            cacheManager.getCache("expression").evict(x.getId());
         });
 
         return createdListDTO;
@@ -141,16 +149,24 @@ public class ListDesignerService {
     }
 
     public void deleteObject(String id) {
-        ListEntity lienEntity = this.listRepository.findById(id)
+        ListEntity listEntity = this.listRepository.findById(id)
                 .orElseThrow(() -> new DoesNotExistException("List Does Not Exist"));
 
-        cacheManager.getCache("list_ui_cache").evict(lienEntity.getId());
-        cacheManager.getCache("list_ui_cache").evict(new Object[]{lienEntity.getId(), 0});
+        cacheManager.getCache("list_cache").evict(listEntity.getId());
+        cacheManager.getCache("list_cache").evict(new Object[]{listEntity.getId(), 0});
         languageDesignerService.getObject().forEach(language -> {
-            cacheManager.getCache("list_ui_cache").evict(new Object[]{lienEntity.getId(), language.getId()});
+            cacheManager.getCache("list_cache").evict(new Object[]{listEntity.getId(), language.getId()});
         });
 
-        this.listRepository.deleteById(lienEntity.getId());
+        listEntity.getListComponentColumnFieldList().forEach(x -> {
+            cacheManager.getCache("expression").evict(x.getId());
+        });
+
+        listEntity.getListComponentFilterFieldList().forEach(x -> {
+            cacheManager.getCache("expression").evict(x.getId());
+        });
+
+        this.listRepository.deleteById(listEntity.getId());
     }
 
     public boolean clearCacheForUi() {
