@@ -1,11 +1,14 @@
 package com.crm.sofia.services.table;
 
-import com.crm.sofia.dto.persistEntity.PersistEntityDTO;
+import com.crm.sofia.dto.table.ForeignKeyConstrainDTO;
 import com.crm.sofia.dto.table.TableDTO;
 import com.crm.sofia.dto.table.TableFieldDTO;
 import com.crm.sofia.exception.DoesNotExistException;
+import com.crm.sofia.mapper.persistEntity.ForeignKeyConstrainMapper;
 import com.crm.sofia.mapper.table.TableMapper;
+import com.crm.sofia.model.persistEntity.ForeignKeyConstrain;
 import com.crm.sofia.model.persistEntity.PersistEntity;
+import com.crm.sofia.repository.persistEntity.ForeignKeyConstrainRepository;
 import com.crm.sofia.repository.persistEntity.PersistEntityRepository;
 import com.crm.sofia.services.auth.JWTService;
 import com.crm.sofia.services.component.ComponentDesignerService;
@@ -32,16 +35,21 @@ public class TableService {
     private final EntityManager entityManager;
     private final JWTService jwtService;
     private final ComponentDesignerService componentDesignerService;
+    private final ForeignKeyConstrainRepository foreignKeyConstrainRepository;
+
+    private  final ForeignKeyConstrainMapper foreignKeyConstrainMapper;
 
     public TableService(PersistEntityRepository persistEntityRepository,
                         TableMapper tableMapper,
                         EntityManager entityManager, JWTService jwtService,
-                        ComponentDesignerService componentDesignerService) {
+                        ComponentDesignerService componentDesignerService, ForeignKeyConstrainRepository foreignKeyConstrainRepository, ForeignKeyConstrainMapper foreignKeyConstrainMapper) {
         this.persistEntityRepository = persistEntityRepository;
         this.tableMapper = tableMapper;
         this.entityManager = entityManager;
         this.jwtService = jwtService;
         this.componentDesignerService = componentDesignerService;
+        this.foreignKeyConstrainRepository = foreignKeyConstrainRepository;
+        this.foreignKeyConstrainMapper = foreignKeyConstrainMapper;
     }
 
     public TableDTO postObject(TableDTO componentDTO) {
@@ -60,7 +68,14 @@ public class TableService {
                     persistEntityField.setPersistEntity(persistEntity);
                 });
 
+        persistEntity.getForeignKeyConstrainList().forEach(foreignKeyConstrain -> {
+            foreignKeyConstrain.setBaseTable(persistEntity);
+            foreignKeyConstrain.setCreatedBy(persistEntity.getCreatedBy());
+            foreignKeyConstrain.setModifiedBy(persistEntity.getModifiedBy());
+        });
+
         PersistEntity entity = this.persistEntityRepository.save(persistEntity);
+
         return this.tableMapper.map(entity);
     }
 
@@ -269,11 +284,76 @@ public class TableService {
         this.updateDatabaseTable(createdDTO);
 
         /**
+         * Add Foreign Key Constrain
+         */
+        this.addForeignKeyConstrain(createdDTO);
+
+        /**
          * Add new Fields From Components
          */
         this.componentDesignerService.insertComponentTableFieldsByTable(this.tableMapper.map(createdDTO));
 
         return createdDTO;
+    }
+
+    public void addForeignKeyConstrain(TableDTO tableDTO) {
+
+        List<ForeignKeyConstrainDTO> newForeignKeyConstrains = removeExistingForeignKeyConstrains(tableDTO);
+
+        if (newForeignKeyConstrains!=null && !newForeignKeyConstrains.isEmpty()){
+
+
+
+            int counter = 1;
+            int iterations =newForeignKeyConstrains.size();
+            String sql = "";
+            sql += "ALTER TABLE " + tableDTO.getName().replace(" ", "");
+            sql += " \n";
+
+            for (ForeignKeyConstrainDTO foreignKeyConstrainDTO : newForeignKeyConstrains) {
+
+                sql += " ADD CONSTRAINT ";
+                sql += foreignKeyConstrainDTO.getName();
+                sql += " FOREIGN KEY ";
+                sql += "(" + foreignKeyConstrainDTO.getFieldName() + ")";
+                sql += " REFERENCES ";
+                sql += foreignKeyConstrainDTO.getReferredTable().getName() + "(" + foreignKeyConstrainDTO.getReferredField().getName() + ")";
+                sql +=" ON UPDATE " + foreignKeyConstrainDTO.getOnUpdate() +  " ON DELETE " +  foreignKeyConstrainDTO.getOnDelete();
+                if(counter < iterations){
+                    sql += ",";
+                }
+                counter++;
+                sql += "\n";
+            }
+            sql += " ; ";
+
+
+
+            Query query = entityManager.createNativeQuery(sql);
+            query.executeUpdate();
+        }
+    }
+
+    public List<ForeignKeyConstrainDTO> removeExistingForeignKeyConstrains(TableDTO tableDTO) {
+        List<String> existingForeignKeyConstrains = getAllExistingConstrains();
+        List<ForeignKeyConstrainDTO> addedForeignKeyConstrains = null;
+        if(Optional.of(tableDTO).isPresent()){
+
+            addedForeignKeyConstrains = tableDTO.getForeignKeyConstrainList()
+                    .stream()
+                    .filter(foreignKeyConstrain1 -> existingForeignKeyConstrains
+                            .stream()
+                            .noneMatch(foreignKeyConstrainName -> foreignKeyConstrainName.equals(foreignKeyConstrain1.getName())))
+                    .collect(Collectors.toList());
+        }
+
+        return addedForeignKeyConstrains;
+    }
+
+    public List<String> getAllExistingConstrains() {
+        Query query = entityManager.createNativeQuery("select CONSTRAINT_NAME from information_schema.KEY_COLUMN_USAGE;");
+        List<String> existingConstrains = query.getResultList();
+        return existingConstrains;
     }
 
     public List<TableFieldDTO> generateTableFields(String name) {

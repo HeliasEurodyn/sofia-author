@@ -1,13 +1,15 @@
 package com.crm.sofia.model.persistEntity;
 
 import com.crm.sofia.model.common.BaseEntity;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.Accessors;
 
 import javax.persistence.*;
 import java.io.Serializable;
 
-@Data
+@Getter
+@Setter
 @Accessors(chain = true)
 @Entity
 @Table(name = "persist_entity_field")

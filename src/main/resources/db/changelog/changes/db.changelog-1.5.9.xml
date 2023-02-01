@@ -1,0 +1,50 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.3.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
+    <changeSet author="ChristosAslamatzidis (generated)" id="2053169944001-30">
+        <createTable tableName="foreign_key_constrain">
+            <column name="id" type="VARCHAR(36)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="created_by" type="VARCHAR(255)"/>
+            <column defaultValueComputed="current_timestamp()" name="created_on" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column name="modified_by" type="VARCHAR(255)"/>
+            <column defaultValueComputed="current_timestamp()" name="modified_on" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueComputed="NULL" name="short_order" type="BIGINT"/>
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="on_update" type="VARCHAR(255)"/>
+            <column name="on_delete" type="VARCHAR(255)"/>
+            <column name="base_table_id" type="VARCHAR(36)"/>
+            <column name="referred_table_id" type="VARCHAR(36)"/>
+            <column name="field_name" type="VARCHAR(255)"/>
+            <column name="referred_field_id" type="VARCHAR(36)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="ChristosAslamatzidis (generated)" id="2053165644001-31">
+        <createIndex indexName="6s7MO84rxot2txO3cPZJMVH5p" tableName="foreign_key_constrain">
+            <column name="base_table_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="ChristosAslamatzidis (generated)" id="2053165644001-32">
+        <addForeignKeyConstraint baseColumnNames="base_table_id" baseTableName="foreign_key_constrain" constraintName="6s7MO84rxot2txO3cPZJMVH5p" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="persist_entity"/>
+    </changeSet>
+    <changeSet author="ChristosAslamatzidis (generated)" id="2053165644001-33">
+        <createIndex indexName="Ybo2otcLAM7SOjoOGrR6gwtYR" tableName="foreign_key_constrain">
+            <column name="referred_table_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="ChristosAslamatzidis (generated)" id="2053165644001-34">
+        <addForeignKeyConstraint baseColumnNames="referred_table_id" baseTableName="foreign_key_constrain" constraintName="Ybo2otcLAM7SOjoOGrR6gwtYR" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="persist_entity"/>
+    </changeSet>
+    <changeSet author="ChristosAslamatzidis (generated)" id="2053165644001-35">
+        <createIndex indexName="CbtIvHGtrna3msy0c69hMbxRU" tableName="foreign_key_constrain">
+            <column name="referred_field_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="ChristosAslamatzidis (generated)" id="2053165644001-36">
+        <addForeignKeyConstraint baseColumnNames="referred_field_id" baseTableName="foreign_key_constrain" constraintName="CbtIvHGtrna3msy0c69hMbxRU" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="persist_entity_field"/>
+    </changeSet>
+</databaseChangeLog>

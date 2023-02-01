@@ -2,13 +2,16 @@ package com.crm.sofia.model.persistEntity;
 
 import com.crm.sofia.model.common.MainEntity;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.Accessors;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 @Accessors(chain = true)
 @Entity
 @Table(name = "persist_entity")
@@ -40,5 +43,14 @@ public class PersistEntity extends MainEntity implements Serializable {
     )
     @JoinColumn(name = "persist_entity_id", referencedColumnName = "id")
     private List<PersistEntityField> persistEntityFieldList;
+
+    @OneToMany(
+            fetch = FetchType.LAZY,
+            cascade = {CascadeType.ALL},
+            orphanRemoval = true,
+            targetEntity= ForeignKeyConstrain.class
+    )
+    @JoinColumn(name = "base_table_id", referencedColumnName = "id")
+    private List<ForeignKeyConstrain> foreignKeyConstrainList;
 
 }

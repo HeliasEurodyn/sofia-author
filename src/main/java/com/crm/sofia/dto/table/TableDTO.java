@@ -30,6 +30,8 @@ public class TableDTO extends BaseDTO {
 
     private List<TableFieldDTO> tableFieldList;
 
+    private List<ForeignKeyConstrainDTO> foreignKeyConstrainList;
+
     private String entitytype;
 
     public TableDTO(String id,String name,Instant modifiedOn) {
