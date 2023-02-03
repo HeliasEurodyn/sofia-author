@@ -4,11 +4,9 @@ import com.crm.sofia.dto.table.ForeignKeyConstrainDTO;
 import com.crm.sofia.dto.table.TableDTO;
 import com.crm.sofia.dto.table.TableFieldDTO;
 import com.crm.sofia.exception.DoesNotExistException;
-import com.crm.sofia.mapper.persistEntity.ForeignKeyConstrainMapper;
+import com.crm.sofia.exception.table.ForeignKeyConstrainAlreadyExist;
 import com.crm.sofia.mapper.table.TableMapper;
-import com.crm.sofia.model.persistEntity.ForeignKeyConstrain;
 import com.crm.sofia.model.persistEntity.PersistEntity;
-import com.crm.sofia.repository.persistEntity.ForeignKeyConstrainRepository;
 import com.crm.sofia.repository.persistEntity.PersistEntityRepository;
 import com.crm.sofia.services.auth.JWTService;
 import com.crm.sofia.services.component.ComponentDesignerService;
@@ -35,44 +33,28 @@ public class TableService {
     private final EntityManager entityManager;
     private final JWTService jwtService;
     private final ComponentDesignerService componentDesignerService;
-    private final ForeignKeyConstrainRepository foreignKeyConstrainRepository;
-
-    private  final ForeignKeyConstrainMapper foreignKeyConstrainMapper;
 
     public TableService(PersistEntityRepository persistEntityRepository,
                         TableMapper tableMapper,
                         EntityManager entityManager, JWTService jwtService,
-                        ComponentDesignerService componentDesignerService, ForeignKeyConstrainRepository foreignKeyConstrainRepository, ForeignKeyConstrainMapper foreignKeyConstrainMapper) {
+                        ComponentDesignerService componentDesignerService) {
         this.persistEntityRepository = persistEntityRepository;
         this.tableMapper = tableMapper;
         this.entityManager = entityManager;
         this.jwtService = jwtService;
         this.componentDesignerService = componentDesignerService;
-        this.foreignKeyConstrainRepository = foreignKeyConstrainRepository;
-        this.foreignKeyConstrainMapper = foreignKeyConstrainMapper;
+
     }
 
     public TableDTO postObject(TableDTO componentDTO) {
         PersistEntity persistEntity = this.tableMapper.map(componentDTO);
 
-        if((persistEntity.getId() == null?"":persistEntity.getId()).equals("")){
+        if ((persistEntity.getId() == null ? "" : persistEntity.getId()).equals("")) {
             persistEntity.setCreatedBy(jwtService.getUserId());
             persistEntity.setCreatedOn(Instant.now());
         }
         persistEntity.setModifiedBy(jwtService.getUserId());
         persistEntity.setModifiedOn(Instant.now());
-
-        persistEntity.getPersistEntityFieldList()
-                .stream()
-                .forEach(persistEntityField -> {
-                    persistEntityField.setPersistEntity(persistEntity);
-                });
-
-        persistEntity.getForeignKeyConstrainList().forEach(foreignKeyConstrain -> {
-            foreignKeyConstrain.setBaseTable(persistEntity);
-            foreignKeyConstrain.setCreatedBy(persistEntity.getCreatedBy());
-            foreignKeyConstrain.setModifiedBy(persistEntity.getModifiedBy());
-        });
 
         PersistEntity entity = this.persistEntityRepository.save(persistEntity);
 
@@ -96,7 +78,7 @@ public class TableService {
     public void shortTableFields(TableDTO tableDTO) {
         tableDTO.getTableFieldList().stream()
                 .filter(field -> field.getShortOrder() == null)
-                .forEach(field -> field.setShortOrder(0L) );
+                .forEach(field -> field.setShortOrder(0L));
 
         List<TableFieldDTO> shortedFieldList = tableDTO.getTableFieldList()
                 .stream()
@@ -114,13 +96,13 @@ public class TableService {
 
     @Transactional
     public List<String> getTables() {
-        Query query = entityManager.createNativeQuery("SELECT table_name FROM information_schema.tables WHERE table_schema='"+this.sofiaDatabase+"';");
+        Query query = entityManager.createNativeQuery("SELECT table_name FROM information_schema.tables WHERE table_schema='" + this.sofiaDatabase + "';");
         List<String> tableNames = query.getResultList();
         return tableNames;
     }
 
     public List<String> getExistingTableFields(String tableName) {
-        Query query = entityManager.createNativeQuery("SHOW COLUMNS FROM " + tableName + " FROM "+this.sofiaDatabase+";");
+        Query query = entityManager.createNativeQuery("SHOW COLUMNS FROM " + tableName + " FROM " + this.sofiaDatabase + ";");
         List<Object[]> fields = query.getResultList();
         List<String> fieldNames = fields.stream().map(f -> f[0].toString()).collect(Collectors.toList());
 
@@ -155,7 +137,7 @@ public class TableService {
                     .replace("datetime", "timestamp")
                     .replace("password", "varchar");
 
-            if (Arrays.asList("varchar","password").contains(tableFieldDTO.getType())) {
+            if (Arrays.asList("varchar", "password").contains(tableFieldDTO.getType())) {
                 sql += " (" + tableFieldDTO.getSize().toString().replace(" ", "") + ") ";
             }
 
@@ -208,7 +190,7 @@ public class TableService {
                     .replace("datetime", "timestamp")
                     .replace("password", "varchar");
 
-            if (Arrays.asList("varchar","password").contains(tableFieldDTO.getType())) {
+            if (Arrays.asList("varchar", "password").contains(tableFieldDTO.getType())) {
                 sql += " (" + tableFieldDTO.getSize().toString().replace(" ", "") + ") ";
             }
 
@@ -264,9 +246,9 @@ public class TableService {
                 dto.getId(),
                 dto.getTableFieldList()
                         .stream()
-                        .map( x -> x.getId())
+                        .map(x -> x.getId())
                         .collect(Collectors.toList())
-                );
+        );
 
         /**
          * Save DTO
@@ -300,12 +282,11 @@ public class TableService {
 
         List<ForeignKeyConstrainDTO> newForeignKeyConstrains = removeExistingForeignKeyConstrains(tableDTO);
 
-        if (newForeignKeyConstrains!=null && !newForeignKeyConstrains.isEmpty()){
-
+        if (newForeignKeyConstrains != null && !newForeignKeyConstrains.isEmpty()) {
 
 
             int counter = 1;
-            int iterations =newForeignKeyConstrains.size();
+            int iterations = newForeignKeyConstrains.size();
             String sql = "";
             sql += "ALTER TABLE " + tableDTO.getName().replace(" ", "");
             sql += " \n";
@@ -318,15 +299,14 @@ public class TableService {
                 sql += "(" + foreignKeyConstrainDTO.getFieldName() + ")";
                 sql += " REFERENCES ";
                 sql += foreignKeyConstrainDTO.getReferredTable().getName() + "(" + foreignKeyConstrainDTO.getReferredField().getName() + ")";
-                sql +=" ON UPDATE " + foreignKeyConstrainDTO.getOnUpdate() +  " ON DELETE " +  foreignKeyConstrainDTO.getOnDelete();
-                if(counter < iterations){
+                sql += " ON UPDATE " + foreignKeyConstrainDTO.getOnUpdate() + " ON DELETE " + foreignKeyConstrainDTO.getOnDelete();
+                if (counter < iterations) {
                     sql += ",";
                 }
                 counter++;
                 sql += "\n";
             }
             sql += " ; ";
-
 
 
             Query query = entityManager.createNativeQuery(sql);
@@ -336,18 +316,28 @@ public class TableService {
 
     public List<ForeignKeyConstrainDTO> removeExistingForeignKeyConstrains(TableDTO tableDTO) {
         List<String> existingForeignKeyConstrains = getAllExistingConstrains();
-        List<ForeignKeyConstrainDTO> addedForeignKeyConstrains = null;
-        if(Optional.of(tableDTO).isPresent()){
+        List<String> existingForeignKeyConstrainsOfTheTable = getExistingConstrainsOfSpecifTable(tableDTO);
+        List<ForeignKeyConstrainDTO> remainingForeignKeyConstrains = null;
+        List<ForeignKeyConstrainDTO> addedForeignKeyConstrain = null;
+        if (Optional.of(tableDTO).isPresent()) {
 
-            addedForeignKeyConstrains = tableDTO.getForeignKeyConstrainList()
+            remainingForeignKeyConstrains = tableDTO.getForeignKeyConstrainList()
                     .stream()
-                    .filter(foreignKeyConstrain1 -> existingForeignKeyConstrains
+                    .filter(foreignKeyConstrain1 -> existingForeignKeyConstrainsOfTheTable
                             .stream()
                             .noneMatch(foreignKeyConstrainName -> foreignKeyConstrainName.equals(foreignKeyConstrain1.getName())))
                     .collect(Collectors.toList());
+
+            boolean foreignKeyConstrainAlreadyExist = remainingForeignKeyConstrains
+                    .stream()
+                    .map(foreignKeyConstrainDTO -> foreignKeyConstrainDTO.getName()).anyMatch(existingForeignKeyConstrains::contains);
+
+            if(foreignKeyConstrainAlreadyExist){
+                throw new ForeignKeyConstrainAlreadyExist();
+            }
         }
 
-        return addedForeignKeyConstrains;
+        return remainingForeignKeyConstrains;
     }
 
     public List<String> getAllExistingConstrains() {
@@ -356,14 +346,24 @@ public class TableService {
         return existingConstrains;
     }
 
+    public List<String> getExistingConstrainsOfSpecifTable(TableDTO tableDTO) {
+        if(tableDTO!=null){
+            char QuotationMark  = '"';
+            Query query = entityManager.createNativeQuery("select CONSTRAINT_NAME from information_schema.KEY_COLUMN_USAGE WHERE TABLE_NAME=" + QuotationMark + tableDTO.getName() + QuotationMark + ";");
+            List<String> existingConstrains = query.getResultList();
+            return existingConstrains;
+        }
+        return Collections.emptyList();
+    }
+
     public List<TableFieldDTO> generateTableFields(String name) {
         List<TableFieldDTO> dtos = new ArrayList<>();
 
-        if(!this.tableOnDatabase(name)){
+        if (!this.tableOnDatabase(name)) {
             return dtos;
         }
 
-        Query query = entityManager.createNativeQuery("SHOW COLUMNS FROM " + name + " FROM "+sofiaDatabase+";");
+        Query query = entityManager.createNativeQuery("SHOW COLUMNS FROM " + name + " FROM " + sofiaDatabase + ";");
         List<Object[]> fields = query.getResultList();
 
         for (Object[] field : fields) {

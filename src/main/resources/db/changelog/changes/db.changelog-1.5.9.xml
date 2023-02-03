@@ -5,14 +5,6 @@
             <column name="id" type="VARCHAR(36)">
                 <constraints nullable="false" primaryKey="true"/>
             </column>
-            <column name="created_by" type="VARCHAR(255)"/>
-            <column defaultValueComputed="current_timestamp()" name="created_on" type="timestamp">
-                <constraints nullable="false"/>
-            </column>
-            <column name="modified_by" type="VARCHAR(255)"/>
-            <column defaultValueComputed="current_timestamp()" name="modified_on" type="timestamp">
-                <constraints nullable="false"/>
-            </column>
             <column defaultValueComputed="NULL" name="short_order" type="BIGINT"/>
             <column name="name" type="VARCHAR(255)"/>
             <column name="on_update" type="VARCHAR(255)"/>

@@ -15,7 +15,6 @@ public abstract class ForeignKeyConstrainMapper {
 
     @Named("ignoreReferredTableFKDTOToEntity")
     @Mapping(target = "referredTable", qualifiedByName ="mapIgnoringForeignKeysDTOToEntity" )
-    @Mapping(target = "baseTable", qualifiedByName ="mapIgnoringForeignKeysDTOToEntity")
     public abstract ForeignKeyConstrain map(ForeignKeyConstrainDTO dto);
 
 

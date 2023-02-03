@@ -48,10 +48,6 @@ public class PersistEntityField extends BaseEntity implements Serializable {
     @Column
     private Boolean hasNotNull;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "persist_entity_id")
-    private PersistEntity persistEntity;
-
     @Column(name = "short_order")
     private Long shortOrder;
 

@@ -1,5 +1,6 @@
 package com.crm.sofia.model.persistEntity;
 
+import com.crm.sofia.model.common.BaseEntity;
 import com.crm.sofia.model.common.MainEntity;
 import lombok.Data;
 import lombok.Getter;
@@ -13,7 +14,7 @@ import javax.persistence.*;
 @Accessors(chain = true)
 @Entity
 @Table(name = "foreign_key_constrain")
-public class ForeignKeyConstrain extends MainEntity {
+public class ForeignKeyConstrain extends BaseEntity {
 
     @Column
     private String name;
@@ -21,11 +22,6 @@ public class ForeignKeyConstrain extends MainEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "referred_table_id")
     private PersistEntity referredTable;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "base_table_id")
-    private PersistEntity baseTable;
-
     @Column(name = "field_name")
     private String fieldName;
 
@@ -37,5 +33,8 @@ public class ForeignKeyConstrain extends MainEntity {
 
     @Column(name = "on_delete")
     private String onDelete;
+
+    @Column(name = "short_order")
+    private Long shortOrder;
 
 }

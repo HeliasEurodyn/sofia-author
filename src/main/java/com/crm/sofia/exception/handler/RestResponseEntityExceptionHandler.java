@@ -8,6 +8,7 @@ import com.crm.sofia.exception.data_tranfer.ImportedFileAlreadyExistsException;
 import com.crm.sofia.exception.data_tranfer.WrongFileTypeException;
 import com.crm.sofia.exception.login.IncorrectPasswordException;
 import com.crm.sofia.exception.login.UserNotFoundException;
+import com.crm.sofia.exception.table.ForeignKeyConstrainAlreadyExist;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +27,8 @@ public class RestResponseEntityExceptionHandler {
 
     @ExceptionHandler(
             {ExpressionException.class, DoesNotExistException.class, UserNotFoundException.class,
-                    IncorrectPasswordException.class, DataImportException.class, WrongFileTypeException.class, ImportedFileAlreadyExistsException.class})
+                    IncorrectPasswordException.class, DataImportException.class, WrongFileTypeException.class,
+                    ImportedFileAlreadyExistsException.class, ForeignKeyConstrainAlreadyExist.class})
     public ResponseEntity<Map<String,String>> handleException(SofiaException exception){
         Map<String,String> response = new HashMap<>();
         response.put("code", exception.getCode());

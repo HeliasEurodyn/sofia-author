@@ -59,8 +59,6 @@ public class AppViewService {
          */
         PersistEntity persistEntity = this.appViewMapper.map(appViewDTO);
 
-        persistEntity.getPersistEntityFieldList().stream()
-                .forEach(persistEntityField -> persistEntityField.setPersistEntity(persistEntity));
 
         PersistEntity createdPersistEntity = this.appViewRepository.save(persistEntity);
 
