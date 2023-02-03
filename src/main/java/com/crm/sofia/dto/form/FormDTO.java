@@ -3,6 +3,7 @@ package com.crm.sofia.dto.form;
 import com.crm.sofia.dto.access_control.AccessControlDTO;
 import com.crm.sofia.dto.common.BaseDTO;
 import com.crm.sofia.dto.component.ComponentDTO;
+import com.crm.sofia.dto.form.translation.FormTranslationDTO;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -48,6 +49,8 @@ public class FormDTO extends BaseDTO {
     private Long instanceVersion;
 
     private List<AccessControlDTO> accessControls;
+
+    private List<FormTranslationDTO> translations;
 
     public FormDTO(String id, String name, Instant modifiedOn,String jsonUrl,String componentId,String componentName) {
         this.setId(id);

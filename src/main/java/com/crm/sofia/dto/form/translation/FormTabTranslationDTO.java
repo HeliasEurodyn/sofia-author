@@ -1,34 +1,19 @@
-package com.crm.sofia.dto.form;
+package com.crm.sofia.dto.form.translation;
 
 import com.crm.sofia.dto.common.BaseDTO;
-import com.crm.sofia.dto.form.translation.FormAreaTranslationDTO;
+import com.crm.sofia.dto.language.LanguageDTO;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
-import java.util.List;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Accessors(chain = true)
-public class FormAreaDTO extends BaseDTO {
-
-    public String code;
-
-    public String title;
-
+public class FormTabTranslationDTO extends BaseDTO {
+    private LanguageDTO language;
     private String description;
-
-    private String icon;
-
-    private String cssclass;
-
-    private List<FormControlDTO> formControls;
-
-    private List<FormAreaTranslationDTO> translations;
-
 }

@@ -1,6 +1,8 @@
 package com.crm.sofia.model.form;
 
 import com.crm.sofia.model.common.BaseEntity;
+import com.crm.sofia.model.form.translation.FormActionButtonTranslation;
+import com.crm.sofia.model.form.translation.FormAreaTranslation;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import org.hibernate.annotations.DynamicInsert;
@@ -48,4 +50,12 @@ public class FormActionButton extends BaseEntity {
 
     @Column(name = "short_order")
     private Long shortOrder;
+
+    @OneToMany(
+            fetch = FetchType.LAZY,
+            cascade = { CascadeType.ALL },
+            orphanRemoval=true
+    )
+    @JoinColumn(name = "form_action_button_id")
+    private List<FormActionButtonTranslation> translations;
 }
