@@ -9,8 +9,9 @@ import com.crm.sofia.model.form.FormEntity;
 import com.crm.sofia.repository.form.FormRepository;
 import com.crm.sofia.services.auth.JWTService;
 import com.crm.sofia.services.component.ComponentPersistEntityFieldAssignmentService;
+import com.crm.sofia.services.language.LanguageDesignerService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.CacheManager;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,16 +24,19 @@ import java.util.stream.Collectors;
 @Service
 public class FormDesignerService {
     @Autowired
-    private  FormRepository formRepository;
+    CacheManager cacheManager;
     @Autowired
-    private  FormMapper formMapper;
+    private FormRepository formRepository;
     @Autowired
-    private  JWTService jwtService;
+    private FormMapper formMapper;
     @Autowired
-    private  ComponentPersistEntityFieldAssignmentService componentPersistEntityFieldAssignmentService;
+    private JWTService jwtService;
     @Autowired
-    private  FormJavascriptService formJavascriptService;
-
+    private ComponentPersistEntityFieldAssignmentService componentPersistEntityFieldAssignmentService;
+    @Autowired
+    private FormJavascriptService formJavascriptService;
+    @Autowired
+    private LanguageDesignerService languageDesignerService;
 
     @Transactional
     public FormDTO postObject(FormDTO formDTO) throws Exception {
@@ -61,13 +65,12 @@ public class FormDesignerService {
 
         String script = this.formJavascriptService.generateDynamicScript(createdFormDTO);
         String scriptMin = this.formJavascriptService.minify(script);
-        this.formRepository.updateScripts(createdFormDTO.getId(),script, scriptMin );
+        this.formRepository.updateScripts(createdFormDTO.getId(), script, scriptMin);
 
         return createdFormDTO;
     }
 
     @Transactional
-    @CacheEvict(value = "form_ui_cache", key = "#formDTO.id")
     public FormDTO putObject(FormDTO formDTO) throws Exception {
         FormEntity formEntity = this.formMapper.map(formDTO);
         formEntity.setModifiedOn(Instant.now());
@@ -92,6 +95,12 @@ public class FormDesignerService {
                         createdFormEntity.getId());
 
         FormDTO createdFormDTO = this.formMapper.map(createdFormEntity);
+
+        cacheManager.getCache("form_uil_cache").evict(createdFormDTO.getId());
+        cacheManager.getCache("form_uil_cache").evict(new Object[]{createdFormDTO.getId(), ""});
+        languageDesignerService.getObject().forEach(language -> {
+            cacheManager.getCache("form_uil_cache").evict(new Object[]{createdFormDTO.getId(), language.getId()});
+        });
 
         return createdFormDTO;
     }
@@ -160,7 +169,7 @@ public class FormDesignerService {
     }
 
     public List<ComponentPersistEntityDTO> shortCPEList(List<ComponentPersistEntityDTO> componentPersistEntityList) {
-        if(componentPersistEntityList == null){
+        if (componentPersistEntityList == null) {
             return null;
         }
 
@@ -210,6 +219,12 @@ public class FormDesignerService {
 
         this.componentPersistEntityFieldAssignmentService.deleteByIdAndEntityType(optionalFormEntity.getId(), "form");
         this.formRepository.deleteById(optionalFormEntity.getId());
+
+        cacheManager.getCache("form_uil_cache").evict(id);
+        cacheManager.getCache("form_uil_cache").evict(new Object[]{id, ""});
+        languageDesignerService.getObject().forEach(language -> {
+            cacheManager.getCache("form_uil_cache").evict(new Object[]{id, language.getId()});
+        });
     }
 
     public boolean clearCache() {
@@ -217,9 +232,9 @@ public class FormDesignerService {
         return true;
     }
 
-    public List<String> getBusinessUnits(){
+    public List<String> getBusinessUnits() {
         List<String> businessUnits = formRepository.findBusinessUnitsDistinct();
-        return  businessUnits;
+        return businessUnits;
     }
 
 }
