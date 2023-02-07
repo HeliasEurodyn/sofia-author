@@ -1,0 +1,191 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.3.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
+
+    <changeSet author="helias (generated)" id="1675781791870-2">
+        <createTable tableName="form_action_button_translation">
+            <column name="id" type="VARCHAR(36)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="description" type="VARCHAR(1024)"/>
+            <column name="language_id" type="VARCHAR(36)"/>
+            <column name="form_action_button_id" type="VARCHAR(36)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="helias (generated)" id="1675781791870-3">
+        <createTable tableName="form_area_translation">
+            <column name="id" type="VARCHAR(36)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="description" type="VARCHAR(1024)"/>
+            <column name="title" type="VARCHAR(255)"/>
+            <column name="language_id" type="VARCHAR(36)"/>
+            <column name="form_area_id" type="VARCHAR(36)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="helias (generated)" id="1675781791870-4">
+        <createTable tableName="form_control_button_translation">
+            <column name="id" type="VARCHAR(36)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="description" type="VARCHAR(1024)"/>
+            <column name="language_id" type="VARCHAR(36)"/>
+            <column name="form_control_button_id" type="VARCHAR(36)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="helias (generated)" id="1675781791870-5">
+        <createTable tableName="form_control_field_translation">
+            <column name="id" type="VARCHAR(36)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="description" type="VARCHAR(1024)"/>
+            <column name="message" type="VARCHAR(1024)"/>
+            <column name="placeholder" type="VARCHAR(255)"/>
+            <column name="language_id" type="VARCHAR(36)"/>
+            <column name="form_control_field_id" type="VARCHAR(36)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="helias (generated)" id="1675781791870-6">
+        <createTable tableName="form_tab_translation">
+            <column name="id" type="VARCHAR(36)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="description" type="VARCHAR(1024)"/>
+            <column name="language_id" type="VARCHAR(36)"/>
+            <column name="form_tab_id" type="VARCHAR(36)"/>
+            <column name="form_popup_id" type="VARCHAR(36)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="helias (generated)" id="1675781791870-7">
+        <createTable tableName="form_translation">
+            <column name="id" type="VARCHAR(36)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="description" type="VARCHAR(1024)"/>
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="title" type="VARCHAR(255)"/>
+            <column name="language_id" type="VARCHAR(36)"/>
+            <column name="form_id" type="VARCHAR(36)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="helias (generated)" id="1675781791870-11">
+        <createIndex indexName="FK37cosqyv6b5af53ov80u9po53" tableName="form_area_translation">
+            <column name="language_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="helias (generated)" id="1675781791870-12">
+        <createIndex indexName="FK4nwt66irwrt17k6wt20fk5mp8" tableName="form_action_button_translation">
+            <column name="form_action_button_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="helias (generated)" id="1675781791870-13">
+        <createIndex indexName="FK5bksgvv6ba9gslbrr2gcwsput" tableName="form_action_button_translation">
+            <column name="language_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="helias (generated)" id="1675781791870-14">
+        <createIndex indexName="FK8k1rjj0h7qspatgdt4ttvmuer" tableName="form_control_button_translation">
+            <column name="language_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="helias (generated)" id="1675781791870-15">
+        <createIndex indexName="FKa90p4gpsoghs9dp8y8mq332ic" tableName="form_tab_translation">
+            <column name="language_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="helias (generated)" id="1675781791870-16">
+        <createIndex indexName="FKan5041jcgvsl3r2l3fumefuck" tableName="form_tab_translation">
+            <column name="form_popup_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="helias (generated)" id="1675781791870-17">
+        <createIndex indexName="FKbtolvxenod7gjh5x233by80aq" tableName="form_tab_translation">
+            <column name="form_tab_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="helias (generated)" id="1675781791870-18">
+        <createIndex indexName="FKca62g014hqrxghp0erm1tgxet" tableName="form_control_field_translation">
+            <column name="form_control_field_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="helias (generated)" id="1675781791870-19">
+        <createIndex indexName="FKg0v4ibfxe8re41vvub5vhk4f4" tableName="form_translation">
+            <column name="form_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="helias (generated)" id="1675781791870-20">
+        <createIndex indexName="FKhpx0wsb9lekeksg64j68lcan1" tableName="form_control_button_translation">
+            <column name="form_control_button_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="helias (generated)" id="1675781791870-21">
+        <createIndex indexName="FKij9mox5l621aqja7bmqqt84ew" tableName="form_translation">
+            <column name="language_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="helias (generated)" id="1675781791870-22">
+        <createIndex indexName="FKm9b33xayonuf0h4hv2kduehwa" tableName="form_control_field_translation">
+            <column name="language_id"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet author="helias (generated)" id="1675781791870-23">
+        <createIndex indexName="FKoag7hj81rtegh9uge5ofvn0bd" tableName="info_card_script">
+            <column name="info_card_id"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet author="helias (generated)" id="1675781791870-24">
+        <createIndex indexName="FKt73eqv7jqj2lo01shbvwcu3om" tableName="form_area_translation">
+            <column name="form_area_id"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet author="helias (generated)" id="1675781791870-25">
+        <addForeignKeyConstraint baseColumnNames="language_id" baseTableName="form_area_translation" constraintName="FK37cosqyv6b5af53ov80u9po53" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="language" validate="true"/>
+    </changeSet>
+    <changeSet author="helias (generated)" id="1675781791870-26">
+        <addForeignKeyConstraint baseColumnNames="form_action_button_id" baseTableName="form_action_button_translation" constraintName="FK4nwt66irwrt17k6wt20fk5mp8" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="form_action_button" validate="true"/>
+    </changeSet>
+    <changeSet author="helias (generated)" id="1675781791870-27">
+        <addForeignKeyConstraint baseColumnNames="language_id" baseTableName="form_action_button_translation" constraintName="FK5bksgvv6ba9gslbrr2gcwsput" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="language" validate="true"/>
+    </changeSet>
+    <changeSet author="helias (generated)" id="1675781791870-28">
+        <addForeignKeyConstraint baseColumnNames="language_id" baseTableName="form_control_button_translation" constraintName="FK8k1rjj0h7qspatgdt4ttvmuer" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="language" validate="true"/>
+    </changeSet>
+    <changeSet author="helias (generated)" id="1675781791870-29">
+        <addForeignKeyConstraint baseColumnNames="language_id" baseTableName="form_tab_translation" constraintName="FKa90p4gpsoghs9dp8y8mq332ic" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="language" validate="true"/>
+    </changeSet>
+    <changeSet author="helias (generated)" id="1675781791870-30">
+        <addForeignKeyConstraint baseColumnNames="form_popup_id" baseTableName="form_tab_translation" constraintName="FKan5041jcgvsl3r2l3fumefuck" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="form_popup" validate="true"/>
+    </changeSet>
+    <changeSet author="helias (generated)" id="1675781791870-31">
+        <addForeignKeyConstraint baseColumnNames="form_tab_id" baseTableName="form_tab_translation" constraintName="FKbtolvxenod7gjh5x233by80aq" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="form_tab" validate="true"/>
+    </changeSet>
+    <changeSet author="helias (generated)" id="1675781791870-32">
+        <addForeignKeyConstraint baseColumnNames="form_control_field_id" baseTableName="form_control_field_translation" constraintName="FKca62g014hqrxghp0erm1tgxet" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="form_control_field" validate="true"/>
+    </changeSet>
+    <changeSet author="helias (generated)" id="1675781791870-33">
+        <addForeignKeyConstraint baseColumnNames="form_id" baseTableName="form_translation" constraintName="FKg0v4ibfxe8re41vvub5vhk4f4" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="form" validate="true"/>
+    </changeSet>
+    <changeSet author="helias (generated)" id="1675781791870-34">
+        <addForeignKeyConstraint baseColumnNames="form_control_button_id" baseTableName="form_control_button_translation" constraintName="FKhpx0wsb9lekeksg64j68lcan1" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="form_control_button" validate="true"/>
+    </changeSet>
+    <changeSet author="helias (generated)" id="1675781791870-35">
+        <addForeignKeyConstraint baseColumnNames="language_id" baseTableName="form_translation" constraintName="FKij9mox5l621aqja7bmqqt84ew" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="language" validate="true"/>
+    </changeSet>
+    <changeSet author="helias (generated)" id="1675781791870-36">
+        <addForeignKeyConstraint baseColumnNames="language_id" baseTableName="form_control_field_translation" constraintName="FKm9b33xayonuf0h4hv2kduehwa" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="language" validate="true"/>
+    </changeSet>
+    <changeSet author="helias (generated)" id="1675781791870-37">
+        <addForeignKeyConstraint baseColumnNames="info_card_id" baseTableName="info_card_script" constraintName="FKoag7hj81rtegh9uge5ofvn0bd" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="info_card" validate="true"/>
+    </changeSet>
+    <changeSet author="helias (generated)" id="1675781791870-38">
+        <addForeignKeyConstraint baseColumnNames="form_area_id" baseTableName="form_area_translation" constraintName="FKt73eqv7jqj2lo01shbvwcu3om" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="form_area" validate="true"/>
+    </changeSet>
+</databaseChangeLog>
