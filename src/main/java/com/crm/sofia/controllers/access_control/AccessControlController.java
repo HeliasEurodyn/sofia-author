@@ -1,6 +1,8 @@
 package com.crm.sofia.controllers.access_control;
 
+import com.crm.sofia.dto.access_control.AccessControlDTO;
 import com.crm.sofia.dto.access_control.PrivilegeDTO;
+import com.crm.sofia.dto.timeline.TimelineDTO;
 import com.crm.sofia.dto.user.RoleDTO;
 import com.crm.sofia.dto.user.UserDTO;
 import com.crm.sofia.services.access_control.AccessControlService;
@@ -11,6 +13,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RestController
@@ -29,6 +32,12 @@ public class AccessControlController {
     List<UserDTO> getUsersByRole(@RequestParam("roleId") String roleId) {
 
         return this.accessControlService.getUsersByRole(roleId);
+    }
+
+    @GetMapping(path = "/permissions")
+    List<AccessControlDTO> getPermissions() {
+
+        return this.accessControlService.getPermisionList();
     }
 
     @GetMapping(path = "/available")
@@ -50,6 +59,15 @@ public class AccessControlController {
 
       return  this.accessControlService.removeUsersFromRole(privilegeDTO);
 
+    }
+
+    @DeleteMapping
+    public void deleteAccessControl(@RequestParam("id") String id) {accessControlService.deleteAccessControl(id);
+    }
+
+    @PutMapping
+    public ResponseEntity<Map<String,String>> putPermissions(@RequestBody List<AccessControlDTO> accessControlList) {
+        return  this.accessControlService.putPermissions(accessControlList);
     }
 
 

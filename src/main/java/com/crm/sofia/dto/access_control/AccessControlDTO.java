@@ -21,6 +21,8 @@ public class AccessControlDTO extends BaseDTO {
 
     private String entityId;
 
+    private String entityName;
+
     private Boolean createEntity;
 
     private Boolean updateEntity;
@@ -30,4 +32,25 @@ public class AccessControlDTO extends BaseDTO {
     private Boolean deleteEntity;
 
     private RoleDTO role;
+
+    private String roleId;
+
+    private  String roleName;
+
+
+
+    public AccessControlDTO(String id,String type, String entityId,String entityName ,Boolean createEntity,
+                            Boolean updateEntity, Boolean readEntity, Boolean deleteEntity,
+                            String roleId, String roleName) {
+        this.setId(id);
+        this.type = type;
+        this.entityId = entityId;
+        this.entityName =entityName;
+        this.createEntity = createEntity;
+        this.updateEntity = updateEntity;
+        this.readEntity = readEntity;
+        this.deleteEntity = deleteEntity;
+        this.roleId = roleId;
+        this.roleName = roleName;
+    }
 }
