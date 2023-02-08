@@ -1,0 +1,31 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.3.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
+    <changeSet author="KonstantinosAftzis (generated)" id="2053165644001-20">
+        <createTable tableName="html_template">
+            <column name="id" type="VARCHAR(36)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="created_by" type="VARCHAR(255)"/>
+            <column defaultValueComputed="current_timestamp()" name="created_on" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column name="modified_by" type="VARCHAR(255)"/>
+            <column defaultValueComputed="current_timestamp()" name="modified_on" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueComputed="NULL" name="short_order" type="BIGINT"/>
+            <column name="description" type="VARCHAR(1024)"/>
+            <column name="html" type="TEXT"/>
+            <column name="title" type="VARCHAR(255)"/>
+            <column name="component_id" type="VARCHAR(36)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="KonstantinosAftzis (generated)" id="2053165644001-21">
+        <createIndex indexName="FKem78O0bEZNZOoYa6PBv2uHB" tableName="html_template">
+            <column name="component_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="KonstantinosAftzis (generated)" id="2053165644001-22">
+        <addForeignKeyConstraint baseColumnNames="component_id" baseTableName="html_template" constraintName="FKem78O0bEZNZOoYa6PBv2uHB" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="component"/>
+    </changeSet>
+</databaseChangeLog>
