@@ -25,6 +25,11 @@ public class FormDesignerController {
         return this.formDesignerService.getObject();
     }
 
+    @GetMapping(path="/10-latest")
+    List<FormDTO> get10LatestObject() {
+        return this.formDesignerService.get10LatestObject();
+    }
+
     @GetMapping(path = "/by-id")
     FormDTO getObject(@RequestParam("id") String id) {
         return this.formDesignerService.getObject(id);

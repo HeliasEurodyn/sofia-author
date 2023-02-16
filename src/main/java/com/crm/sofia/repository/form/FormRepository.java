@@ -3,6 +3,7 @@ package com.crm.sofia.repository.form;
 import com.crm.sofia.dto.form.FormDTO;
 import com.crm.sofia.model.form.FormEntity;
 import com.crm.sofia.repository.common.BaseRepository;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -64,5 +65,8 @@ public interface FormRepository extends BaseRepository<FormEntity> {
 
     @Query("SELECT new com.crm.sofia.dto.form.FormDTO(f.id, f.name, f.modifiedOn,f.jsonUrl, c.id, c.name) FROM FormEntity f INNER JOIN f.component c ORDER BY f.modifiedOn DESC")
     List<FormDTO> getObject();
+
+    @Query("SELECT new com.crm.sofia.dto.form.FormDTO(f.id, f.name, f.modifiedOn,f.jsonUrl, c.id, c.name) FROM FormEntity f INNER JOIN f.component c ORDER BY f.modifiedOn DESC")
+    List<FormDTO> get10LatestObject(Pageable pageable);
 
 }

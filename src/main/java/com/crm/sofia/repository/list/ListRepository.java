@@ -3,6 +3,7 @@ package com.crm.sofia.repository.list;
 import com.crm.sofia.dto.list.ListDTO;
 import com.crm.sofia.model.list.ListEntity;
 import com.crm.sofia.repository.common.BaseRepository;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -66,5 +67,8 @@ public interface ListRepository extends BaseRepository<ListEntity> {
 
     @Query("SELECT new com.crm.sofia.dto.list.ListDTO(l.id, l.name, l.modifiedOn, c.id, c.name) FROM ListEntity l INNER JOIN l.component c ORDER BY l.modifiedOn DESC")
     List<ListDTO> getObject();
+
+    @Query("SELECT new com.crm.sofia.dto.list.ListDTO(l.id, l.name, l.modifiedOn, c.id, c.name) FROM ListEntity l INNER JOIN l.component c ORDER BY l.modifiedOn DESC")
+    List<ListDTO> get10LatestObject(Pageable pageable);
 
 }

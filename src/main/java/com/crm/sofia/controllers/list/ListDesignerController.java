@@ -25,6 +25,11 @@ public class ListDesignerController {
         return this.listDesignerService.getObject();
     }
 
+    @GetMapping(path="/10-latest")
+    List<ListDTO> get10LatestObject() {
+        return this.listDesignerService.get10LatestObject();
+    }
+
     @GetMapping(path = "/by-id")
     ListDTO getObject(@RequestParam("id") String id) {
         return this.listDesignerService.getObject(id);

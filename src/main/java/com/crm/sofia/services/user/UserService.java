@@ -19,6 +19,7 @@ import com.crm.sofia.services.auth.JWTService;
 import com.crm.sofia.services.menu.MenuFieldService;
 import com.crm.sofia.utils.GeneralUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -74,6 +75,11 @@ public class UserService {
 
     public List<UserDTO> getAllUsers() {
         List<UserDTO> users = userRepository.getAllUsers(AppConstants.Types.UserStatus.deleted);
+        return users;
+    }
+
+    public List<UserDTO> get10LatestUsers() {
+        List<UserDTO> users = userRepository.get10LatestUsers(AppConstants.Types.UserStatus.deleted, PageRequest.of (0,10));
         return users;
     }
 

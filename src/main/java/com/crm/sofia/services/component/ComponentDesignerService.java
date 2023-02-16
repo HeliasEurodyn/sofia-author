@@ -1,13 +1,11 @@
 package com.crm.sofia.services.component;
 
-import com.crm.sofia.dto.common.BaseDTO;
 import com.crm.sofia.dto.component.ComponentDTO;
 import com.crm.sofia.dto.component.ComponentPersistEntityDTO;
 import com.crm.sofia.dto.component.ComponentPersistEntityFieldDTO;
 import com.crm.sofia.exception.DoesNotExistException;
 import com.crm.sofia.mapper.component.ComponentMapper;
 import com.crm.sofia.mapper.component.ComponentPersistEntityMapper;
-import com.crm.sofia.model.common.MainEntity;
 import com.crm.sofia.model.component.Component;
 import com.crm.sofia.model.component.ComponentPersistEntity;
 import com.crm.sofia.model.component.ComponentPersistEntityField;
@@ -15,7 +13,6 @@ import com.crm.sofia.model.persistEntity.PersistEntity;
 import com.crm.sofia.repository.component.ComponentPersistEntityRepository;
 import com.crm.sofia.repository.component.ComponentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

@@ -40,6 +40,12 @@ public class UserController {
         return userService.getAllUsers();
     }
 
+    @GetMapping(path="/10-latest")
+    public @ResponseBody
+    Collection<UserDTO> get10LatestUsers() {
+        return userService.get10LatestUsers();
+    }
+
     @GetMapping(path="/by-id")
     public UserDTO getUser(@RequestParam("id") String id) {
         return userService.getUser(id);

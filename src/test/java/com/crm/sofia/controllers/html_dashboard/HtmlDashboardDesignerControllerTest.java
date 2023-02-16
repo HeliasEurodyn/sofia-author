@@ -51,6 +51,7 @@ public class HtmlDashboardDesignerControllerTest {
 
         this.htmlDashboardDTOList = new ArrayList<>();
         dto = new HtmlDashboardDTO().setName("dummyNameDTO");
+        dto.setId("1");
         this.htmlDashboardDTOList.add(dto);
 
         mvc = MockMvcBuilders.standaloneSetup(htmlDashboardDesignerController)

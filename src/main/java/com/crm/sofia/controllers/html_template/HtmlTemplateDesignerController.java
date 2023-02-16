@@ -36,8 +36,8 @@ public class HtmlTemplateDesignerController {
 
 
     @GetMapping(path = "/download")
-    public void print(@RequestParam("id") String id, HttpServletResponse response) throws IOException, DocumentException {
-        htmlTemplateDesignerService.print(id, response);
+    public void download(@RequestParam("id") String id, HttpServletResponse response) throws IOException, DocumentException {
+        htmlTemplateDesignerService.download(id, response);
     }
 
 

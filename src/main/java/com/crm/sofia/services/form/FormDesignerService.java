@@ -12,6 +12,7 @@ import com.crm.sofia.services.component.ComponentPersistEntityFieldAssignmentSer
 import com.crm.sofia.services.language.LanguageDesignerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -107,6 +108,11 @@ public class FormDesignerService {
 
     public List<FormDTO> getObject() {
         List<FormDTO> formList = this.formRepository.getObject();
+        return formList;
+    }
+
+    public List<FormDTO> get10LatestObject() {
+        List<FormDTO> formList = this.formRepository.get10LatestObject(PageRequest.of (0,10));
         return formList;
     }
 

@@ -11,6 +11,7 @@ import com.crm.sofia.services.auth.JWTService;
 import com.crm.sofia.services.language.LanguageDesignerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -99,6 +100,10 @@ public class ListDesignerService {
 
     public List<ListDTO> getObject() {
         return this.listRepository.getObject();
+    }
+
+    public List<ListDTO> get10LatestObject() {
+        return this.listRepository.get10LatestObject(PageRequest.of (0,10));
     }
 
     public ListDTO getObject(String id) {
