@@ -28,24 +28,20 @@ public class HtmlTemplateDesignerController {
         return htmlTemplateDesignerService.getObject();
     }
 
-
     @GetMapping(path = "/by-id")
     HtmlTemplateDTO getObject(@RequestParam("id") String id) {
         return htmlTemplateDesignerService.getObject(id);
     }
 
-
     @GetMapping(path = "/download")
-    public void download(@RequestParam("id") String id, HttpServletResponse response) throws IOException, DocumentException {
-        htmlTemplateDesignerService.download(id, response);
+    public void print(@RequestParam("id") String id, HttpServletResponse response) throws IOException, DocumentException {
+        htmlTemplateDesignerService.print(id, response);
     }
-
 
     @PostMapping
     public HtmlTemplateDTO postObject(@RequestBody HtmlTemplateDTO htmlTemplateDTO) throws IOException {
         return htmlTemplateDesignerService.postObject(htmlTemplateDTO);
     }
-
 
     @PutMapping
     public HtmlTemplateDTO putObject(@RequestBody HtmlTemplateDTO htmlTemplateDTO) {
