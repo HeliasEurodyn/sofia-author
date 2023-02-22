@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.annotation.IfProfileValue;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +22,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@IfProfileValue(name = "spring.profiles.active", values = {"dev"})
 @TestPropertySource("/application-test.properties")
 @SpringBootTest(classes = {SofiaApplication.class})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
