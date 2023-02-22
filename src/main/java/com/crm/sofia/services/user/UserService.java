@@ -20,6 +20,7 @@ import com.crm.sofia.services.menu.MenuFieldService;
 import com.crm.sofia.utils.GeneralUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -56,7 +57,7 @@ public class UserService {
 
     public UserService(UserRepository userRepository,
                        UserMapper userMapper,
-                       PasswordEncoder passwordEncoder,
+                       @Lazy PasswordEncoder passwordEncoder,
                        JWTService jwtService,
                        MenuFieldService menuFieldService,
                        RoleRepository roleRepository,
