@@ -21,7 +21,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@EnabledIf(expression = "#{environment['spring.profiles.active'] == 'dev'}", loadContext = true)
+@EnabledIf(expression = "#{environment['spring.profiles.active'] == 'test'}", loadContext = true)
 @TestPropertySource("/application-test.properties")
 @SpringBootTest(classes = {SofiaApplication.class})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
