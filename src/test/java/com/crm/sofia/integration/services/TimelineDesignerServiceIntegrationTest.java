@@ -8,13 +8,12 @@ import com.crm.sofia.model.timeline.Timeline;
 import com.crm.sofia.repository.timeline.TimelineRepository;
 import com.crm.sofia.services.timeline.TimelineDesignerService;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.annotation.IfProfileValue;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.junit.jupiter.EnabledIf;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -22,7 +21,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@IfProfileValue(name = "spring.profiles.active", values = {"dev"})
+@EnabledIf(expression = "#{environment['spring.profiles.active'] == 'dev'}", loadContext = true)
 @TestPropertySource("/application-test.properties")
 @SpringBootTest(classes = {SofiaApplication.class})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -65,7 +64,6 @@ public class TimelineDesignerServiceIntegrationTest {
     @Test
     @DisplayName("Get Timeline List")
     @Order(1)
-    @EnabledIfSystemProperty(named = "deployment", matches = "DEV")
     public void getObjectTest() {
         List<TimelineDTO> list = timelineDesignerService.getObject();
         assertFalse(list.isEmpty(), "List should not empty");
@@ -78,7 +76,6 @@ public class TimelineDesignerServiceIntegrationTest {
     @Test
     @DisplayName("Get Timeline")
     @Order(2)
-    @EnabledIfSystemProperty(named = "deployment", matches = "DEV")
     public void getObjectByIdTest() {
         Optional<Timeline> timeline = timelineRepository.findById("1");
         Optional<Timeline> timeline2 = timelineRepository.findById("2");
@@ -121,7 +118,6 @@ public class TimelineDesignerServiceIntegrationTest {
     @Test
     @DisplayName("Delete Timeline")
     @Order(3)
-    @EnabledIfSystemProperty(named = "deployment", matches = "DEV")
     public void deleteObjectByIdTest() {
         List<Timeline> timelineList = timelineRepository.findAll();
         assertFalse(timelineList.isEmpty());
@@ -164,7 +160,6 @@ public class TimelineDesignerServiceIntegrationTest {
     @Test
     @DisplayName("Post-Put Timeline")
     @Order(4)
-    @EnabledIfSystemProperty(named = "deployment", matches = "DEV")
     public void postObjectTest() {
 
         TimelineDTO timelineDTO1 = new TimelineDTO()

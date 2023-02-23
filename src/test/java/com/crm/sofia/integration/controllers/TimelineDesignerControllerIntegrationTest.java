@@ -9,16 +9,14 @@ import com.crm.sofia.model.timeline.Timeline;
 import com.crm.sofia.repository.timeline.TimelineRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.annotation.IfProfileValue;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.junit.jupiter.EnabledIf;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -37,7 +35,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@IfProfileValue(name = "spring.profiles.active", values = {"dev"})
+@EnabledIf(expression = "#{environment['spring.profiles.active'] == 'dev'}", loadContext = true)
 @TestPropertySource("/application-test.properties")
 @SpringBootTest(classes = {SofiaApplication.class})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -101,7 +99,6 @@ public class TimelineDesignerControllerIntegrationTest {
     @Test
     @DisplayName("Get Timeline List Http Request ")
     @Order(1)
-    @EnabledIfSystemProperty(named = "deployment", matches = "DEV")
     public void getTimelineListHttpRequest() throws Exception{
 
         mockMvc.perform(MockMvcRequestBuilders.get("/timeline-designer"))
@@ -113,7 +110,6 @@ public class TimelineDesignerControllerIntegrationTest {
     @Test
     @DisplayName("Create Timeline Http Request ")
     @Order(2)
-    @EnabledIfSystemProperty(named = "deployment", matches = "DEV")
     public void createTimelineHttpRequest() throws Exception{
 
         mockMvc.perform(post("/timeline-designer")
@@ -135,7 +131,6 @@ public class TimelineDesignerControllerIntegrationTest {
     @Test
     @DisplayName("Update Timeline Http Request ")
     @Order(3)
-    @EnabledIfSystemProperty(named = "deployment", matches = "DEV")
     public void updateTimelineHttpRequest() throws Exception{
 
        Timeline timeline1 = timelineRepository.findById("1").get();
@@ -169,7 +164,6 @@ public class TimelineDesignerControllerIntegrationTest {
     @Test
     @DisplayName("Get Timeline Http Request ")
     @Order(4)
-    @EnabledIfSystemProperty(named = "deployment", matches = "DEV")
     public void getTimelineHttpRequest() throws Exception{
 
         Optional<Timeline> timeline1 = timelineRepository.findById("1");
@@ -188,7 +182,6 @@ public class TimelineDesignerControllerIntegrationTest {
     @Test
     @DisplayName("Get Timeline Http Request With Empty Response")
     @Order(5)
-    @EnabledIfSystemProperty(named = "deployment", matches = "DEV")
     public void getTimelineHttpRequestEmptyResponse() throws Exception{
 
         Optional<Timeline> timeline1 = timelineRepository.findById("0");
@@ -205,7 +198,6 @@ public class TimelineDesignerControllerIntegrationTest {
     @Test
     @DisplayName("Delete Timeline Http Request ")
     @Order(6)
-    @EnabledIfSystemProperty(named = "deployment", matches = "DEV")
     public void deleteTimelineHttpRequest() throws Exception{
 
         Optional<Timeline> timeline1 = timelineRepository.findById("1");
@@ -222,7 +214,6 @@ public class TimelineDesignerControllerIntegrationTest {
     @Test
     @DisplayName("Delete Timeline Http Request With Empty Response")
     @Order(7)
-    @EnabledIfSystemProperty(named = "deployment", matches = "DEV")
     public void deleteTimelineHttpRequestEmptyResponse() throws Exception{
 
         Optional<Timeline> timeline1 = timelineRepository.findById("0");
