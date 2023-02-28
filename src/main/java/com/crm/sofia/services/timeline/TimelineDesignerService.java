@@ -6,6 +6,7 @@ import com.crm.sofia.mapper.timeline.TimelineMapper;
 import com.crm.sofia.model.timeline.Timeline;
 import com.crm.sofia.repository.timeline.TimelineRepository;
 import com.crm.sofia.services.auth.JWTService;
+import com.crm.sofia.utils.EncodingUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +14,6 @@ import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.Base64;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class TimelineDesignerService {
@@ -38,17 +38,23 @@ public class TimelineDesignerService {
 
         TimelineDTO dto = timelineMapper.map(optionalEntity);
 
-        String encodedQuery = Base64.getEncoder().encodeToString(dto.getQuery().getBytes(StandardCharsets.UTF_8));
-        dto.setQuery(encodedQuery);
-
+        if (dto.getQuery() != null) {
+            String uriEncoded = EncodingUtil.encodeURIComponent(dto.getQuery());
+            String encodedQuery = Base64.getEncoder().encodeToString(uriEncoded.getBytes(StandardCharsets.UTF_8));
+            dto.setQuery(encodedQuery);
+        }
         return dto;
+
     }
 
 
     public TimelineDTO postObject(TimelineDTO timelineDTO) {
 
-        byte[] decodedQuery = Base64.getDecoder().decode(timelineDTO.getQuery());
-        timelineDTO.setQuery(new String(decodedQuery));
+        if (timelineDTO.getQuery() != null) {
+            byte[] decodedQuery = Base64.getDecoder().decode(timelineDTO.getQuery());
+            String Query = EncodingUtil.decodeURIComponent(new String(decodedQuery));
+            timelineDTO.setQuery(Query);
+        }
 
         Timeline timeline = timelineMapper.map(timelineDTO);
         if (timeline.getId() == null) {
@@ -63,12 +69,11 @@ public class TimelineDesignerService {
     }
 
     public void deleteObject(String id) {
-       Timeline optionalEntity = timelineRepository.findById(id)
-                       .orElseThrow(() -> new DoesNotExistException("Timeline Does Not Exist"));
+        Timeline optionalEntity = timelineRepository.findById(id)
+                .orElseThrow(() -> new DoesNotExistException("Timeline Does Not Exist"));
 
         timelineRepository.deleteById(optionalEntity.getId());
     }
-
 
 
 }

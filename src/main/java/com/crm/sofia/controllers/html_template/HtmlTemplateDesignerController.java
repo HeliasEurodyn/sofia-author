@@ -38,6 +38,7 @@ public class HtmlTemplateDesignerController {
         htmlTemplateDesignerService.print(id, response);
     }
 
+
     @PostMapping
     public HtmlTemplateDTO postObject(@RequestBody HtmlTemplateDTO htmlTemplateDTO) throws IOException {
         return htmlTemplateDesignerService.postObject(htmlTemplateDTO);

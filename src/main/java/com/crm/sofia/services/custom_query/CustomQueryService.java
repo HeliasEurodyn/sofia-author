@@ -6,6 +6,7 @@ import com.crm.sofia.mapper.custom_query.CustomQueryMapper;
 import com.crm.sofia.model.custom_query.CustomQuery;
 import com.crm.sofia.repository.custom_query.CustomQueryRepository;
 import com.crm.sofia.services.auth.JWTService;
+import com.crm.sofia.utils.EncodingUtil;
 import org.hibernate.HibernateException;
 import org.hibernate.query.internal.NativeQueryImpl;
 import org.hibernate.transform.AliasToEntityMapResultTransformer;
@@ -18,7 +19,9 @@ import org.springframework.web.server.ResponseStatusException;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.transaction.Transactional;
+import java.nio.charset.StandardCharsets;
 import java.time.Instant;
+import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 
@@ -48,6 +51,12 @@ public class CustomQueryService {
                 .orElseThrow(() -> new DoesNotExistException("CustomQuery Does Not Exist"));
 
         CustomQueryDTO dto = customQueryMapper.map(optionalEntity);
+
+        if (dto.getQuery() != null) {
+            String uriEncoded = EncodingUtil.encodeURIComponent(dto.getQuery());
+            String encodedQuery = Base64.getEncoder().encodeToString(uriEncoded.getBytes(StandardCharsets.UTF_8));
+            dto.setQuery(encodedQuery);
+        }
         return dto;
     }
 
@@ -106,6 +115,12 @@ public class CustomQueryService {
     }
 
     public CustomQueryDTO postObject(CustomQueryDTO customQueryDto) {
+
+        if (customQueryDto.getQuery() != null) {
+            byte[] decodedQuery = Base64.getDecoder().decode(customQueryDto.getQuery());
+            String query = EncodingUtil.decodeURIComponent(new String(decodedQuery));
+            customQueryDto.setQuery(query);
+        }
 
         CustomQuery customQuery = customQueryMapper.map(customQueryDto);
         if (customQueryDto.getId() == null) {

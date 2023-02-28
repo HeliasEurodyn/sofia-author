@@ -7,13 +7,16 @@ import com.crm.sofia.mapper.appview.AppViewMapper;
 import com.crm.sofia.model.persistEntity.PersistEntity;
 import com.crm.sofia.repository.persistEntity.PersistEntityRepository;
 import com.crm.sofia.services.component.ComponentDesignerService;
+import com.crm.sofia.utils.EncodingUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.UUID;
 import java.util.regex.Matcher;
@@ -42,6 +45,12 @@ public class AppViewService {
     }
 
     public AppViewDTO postObject(AppViewDTO appViewDTO) {
+
+        if (appViewDTO.getQuery() != null) {
+            byte[] decodedQuery = Base64.getDecoder().decode(appViewDTO.getQuery());
+            String query = EncodingUtil.decodeURIComponent(new String(decodedQuery));
+            appViewDTO.setQuery(query);
+        }
 
         /**
          * Remove deleted Fields From Components
@@ -80,7 +89,15 @@ public class AppViewService {
         PersistEntity optionalView = this.appViewRepository.findById(id)
                 .orElseThrow(() -> new DoesNotExistException("View Does Not Exist"));
 
-        return this.appViewMapper.map(optionalView);
+       AppViewDTO dto = appViewMapper.map(optionalView);
+
+        if (dto.getQuery() != null) {
+            String uriEncoded = EncodingUtil.encodeURIComponent(dto.getQuery());
+            String encodedQuery = Base64.getEncoder().encodeToString(uriEncoded.getBytes(StandardCharsets.UTF_8));
+            dto.setQuery(encodedQuery);
+        }
+
+        return dto;
     }
 
     public void deleteObject(String id) {

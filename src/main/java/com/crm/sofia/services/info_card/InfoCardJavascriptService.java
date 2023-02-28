@@ -9,7 +9,6 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.List;
 
 @Service
@@ -57,14 +56,14 @@ public class InfoCardJavascriptService {
     }
 
     private String generateUserScripts(InfoCard infoCard) {
-        List<String> decodedScripts = new ArrayList<>();
+        List<String> scripts = new ArrayList<>();
         infoCard.getScripts().forEach(listScript -> {
-            byte[] decodedBytes = Base64.getDecoder().decode(listScript.getScript());
-            String decodedScript = new String(decodedBytes);
-            decodedScripts.add(decodedScript);
+
+            scripts.add(listScript.getScript());
         });
 
-        return String.join("\n", decodedScripts);
+
+        return String.join("\n", scripts);
     }
 
     private String generateClassInit(InfoCard infoCard) {
@@ -72,7 +71,7 @@ public class InfoCardJavascriptService {
 
         List<String> classDefLines = new ArrayList<>();
         classDefLines.add("class InfoCardDynamicScript");
-        classDefLines.add(infoCard.getId().replace("-","_"));
+        classDefLines.add(infoCard.getId().replace("-", "_"));
         classDefLines.add(" {");
         String classDef = String.join("", classDefLines);
 

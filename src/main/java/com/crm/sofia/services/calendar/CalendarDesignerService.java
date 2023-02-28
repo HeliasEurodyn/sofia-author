@@ -6,6 +6,7 @@ import com.crm.sofia.mapper.calendar.CalendarMapper;
 import com.crm.sofia.model.calendar.Calendar;
 import com.crm.sofia.repository.calendar.CalendarRepository;
 import com.crm.sofia.services.auth.JWTService;
+import com.crm.sofia.utils.EncodingUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -43,15 +44,19 @@ public class CalendarDesignerService {
 
         CalendarDTO dto = calendarMapper.map(entity);
 
-        String encodedQuery = Base64.getEncoder().encodeToString(dto.getQuery().getBytes(StandardCharsets.UTF_8));
-        dto.setQuery(encodedQuery);
+        if (dto.getQuery() != null) {
+            String uriEncoded = EncodingUtil.encodeURIComponent(dto.getQuery());
+            String encodedQuery = Base64.getEncoder().encodeToString(uriEncoded.getBytes(StandardCharsets.UTF_8));
+            dto.setQuery(encodedQuery);
+        }
         return dto;
     }
 
     public CalendarDTO postObject(CalendarDTO calendarDTO) {
         if (calendarDTO.getQuery() != null) {
             byte[] decodedQuery = Base64.getDecoder().decode(calendarDTO.getQuery());
-            calendarDTO.setQuery(new String(decodedQuery));
+            String Query = EncodingUtil.decodeURIComponent(new String(decodedQuery));
+            calendarDTO.setQuery(Query);
         }
 
 
