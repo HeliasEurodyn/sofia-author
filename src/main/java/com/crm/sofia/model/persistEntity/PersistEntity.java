@@ -53,4 +53,8 @@ public class PersistEntity extends MainEntity implements Serializable {
     @JoinColumn(name = "base_table_id", referencedColumnName = "id")
     private List<ForeignKeyConstrain> foreignKeyConstrainList;
 
+    public void removeForeignKeyConstrain(ForeignKeyConstrain foreignKeyConstrain){
+        foreignKeyConstrainList.remove(foreignKeyConstrain);
+    }
+
 }

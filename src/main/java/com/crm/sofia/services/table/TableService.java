@@ -1,16 +1,21 @@
 package com.crm.sofia.services.table;
 
 import com.crm.sofia.dto.table.ForeignKeyConstrainDTO;
+import com.crm.sofia.dto.table.RemoveForeignKeyConstrainDTO;
 import com.crm.sofia.dto.table.TableDTO;
 import com.crm.sofia.dto.table.TableFieldDTO;
 import com.crm.sofia.exception.DoesNotExistException;
 import com.crm.sofia.exception.table.ForeignKeyConstrainAlreadyExist;
+import com.crm.sofia.mapper.persistEntity.ForeignKeyConstrainMapper;
 import com.crm.sofia.mapper.table.TableMapper;
+import com.crm.sofia.model.persistEntity.ForeignKeyConstrain;
 import com.crm.sofia.model.persistEntity.PersistEntity;
 import com.crm.sofia.repository.persistEntity.PersistEntityRepository;
 import com.crm.sofia.services.auth.JWTService;
 import com.crm.sofia.services.component.ComponentDesignerService;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,16 +39,18 @@ public class TableService {
     private final JWTService jwtService;
     private final ComponentDesignerService componentDesignerService;
 
+    private final ForeignKeyConstrainMapper foreignKeyConstrainMapper;
+
     public TableService(PersistEntityRepository persistEntityRepository,
                         TableMapper tableMapper,
                         EntityManager entityManager, JWTService jwtService,
-                        ComponentDesignerService componentDesignerService) {
+                        ComponentDesignerService componentDesignerService, ForeignKeyConstrainMapper foreignKeyConstrainMapper) {
         this.persistEntityRepository = persistEntityRepository;
         this.tableMapper = tableMapper;
         this.entityManager = entityManager;
         this.jwtService = jwtService;
         this.componentDesignerService = componentDesignerService;
-
+        this.foreignKeyConstrainMapper = foreignKeyConstrainMapper;
     }
 
     public TableDTO postObject(TableDTO componentDTO) {
@@ -413,5 +420,41 @@ public class TableService {
             dtos.add(dto);
         }
         return dtos;
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public ResponseEntity<Map<String, String>> DropForeignKeyConstrain(RemoveForeignKeyConstrainDTO dto) {
+
+        Map<String,String> response = new HashMap<>();
+
+        if(dto!= null){
+            if(dto.getForeignKeyConstrainDTO()!= null && dto.getTableDTO()!=null){
+
+                ForeignKeyConstrainDTO foreignKeyConstrainDTO = dto.getForeignKeyConstrainDTO();
+                TableDTO tableDTO = dto.getTableDTO();
+                PersistEntity persistEntity = persistEntityRepository.findById(tableDTO.getId())
+                        .orElseThrow(() -> new DoesNotExistException("Table Does Not Exist"));
+
+                ForeignKeyConstrain foreignKeyConstrain = foreignKeyConstrainMapper.map(foreignKeyConstrainDTO);
+
+                persistEntity.removeForeignKeyConstrain(foreignKeyConstrain);
+
+                String sql = "";
+                sql += "ALTER TABLE " + tableDTO.getName().replace(" ", "");
+                sql += " \n";
+                sql += " DROP CONSTRAINT ";
+                sql += foreignKeyConstrainDTO.getName();
+                sql += " ; ";
+
+                Query query = entityManager.createNativeQuery(sql);
+                query.executeUpdate();
+
+                response.put("message","The foreign key constrain  has been removed successfully");
+                return new ResponseEntity<>(response, HttpStatus.OK);
+
+            }
+        }
+        response.put("message","Table or Foreign Key are missing");
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 }

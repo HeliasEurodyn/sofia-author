@@ -1,13 +1,16 @@
 package com.crm.sofia.controllers.table;
 
+import com.crm.sofia.dto.table.RemoveForeignKeyConstrainDTO;
 import com.crm.sofia.dto.table.TableDTO;
 import com.crm.sofia.dto.table.TableFieldDTO;
 import com.crm.sofia.services.table.TableService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 
 @Slf4j
@@ -59,5 +62,11 @@ public class TableController {
     List<TableFieldDTO> generateTableFields(@RequestParam("name") String name) {
         return this.tableService.generateTableFields(name);
     }
+
+    @PutMapping(path="/drop_foreign_key_constrain")
+    public ResponseEntity<Map<String,String>> DropForeignKeyConstrain(@RequestBody RemoveForeignKeyConstrainDTO dto) {
+       return this.tableService.DropForeignKeyConstrain(dto);
+    }
+
 
 }
