@@ -154,6 +154,8 @@ public class TableService {
 
             if (tableFieldDTO.getHasNotNull()) {
                 sql += " NOT NULL ";
+            } else {
+                sql += " NULL ";
             }
 
             if (tableFieldDTO.getHasDefault()) {
@@ -207,6 +209,8 @@ public class TableService {
 
             if (tableFieldDTO.getHasNotNull()) {
                 sql += " NOT NULL ";
+            } else {
+                sql += " NULL ";
             }
 
             if (tableFieldDTO.getHasDefault()) {
