@@ -17,7 +17,7 @@ public class ExprPlus extends ExprUnit {
         String expressionPart = expression.substring(expressionPosition, expressionPosition + exprUnitLength);
         if (expressionPart.equals(exprUnitString)) {
             ExprPlus exprUnit = new ExprPlus();
-            //exprUnit.setExpressionPart(expressionPart);
+            exprUnit.setExpressionPart("+");
             exprUnit.setExpressionPosition(expressionPosition);
             return exprUnit;
         }
