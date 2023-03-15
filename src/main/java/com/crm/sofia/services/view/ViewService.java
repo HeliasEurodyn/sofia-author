@@ -1,18 +1,26 @@
 package com.crm.sofia.services.view;
 
+import com.crm.sofia.dto.appview.AppViewDTO;
 import com.crm.sofia.dto.view.ViewDTO;
 import com.crm.sofia.dto.view.ViewFieldDTO;
 import com.crm.sofia.exception.DoesNotExistException;
 import com.crm.sofia.mapper.view.ViewMapper;
 import com.crm.sofia.model.persistEntity.PersistEntity;
 import com.crm.sofia.repository.persistEntity.PersistEntityRepository;
+import com.crm.sofia.services.auth.JWTService;
+import com.crm.sofia.services.component.ComponentDesignerService;
+import com.crm.sofia.utils.EncodingUtil;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
+import java.nio.charset.StandardCharsets;
+import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.UUID;
 import java.util.regex.Matcher;
@@ -22,30 +30,62 @@ import java.util.stream.Collectors;
 @Service
 public class ViewService {
 
+    @Value("${sofia.db.name}")
+    private String sofiaDatabase;
+
     private final PersistEntityRepository persistEntityRepository;
     private final ViewMapper viewMapper;
     private final EntityManager entityManager;
+    private final ComponentDesignerService componentDesignerService;
+    private final JWTService jwtService;
 
     public ViewService(PersistEntityRepository persistEntityRepository,
                        ViewMapper viewMapper,
-                       EntityManager entityManager) {
+                       EntityManager entityManager,
+                       ComponentDesignerService componentDesignerService,
+                       JWTService jwtService) {
         this.persistEntityRepository = persistEntityRepository;
         this.viewMapper = viewMapper;
         this.entityManager = entityManager;
+        this.componentDesignerService = componentDesignerService;
+        this.jwtService = jwtService;
     }
 
     public ViewDTO postObject(ViewDTO viewDTO) {
+
+        if (viewDTO.getQuery() != null) {
+            byte[] decodedQuery = Base64.getDecoder().decode(viewDTO.getQuery());
+            String query = EncodingUtil.decodeURIComponent(new String(decodedQuery));
+            viewDTO.setQuery(query);
+        }
+
+        /**
+         * Remove deleted Fields From Components
+         */
+        this.componentDesignerService.removeComponentTableFieldsByTable(
+                viewDTO.getId(),
+                viewDTO.getViewFieldList()
+                        .stream()
+                        .map( x -> x.getId())
+                        .collect(Collectors.toList())
+        );
+
+        /**
+         * Map And Save DTO
+         */
         PersistEntity view = this.viewMapper.map(viewDTO);
 
+        if ((view.getId() == null ? "" : view.getId()).equals("")) {
+            view.setCreatedBy(jwtService.getUserId());
+            view.setCreatedOn(Instant.now());
+        }
+        view.setModifiedBy(jwtService.getUserId());
+        view.setModifiedOn(Instant.now());
+
         PersistEntity createdView = this.persistEntityRepository.save(view);
+
         return this.viewMapper.map(createdView);
     }
-
-    @Transactional
-    public ViewDTO putObject(ViewDTO viewDTO) {
-        return null;
-    }
-
 
     public List<ViewDTO> getObjectView() {
         List<ViewDTO> viewsList = this.persistEntityRepository.getObjectView("View");
@@ -56,7 +96,15 @@ public class ViewService {
         PersistEntity optionalView = this.persistEntityRepository.findById(id)
                 .orElseThrow(() -> new DoesNotExistException("View Does Not Exist"));
 
-        return this.viewMapper.map(optionalView);
+        ViewDTO dto = this.viewMapper.map(optionalView);
+
+        if (dto.getQuery() != null) {
+            String uriEncoded = EncodingUtil.encodeURIComponent(dto.getQuery());
+            String encodedQuery = Base64.getEncoder().encodeToString(uriEncoded.getBytes(StandardCharsets.UTF_8));
+            dto.setQuery(encodedQuery);
+        }
+
+        return dto;
     }
 
     public void deleteObject(String id) {
@@ -68,14 +116,14 @@ public class ViewService {
 
     @Transactional
     public List<String> getViews() {
-        Query query = entityManager.createNativeQuery("SELECT view_name FROM information_schema.views WHERE view_schema='sofia';");
+        Query query = entityManager.createNativeQuery("SELECT view_name FROM information_schema.views WHERE view_schema='"+sofiaDatabase+"';");
         List<String> viewNames = query.getResultList();
         return viewNames;
     }
 
     @Transactional
     public List<String> getViewFields(String viewName) {
-        Query query = entityManager.createNativeQuery("SHOW COLUMNS FROM " + viewName + " FROM sofia;");
+        Query query = entityManager.createNativeQuery("SHOW COLUMNS FROM " + viewName + " FROM "+sofiaDatabase+";");
         List<Object[]> fields = query.getResultList();
         List<String> fieldNames = fields.stream().map(f -> f[0].toString()).collect(Collectors.toList());
 
@@ -97,11 +145,16 @@ public class ViewService {
     @Transactional
     public List<ViewFieldDTO> generateViewFields(String sql) {
 
+        byte[] baseDecodedSql = Base64.getDecoder().decode(sql);
+        String decodedSql = EncodingUtil.decodeURIComponent(new String(baseDecodedSql));
+        sql = decodedSql;
+
+
         List<ViewFieldDTO> dtos = new ArrayList<>();
         String uuid = UUID.randomUUID().toString().replace("-", "_");
         this.createView(uuid, sql);
 
-        Query query = entityManager.createNativeQuery("SHOW COLUMNS FROM " + uuid + " FROM sofia;");
+        Query query = entityManager.createNativeQuery("SHOW COLUMNS FROM " + uuid + " FROM "+sofiaDatabase+";");
         List<Object[]> fields = query.getResultList();
 
         for (Object[] field : fields) {
@@ -130,7 +183,7 @@ public class ViewService {
     @Transactional
     @Modifying
     public void dropView(String name) {
-        String sql = "DROP VIEW IF EXISTS sofia." + name;
+        String sql = "DROP VIEW IF EXISTS "+sofiaDatabase+"." + name;
         Query query = entityManager.createNativeQuery(sql);
         query.executeUpdate();
     }
@@ -138,7 +191,7 @@ public class ViewService {
     @Transactional
     @Modifying
     public void alterView(String name, String queryStr) {
-        String sql = "ALTER VIEW IF EXISTS sofia." + name + " AS " + queryStr;
+        String sql = "ALTER VIEW IF EXISTS "+sofiaDatabase+"." + name + " AS " + queryStr;
         Query query = entityManager.createNativeQuery(sql);
         query.executeUpdate();
     }
@@ -146,7 +199,7 @@ public class ViewService {
     @Transactional
     @Modifying
     public void createView(String name, String queryStr) {
-        String sql = "CREATE VIEW IF NOT EXISTS sofia." + name + " AS " + queryStr;
+        String sql = "CREATE VIEW IF NOT EXISTS "+sofiaDatabase+"." + name + " AS " + queryStr;
         Query query = entityManager.createNativeQuery(sql);
         query.executeUpdate();
     }

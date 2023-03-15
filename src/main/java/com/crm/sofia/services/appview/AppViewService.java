@@ -79,7 +79,6 @@ public class AppViewService {
         return this.appViewMapper.map(createdPersistEntity);
     }
 
-
     public List<AppViewDTO> getObjectAppView() {
         List<AppViewDTO> viewsList = this.appViewRepository.getObjectAppView("AppView");
         return viewsList;
@@ -146,6 +145,10 @@ public class AppViewService {
 
     @Transactional
     public List<AppViewFieldDTO> generateViewFields(String sql) {
+
+        byte[] baseDecodedSql = Base64.getDecoder().decode(sql);
+        String decodedSql = EncodingUtil.decodeURIComponent(new String(baseDecodedSql));
+        sql = decodedSql;
 
         List<AppViewFieldDTO> dtos = new ArrayList<>();
         String uuid = UUID.randomUUID().toString().replace("-", "_");

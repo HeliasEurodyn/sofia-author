@@ -8,6 +8,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RestController
@@ -46,9 +47,9 @@ public class AppViewController {
         this.appViewService.deleteObject(id);
     }
 
-    @GetMapping(path = "/generate-view-fields")
-    List<AppViewFieldDTO> generateViewFields(@RequestParam("query") String query) {
-        return this.appViewService.generateViewFields(query);
+    @PostMapping(path = "/generate-view-fields")
+    List<AppViewFieldDTO> generateViewFields(@RequestBody Map<String, String> parameters) {
+        return this.appViewService.generateViewFields(parameters.get("query"));
     }
 
     @GetMapping(path = "/view-exists")
