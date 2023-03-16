@@ -17,8 +17,8 @@ public interface ListRepository extends BaseRepository<ListEntity> {
 
     List<ListEntity> findAllByOrderByModifiedOn();
 
-    @Query(" SELECT DISTINCT l.businessUnit FROM ListEntity l WHERE l.businessUnit IS NOT NULL ")
-    List<String> findBusinessUnitsDistinct();
+    @Query(" SELECT DISTINCT l.tag FROM ListEntity l WHERE l.tag IS NOT NULL ")
+    List<String> findTagDistinct();
 
     ListEntity findFirstByName(String name);
 

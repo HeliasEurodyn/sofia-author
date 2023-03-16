@@ -57,9 +57,9 @@ public class FormDesignerController {
         return this.formDesignerService.clearCache();
     }
 
-    @GetMapping(path = "/business-units")
-    List<String> getBusinessUnits() {
-        return this.formDesignerService.getBusinessUnits();
+    @GetMapping(path = "/tag")
+    List<String> getTag() {
+        return this.formDesignerService.getTag();
     }
 
 }

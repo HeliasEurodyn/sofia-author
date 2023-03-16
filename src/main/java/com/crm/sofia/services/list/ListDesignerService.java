@@ -179,8 +179,8 @@ public class ListDesignerService {
         return true;
     }
 
-    public List<String> getBusinessUnits() {
-        List<String> businessUnits = listRepository.findBusinessUnitsDistinct();
-        return businessUnits;
+    public List<String> getTag() {
+        List<String> tag = listRepository.findTagDistinct();
+        return tag;
     }
 }

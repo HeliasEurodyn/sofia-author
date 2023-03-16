@@ -108,7 +108,7 @@ public class ListEntity extends MainEntity implements Serializable {
     private Boolean accessControlEnabled;
 
     @Column
-    private String businessUnit;
+    private String tag;
 
     @ManyToOne(fetch = FetchType.LAZY, targetEntity = Component.class)
     @JoinColumn(name = "component_id", referencedColumnName = "id")

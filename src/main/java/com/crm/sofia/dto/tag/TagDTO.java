@@ -1,4 +1,4 @@
-package com.crm.sofia.dto.business_unit;
+package com.crm.sofia.dto.tag;
 
 import com.crm.sofia.dto.common.BaseDTO;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -18,7 +18,7 @@ import java.time.Instant;
 @EqualsAndHashCode
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Accessors(chain = true)
-public class BusinessUnitDTO extends BaseDTO {
+public class TagDTO extends BaseDTO {
 
     @NotNull
     @NotBlank
@@ -27,7 +27,7 @@ public class BusinessUnitDTO extends BaseDTO {
 
     private String description;
 
-    public BusinessUnitDTO(String id, String title, Instant modifiedOn) {
+    public TagDTO(String id, String title, Instant modifiedOn) {
         this.setId(id);
         this.title = title;
         this.setModifiedOn(modifiedOn);

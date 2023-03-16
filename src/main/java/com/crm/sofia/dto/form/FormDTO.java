@@ -30,7 +30,7 @@ public class FormDTO extends BaseDTO {
 
     private Boolean accessControlEnabled;
 
-    private String businessUnit;
+    private String tag;
 
     private ComponentDTO component;
 

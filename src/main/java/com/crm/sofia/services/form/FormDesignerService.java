@@ -238,9 +238,9 @@ public class FormDesignerService {
         return true;
     }
 
-    public List<String> getBusinessUnits() {
-        List<String> businessUnits = formRepository.findBusinessUnitsDistinct();
-        return businessUnits;
+    public List<String> getTag() {
+        List<String> tag = formRepository.findTagDistinct();
+        return tag;
     }
 
 }

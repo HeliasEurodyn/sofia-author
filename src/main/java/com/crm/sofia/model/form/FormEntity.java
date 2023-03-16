@@ -37,7 +37,7 @@ public class FormEntity extends MainEntity {
     private Boolean accessControlEnabled;
 
     @Column
-    private String businessUnit;
+    private String tag;
 
     @ManyToOne(fetch = FetchType.LAZY,
             targetEntity = Component.class)

@@ -1,4 +1,4 @@
-package com.crm.sofia.model.business_unit;
+package com.crm.sofia.model.tag;
 
 import com.crm.sofia.model.common.MainEntity;
 import lombok.Data;
@@ -10,9 +10,9 @@ import javax.persistence.Table;
 
 @Data
 @Accessors(chain = true)
-@Entity(name = "BusinessUnit")
-@Table(name = "business_unit")
-public class BusinessUnit extends MainEntity {
+@Entity(name = "Tag")
+@Table(name = "tag")
+public class Tag extends MainEntity {
 
     @Column
     private String title;
