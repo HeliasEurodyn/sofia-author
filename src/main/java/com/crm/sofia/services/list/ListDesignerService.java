@@ -23,18 +23,17 @@ import java.util.List;
 @Service
 public class ListDesignerService {
     @Autowired
-    private  ListRepository listRepository;
-    @Autowired
-    private  ListMapper listMapper;
-    @Autowired
-    private  JWTService jwtService;
-    @Autowired
-    private  ListJavascriptService listJavascriptService;
-    @Autowired
-    private  LanguageDesignerService languageDesignerService;
-
-    @Autowired
     CacheManager cacheManager;
+    @Autowired
+    private ListRepository listRepository;
+    @Autowired
+    private ListMapper listMapper;
+    @Autowired
+    private JWTService jwtService;
+    @Autowired
+    private ListJavascriptService listJavascriptService;
+    @Autowired
+    private LanguageDesignerService languageDesignerService;
 
     @Transactional
     public ListDTO postObject(ListDTO listDTO) throws Exception {
@@ -82,19 +81,7 @@ public class ListDesignerService {
         String scriptMin = this.listJavascriptService.minify(script);
         this.listRepository.updateScripts(createdListDTO.getId(), script, scriptMin);
 
-        cacheManager.getCache("list_cache").evict(createdListEntity.getId());
-        cacheManager.getCache("list_cache").evict(new Object[]{createdListEntity.getId(), 0});
-        languageDesignerService.getObject().forEach(language -> {
-            cacheManager.getCache("list_cache").evict(new Object[]{createdListEntity.getId(), language.getId()});
-        });
-
-        createdListEntity.getListComponentColumnFieldList().forEach(x -> {
-            cacheManager.getCache("expression").evict(x.getId());
-        });
-
-        createdListEntity.getListComponentFilterFieldList().forEach(x -> {
-            cacheManager.getCache("expression").evict(x.getId());
-        });
+        this.redisCacheEvict(createdListEntity);
 
         return createdListDTO;
     }
@@ -104,7 +91,7 @@ public class ListDesignerService {
     }
 
     public List<ListDTO> get10LatestObject() {
-        return this.listRepository.get10LatestObject(PageRequest.of (0,10));
+        return this.listRepository.get10LatestObject(PageRequest.of(0, 10));
     }
 
     public ListDTO getObject(String id) {
@@ -158,6 +145,22 @@ public class ListDesignerService {
         ListEntity listEntity = this.listRepository.findById(id)
                 .orElseThrow(() -> new DoesNotExistException("List Does Not Exist"));
 
+        this.redisCacheEvict(listEntity);
+
+        this.listRepository.deleteById(listEntity.getId());
+    }
+
+    public boolean clearCacheForUi() {
+
+        this.listRepository.increaseInstanceVersions();
+
+        List<ListEntity> lists = this.listRepository.findAll();
+        lists.forEach(list -> this.redisCacheEvict(list));
+
+        return true;
+    }
+
+    private void redisCacheEvict(ListEntity listEntity) {
         cacheManager.getCache("list_cache").evict(listEntity.getId());
         cacheManager.getCache("list_cache").evict(new Object[]{listEntity.getId(), 0});
         languageDesignerService.getObject().forEach(language -> {
@@ -171,13 +174,6 @@ public class ListDesignerService {
         listEntity.getListComponentFilterFieldList().forEach(x -> {
             cacheManager.getCache("expression").evict(x.getId());
         });
-
-        this.listRepository.deleteById(listEntity.getId());
-    }
-
-    public boolean clearCacheForUi() {
-        this.listRepository.increaseInstanceVersions();
-        return true;
     }
 
     public List<TagDTO> getTag() {

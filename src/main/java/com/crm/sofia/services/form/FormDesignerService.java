@@ -98,11 +98,7 @@ public class FormDesignerService {
 
         FormDTO createdFormDTO = this.formMapper.map(createdFormEntity);
 
-        cacheManager.getCache("form_uil_cache").evict(createdFormDTO.getId());
-        cacheManager.getCache("form_uil_cache").evict(new Object[]{createdFormDTO.getId(), ""});
-        languageDesignerService.getObject().forEach(language -> {
-            cacheManager.getCache("form_uil_cache").evict(new Object[]{createdFormDTO.getId(), language.getId()});
-        });
+        this.redisCacheEvict(createdFormDTO.getId());
 
         return createdFormDTO;
     }
@@ -227,21 +223,27 @@ public class FormDesignerService {
         this.componentPersistEntityFieldAssignmentService.deleteByIdAndEntityType(optionalFormEntity.getId(), "form");
         this.formRepository.deleteById(optionalFormEntity.getId());
 
-        cacheManager.getCache("form_uil_cache").evict(id);
-        cacheManager.getCache("form_uil_cache").evict(new Object[]{id, ""});
-        languageDesignerService.getObject().forEach(language -> {
-            cacheManager.getCache("form_uil_cache").evict(new Object[]{id, language.getId()});
-        });
+        this.redisCacheEvict(id);
     }
 
     public boolean clearCache() {
         this.formRepository.increaseInstanceVersions();
+        List<String> formIds = this.formRepository.getFormIds();
+        formIds.forEach(id ->  this.redisCacheEvict(id) );
         return true;
     }
 
     public List<String> getTag() {
         List<String> tag = formRepository.findTagDistinct();
         return tag;
+    }
+
+    private void redisCacheEvict(String id){
+        cacheManager.getCache("form_uil_cache").evict(id);
+        cacheManager.getCache("form_uil_cache").evict(new Object[]{id, ""});
+        languageDesignerService.getObject().forEach(language -> {
+            cacheManager.getCache("form_uil_cache").evict(new Object[]{id, language.getId()});
+        });
     }
 
 }
