@@ -1,0 +1,2 @@
+- pipeline.id: sofia-pipeline
+  path.config: "/usr/share/logstash/pipeline/sofia-pipeline.conf"
