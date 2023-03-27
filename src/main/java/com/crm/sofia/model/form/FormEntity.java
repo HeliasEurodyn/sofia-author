@@ -39,13 +39,13 @@ public class FormEntity extends MainEntity {
     @Column
     private String tag;
 
-//    @OneToMany(
-//            fetch = FetchType.LAZY,
-//            cascade = {CascadeType.ALL},
-//            orphanRemoval = true
-//    )
-//    @JoinColumn(name = "form_id")
-//    private List<EntityTag> tags;
+    @OneToMany(
+            fetch = FetchType.LAZY,
+            cascade = {CascadeType.ALL},
+            orphanRemoval = true
+    )
+    @JoinColumn(name = "form_id")
+    private List<EntityTag> tags;
 
     @ManyToOne(fetch = FetchType.LAZY,
             targetEntity = Component.class)

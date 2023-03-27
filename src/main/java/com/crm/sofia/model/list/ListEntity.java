@@ -4,6 +4,7 @@ import com.crm.sofia.model.access_control.AccessControl;
 import com.crm.sofia.model.common.MainEntity;
 import com.crm.sofia.model.component.Component;
 import com.crm.sofia.model.list.translation.ListTranslation;
+import com.crm.sofia.model.tag.EntityTag;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import org.hibernate.annotations.DynamicInsert;
@@ -214,5 +215,13 @@ public class ListEntity extends MainEntity implements Serializable {
     )
     @JoinColumn(name = "list_id")
     private List<ListTranslation> translations;
+
+    @OneToMany(
+            fetch = FetchType.LAZY,
+            cascade = {CascadeType.ALL},
+            orphanRemoval = true
+    )
+    @JoinColumn(name = "list_id")
+    private List<EntityTag> tags;
 
 }

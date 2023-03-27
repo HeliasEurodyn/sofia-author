@@ -1,6 +1,7 @@
 package com.crm.sofia.repository.form;
 
 import com.crm.sofia.dto.form.FormDTO;
+import com.crm.sofia.dto.tag.TagDTO;
 import com.crm.sofia.model.form.FormEntity;
 import com.crm.sofia.repository.common.BaseRepository;
 import org.springframework.data.domain.Pageable;

@@ -1,0 +1,86 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.3.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
+    <changeSet author="KonstantinosAftzis (generated)" id="2053165644001-40">
+        <addColumn tableName="entity_tag">
+            <column name="component_id" type="VARCHAR(36)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="KonstantinosAftzis (generated)" id="2053165644001-41">
+        <createIndex indexName="iJ8DTfsJOTXlzkxtAAjBKdS1m" tableName="entity_tag">
+            <column name="component_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="KonstantinosAftzis (generated)" id="2053165644001-42">
+        <addForeignKeyConstraint baseColumnNames="component_id" baseTableName="entity_tag" constraintName="iJ8DTfsJOTXlzkxtAAjBKdS1m" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="CASCADE" referencedColumnNames="id" referencedTableName="component"/>
+    </changeSet>
+
+    <changeSet author="KonstantinosAftzis (generated)" id="2053165644001-43">
+        <addColumn tableName="entity_tag">
+            <column name="custom_query_id" type="VARCHAR(36)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="KonstantinosAftzis (generated)" id="2053165644001-44">
+        <createIndex indexName="6sfZQrefwGCalvRFcFBDn71ZI" tableName="entity_tag">
+            <column name="custom_query_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="KonstantinosAftzis (generated)" id="2053165644001-45">
+        <addForeignKeyConstraint baseColumnNames="custom_query_id" baseTableName="entity_tag" constraintName="6sfZQrefwGCalvRFcFBDn71ZI" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="CASCADE" referencedColumnNames="id" referencedTableName="custom_query"/>
+    </changeSet>
+
+    <changeSet author="KonstantinosAftzis (generated)" id="2053165644001-46">
+        <addColumn tableName="entity_tag">
+            <column name="report_id" type="VARCHAR(36)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="KonstantinosAftzis (generated)" id="2053165644001-47">
+        <createIndex indexName="q4cbMQTMUEqsAgHXKXpHc4mnC" tableName="entity_tag">
+            <column name="report_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="KonstantinosAftzis (generated)" id="2053165644001-48">
+        <addForeignKeyConstraint baseColumnNames="report_id" baseTableName="entity_tag" constraintName="q4cbMQTMUEqsAgHXKXpHc4mnC" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="CASCADE" referencedColumnNames="id" referencedTableName="report"/>
+    </changeSet>
+
+    <changeSet author="KonstantinosAftzis (generated)" id="2053165644001-49">
+        <addColumn tableName="entity_tag">
+            <column name="xls_import_id" type="VARCHAR(36)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="KonstantinosAftzis (generated)" id="2053165644001-50">
+        <createIndex indexName="QbSd7HBqyIkgUVXSmNj24sMgb" tableName="entity_tag">
+            <column name="xls_import_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="KonstantinosAftzis (generated)" id="2053165644001-51">
+        <addForeignKeyConstraint baseColumnNames="xls_import_id" baseTableName="entity_tag" constraintName="QbSd7HBqyIkgUVXSmNj24sMgb" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="CASCADE" referencedColumnNames="id" referencedTableName="xls_import"/>
+    </changeSet>
+
+    <changeSet author="KonstantinosAftzis (generated)" id="2053165644001-52">
+        <addColumn tableName="entity_tag">
+            <column name="search_id" type="VARCHAR(36)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="KonstantinosAftzis (generated)" id="2053165644001-53">
+        <createIndex indexName="hYdY7CFacFLPOKe4lUAMgGMoG" tableName="entity_tag">
+            <column name="search_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="KonstantinosAftzis (generated)" id="2053165644001-54">
+        <addForeignKeyConstraint baseColumnNames="search_id" baseTableName="entity_tag" constraintName="hYdY7CFacFLPOKe4lUAMgGMoG" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="CASCADE" referencedColumnNames="id" referencedTableName="search"/>
+    </changeSet>
+
+    <changeSet author="KonstantinosAftzis (generated)" id="2053165644001-55">
+        <addColumn tableName="entity_tag">
+            <column name="persist_entity_id" type="VARCHAR(36)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="KonstantinosAftzis (generated)" id="2053165644001-56">
+        <createIndex indexName="jJQrTNE8clgTNADM6S0rEcm66" tableName="entity_tag">
+            <column name="persist_entity_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="KonstantinosAftzis (generated)" id="2053165644001-57">
+        <addForeignKeyConstraint baseColumnNames="persist_entity_id" baseTableName="entity_tag" constraintName="jJQrTNE8clgTNADM6S0rEcm66" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="CASCADE" referencedColumnNames="id" referencedTableName="persist_entity"/>
+    </changeSet>
+</databaseChangeLog>

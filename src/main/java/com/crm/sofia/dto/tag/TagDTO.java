@@ -27,9 +27,17 @@ public class TagDTO extends BaseDTO {
 
     private String description;
 
-    public TagDTO(String id, String title, Instant modifiedOn) {
+    private String color;
+
+    public TagDTO(String id, String title, Instant modifiedOn, String color) {
         this.setId(id);
         this.title = title;
         this.setModifiedOn(modifiedOn);
+        this.color = color;
+    }
+
+    public TagDTO(String title, String color) {
+        this.title = title;
+        this.color = color;
     }
 }

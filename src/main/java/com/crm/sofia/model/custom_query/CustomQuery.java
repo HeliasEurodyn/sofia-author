@@ -2,6 +2,7 @@ package com.crm.sofia.model.custom_query;
 
 import com.crm.sofia.model.access_control.AccessControl;
 import com.crm.sofia.model.common.MainEntity;
+import com.crm.sofia.model.tag.EntityTag;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import org.hibernate.annotations.DynamicInsert;
@@ -37,4 +38,12 @@ public class CustomQuery extends MainEntity {
     )
     @JoinColumn(name = "custom_query_id")
     private List<AccessControl> accessControls;
+
+    @OneToMany(
+            fetch = FetchType.LAZY,
+            cascade = {CascadeType.ALL},
+            orphanRemoval = true
+    )
+    @JoinColumn(name = "custom_query_id")
+    private List<EntityTag> tags;
 }

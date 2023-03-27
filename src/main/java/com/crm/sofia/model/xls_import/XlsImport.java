@@ -3,6 +3,7 @@ package com.crm.sofia.model.xls_import;
 import com.crm.sofia.model.access_control.AccessControl;
 import com.crm.sofia.model.common.MainEntity;
 import com.crm.sofia.model.component.Component;
+import com.crm.sofia.model.tag.EntityTag;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import org.hibernate.annotations.DynamicInsert;
@@ -51,4 +52,12 @@ public class XlsImport extends MainEntity {
     )
     @JoinColumn(name = "xls_import_id")
     private List<AccessControl> accessControls;
+
+    @OneToMany(
+            fetch = FetchType.LAZY,
+            cascade = {CascadeType.ALL},
+            orphanRemoval = true
+    )
+    @JoinColumn(name = "xls_import_id")
+    private List<EntityTag> tags;
 }

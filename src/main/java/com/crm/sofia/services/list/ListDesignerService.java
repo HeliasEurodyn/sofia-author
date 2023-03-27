@@ -3,6 +3,7 @@ package com.crm.sofia.services.list;
 import com.crm.sofia.dto.component.ComponentPersistEntityDTO;
 import com.crm.sofia.dto.list.ListComponentFieldDTO;
 import com.crm.sofia.dto.list.ListDTO;
+import com.crm.sofia.dto.tag.TagDTO;
 import com.crm.sofia.exception.DoesNotExistException;
 import com.crm.sofia.mapper.list.ListMapper;
 import com.crm.sofia.model.list.ListEntity;
@@ -179,8 +180,8 @@ public class ListDesignerService {
         return true;
     }
 
-    public List<String> getTag() {
-        List<String> tag = listRepository.findTagDistinct();
+    public List<TagDTO> getTag() {
+        List<TagDTO> tag = listRepository.findTagDistinct();
         return tag;
     }
 }

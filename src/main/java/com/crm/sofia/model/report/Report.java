@@ -2,6 +2,7 @@ package com.crm.sofia.model.report;
 
 import com.crm.sofia.model.access_control.AccessControl;
 import com.crm.sofia.model.common.MainEntity;
+import com.crm.sofia.model.tag.EntityTag;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -66,5 +67,13 @@ public class Report extends MainEntity {
     )
     @JoinColumn(name = "report_id")
     private List<AccessControl> accessControls;
+
+    @OneToMany(
+            fetch = FetchType.LAZY,
+            cascade = {CascadeType.ALL},
+            orphanRemoval = true
+    )
+    @JoinColumn(name = "report_id")
+    private List<EntityTag> tags;
 
 }

@@ -64,6 +64,5 @@ public class FormDTO extends BaseDTO {
         componentDTO.setId(componentId);
         componentDTO.setName(componentName);
         this.setComponent(componentDTO);
-
     }
 }

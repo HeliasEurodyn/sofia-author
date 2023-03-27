@@ -1,6 +1,7 @@
 package com.crm.sofia.repository.list;
 
 import com.crm.sofia.dto.list.ListDTO;
+import com.crm.sofia.dto.tag.TagDTO;
 import com.crm.sofia.model.list.ListEntity;
 import com.crm.sofia.repository.common.BaseRepository;
 import org.springframework.data.domain.Pageable;
@@ -17,8 +18,10 @@ public interface ListRepository extends BaseRepository<ListEntity> {
 
     List<ListEntity> findAllByOrderByModifiedOn();
 
-    @Query(" SELECT DISTINCT l.tag FROM ListEntity l WHERE l.tag IS NOT NULL ")
-    List<String> findTagDistinct();
+    @Query(" SELECT DISTINCT new com.crm.sofia.dto.tag.TagDTO(lt.title, lt.color) " +
+            " FROM ListEntity l  " +
+            " INNER JOIN l.tags lt ")
+    List<TagDTO> findTagDistinct();
 
     ListEntity findFirstByName(String name);
 

@@ -20,4 +20,7 @@ public class Tag extends MainEntity {
     @Column
     private String description;
 
+    @Column
+    private String color;
+
 }

@@ -1,6 +1,7 @@
 package com.crm.sofia.dto.persistEntity;
 
 import com.crm.sofia.dto.common.BaseDTO;
+import com.crm.sofia.dto.tag.TagDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

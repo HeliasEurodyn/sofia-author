@@ -1,6 +1,7 @@
 package com.crm.sofia.controllers.list;
 
 import com.crm.sofia.dto.list.ListDTO;
+import com.crm.sofia.dto.tag.TagDTO;
 import com.crm.sofia.services.list.ListDesignerService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
@@ -63,7 +64,7 @@ public class ListDesignerController {
     }
 
     @GetMapping(path = "/tag")
-    List<String> getTag() {
+    List<TagDTO> getTag() {
         return this.listDesignerService.getTag();
     }
 

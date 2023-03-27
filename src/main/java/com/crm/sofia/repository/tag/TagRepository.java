@@ -10,6 +10,6 @@ import java.util.List;
 
 @Repository
 public interface TagRepository extends BaseRepository<Tag> {
-    @Query("SELECT new com.crm.sofia.dto.tag.TagDTO(t.id,t.title,t.modifiedOn) FROM Tag t ORDER BY t.modifiedOn DESC")
+    @Query("SELECT new com.crm.sofia.dto.tag.TagDTO(t.id,t.title,t.modifiedOn,t.color) FROM Tag t ORDER BY t.modifiedOn DESC")
     List<TagDTO> getObject();
 }

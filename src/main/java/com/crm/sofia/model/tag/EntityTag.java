@@ -8,23 +8,20 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-//@Data
-//@Accessors(chain = true)
-//@Entity(name = "EntityTag")
-//@Table(name = "entity_tag")
-//public class EntityTag extends BaseEntity {
-//
-//    @Column
-//    private String title;
-//
-//    @Column
-//    private String description;
-//
-//    @Column
-//    private String color;
-//
-//}
+@Data
+@Accessors(chain = true)
+@Entity(name = "EntityTag")
+@Table(name = "entity_tag")
+public class EntityTag extends BaseEntity {
 
-public class EntityTag {
+    @Column
+    private String title;
+
+    @Column
+    private String description;
+
+    @Column
+    private String color;
 
 }
+

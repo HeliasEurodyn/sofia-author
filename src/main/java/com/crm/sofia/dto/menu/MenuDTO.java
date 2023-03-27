@@ -2,6 +2,7 @@ package com.crm.sofia.dto.menu;
 
 import com.crm.sofia.dto.access_control.AccessControlDTO;
 import com.crm.sofia.dto.common.BaseDTO;
+import com.crm.sofia.dto.tag.TagDTO;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -24,11 +25,15 @@ public class MenuDTO extends BaseDTO {
 
     private Boolean accessControlEnabled;
 
+    private String tag;
+
     private List<MenuFieldDTO> menuFieldList;
 
     private List<AccessControlDTO> accessControls;
 
     private List<MenuTranslationDTO> translations;
+
+    private List<TagDTO> tags;
 
     public MenuDTO(String id, String name, Instant modifiedOn) {
         this.setId(id);
