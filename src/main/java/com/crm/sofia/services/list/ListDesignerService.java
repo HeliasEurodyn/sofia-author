@@ -90,6 +90,10 @@ public class ListDesignerService {
         return this.listRepository.getObject();
     }
 
+    public List<ListDTO> getObjectByTag(String tag) {
+        return this.listRepository.getObjectByTag(tag);
+    }
+
     public List<ListDTO> get10LatestObject() {
         return this.listRepository.get10LatestObject(PageRequest.of(0, 10));
     }

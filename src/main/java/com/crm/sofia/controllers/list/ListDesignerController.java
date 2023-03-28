@@ -26,6 +26,11 @@ public class ListDesignerController {
         return this.listDesignerService.getObject();
     }
 
+    @GetMapping(path = "/by-tag")
+    List<ListDTO> getObjectByTag(@RequestParam("tag") String tag) {
+        return this.listDesignerService.getObjectByTag(tag);
+    }
+
     @GetMapping(path="/10-latest")
     List<ListDTO> get10LatestObject() {
         return this.listDesignerService.get10LatestObject();

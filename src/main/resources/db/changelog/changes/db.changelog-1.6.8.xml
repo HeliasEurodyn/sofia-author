@@ -1,0 +1,20 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.3.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
+    <changeSet author="KonstantinosAftzis (generated)" id="2053165644001-58">
+        <dropTable tableName="entity_tag"/>
+    </changeSet>
+    <changeSet author="KonstantinosAftzis (generated)" id="2053165644001-59">
+        <createTable tableName="entity_tag">
+            <column name="list_id" type="VARCHAR(36)"/>
+            <column name="tag_id" type="VARCHAR(36)"/>
+            <column name="xls_import_id" type="VARCHAR(36)"/>
+            <column name="search_id" type="VARCHAR(36)"/>
+            <column name="report_id" type="VARCHAR(36)"/>
+            <column name="persist_entity_id" type="VARCHAR(36)"/>
+            <column name="menu_id" type="VARCHAR(36)"/>
+            <column name="form_id" type="VARCHAR(36)"/>
+            <column name="custom_query_id" type="VARCHAR(36)"/>
+            <column name="component_id" type="VARCHAR(36)"/>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

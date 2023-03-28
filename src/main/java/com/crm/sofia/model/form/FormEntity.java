@@ -4,7 +4,7 @@ import com.crm.sofia.model.access_control.AccessControl;
 import com.crm.sofia.model.common.MainEntity;
 import com.crm.sofia.model.component.Component;
 import com.crm.sofia.model.form.translation.FormTranslation;
-import com.crm.sofia.model.tag.EntityTag;
+import com.crm.sofia.model.tag.Tag;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import org.hibernate.annotations.DynamicInsert;
@@ -39,13 +39,15 @@ public class FormEntity extends MainEntity {
     @Column
     private String tag;
 
-    @OneToMany(
-            fetch = FetchType.LAZY,
-            cascade = {CascadeType.ALL},
-            orphanRemoval = true
+    @ManyToMany(fetch = FetchType.LAZY,cascade = {CascadeType.MERGE})
+    @JoinTable(
+            name = "entity_tag",
+            joinColumns = @JoinColumn(name = "form_id"),
+            inverseJoinColumns = {
+                    @JoinColumn(name = "tag_id", referencedColumnName = "id")
+            }
     )
-    @JoinColumn(name = "form_id")
-    private List<EntityTag> tags;
+    private List<Tag> tags;
 
     @ManyToOne(fetch = FetchType.LAZY,
             targetEntity = Component.class)

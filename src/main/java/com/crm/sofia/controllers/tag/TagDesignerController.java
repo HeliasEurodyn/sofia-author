@@ -19,7 +19,6 @@ public class TagDesignerController {
     @Autowired
     private TagDesignerService tagDesignerService;
 
-
     @GetMapping
     List<TagDTO> getObject() {
         return tagDesignerService.getObject();

@@ -74,4 +74,12 @@ public interface ListRepository extends BaseRepository<ListEntity> {
     @Query("SELECT new com.crm.sofia.dto.list.ListDTO(l.id, l.name, l.modifiedOn, c.id, c.name) FROM ListEntity l INNER JOIN l.component c ORDER BY l.modifiedOn DESC")
     List<ListDTO> get10LatestObject(Pageable pageable);
 
+    @Query("SELECT DISTINCT new com.crm.sofia.dto.list.ListDTO(l.id, l.name, l.modifiedOn, c.id, c.name) " +
+            "FROM ListEntity l " +
+            "INNER JOIN l.component c " +
+            "INNER JOIN l.tags lt " +
+            "WHERE lt.title = :tag " +
+            "ORDER BY l.modifiedOn DESC")
+    List<ListDTO> getObjectByTag(@Param("tag") String tag);
+
 }
