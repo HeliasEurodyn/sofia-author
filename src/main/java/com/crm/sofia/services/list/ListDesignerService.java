@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.Instant;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ListDesignerService {
@@ -63,6 +64,13 @@ public class ListDesignerService {
     @Transactional
     public ListDTO putObject(ListDTO listDTO) throws Exception {
 
+        List<TagDTO> tags =
+                listDTO.getTags().stream().collect(Collectors.toMap(TagDTO::getId, p -> p, (p, q) -> p))
+                        .values()
+                        .stream().collect(Collectors.toList());
+
+        listDTO.setTags(tags);
+
         ListEntity listEntity = this.listMapper.mapListDTO(listDTO);
         listEntity.setModifiedOn(Instant.now());
         listEntity.setModifiedBy(jwtService.getUserId());
@@ -88,6 +96,11 @@ public class ListDesignerService {
 
     public List<ListDTO> getObject() {
         return this.listRepository.getObject();
+    }
+
+    public List<TagDTO> getTag() {
+        List<TagDTO> tag = listRepository.findTagDistinct();
+        return tag;
     }
 
     public List<ListDTO> getObjectByTag(String tag) {
@@ -180,8 +193,4 @@ public class ListDesignerService {
         });
     }
 
-    public List<TagDTO> getTag() {
-        List<TagDTO> tag = listRepository.findTagDistinct();
-        return tag;
-    }
 }

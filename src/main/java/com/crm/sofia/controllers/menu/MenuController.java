@@ -1,6 +1,7 @@
 package com.crm.sofia.controllers.menu;
 
 import com.crm.sofia.dto.menu.MenuDTO;
+import com.crm.sofia.dto.tag.TagDTO;
 import com.crm.sofia.services.menu.MenuService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
@@ -24,6 +25,14 @@ public class MenuController {
     List<MenuDTO> getObject() {
         return this.menuService.getObject();
     }
+
+    @GetMapping(path = "/tag")
+    List<TagDTO> getTag(){return this.menuService.getTag();}
+
+   @GetMapping(path="/by-tag")
+    List<MenuDTO> getObjectByTag(@RequestParam("tag") String tag){
+        return this.menuService.getObjectByTag(tag);
+   }
 
     @GetMapping(path="/by-id")
     MenuDTO getObject(@RequestParam("id") String id,

@@ -1,6 +1,7 @@
 package com.crm.sofia.controllers.custom_query;
 
 import com.crm.sofia.dto.custom_query.CustomQueryDTO;
+import com.crm.sofia.dto.tag.TagDTO;
 import com.crm.sofia.services.custom_query.CustomQueryService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,17 @@ public class CustomQueryDesignerController {
 
     @Autowired
     private CustomQueryService customQueryService;
+
+    @GetMapping(path = "/tag")
+    List<TagDTO> getTag() {
+        return this.customQueryService.getTag();
+    }
+
+
+    @GetMapping(path = "/by-tag")
+    List<CustomQueryDTO> getObjectByTag(@RequestParam("tag") String tag) {
+        return this.customQueryService.getObjectByTag(tag);
+    }
 
     @GetMapping
     List<CustomQueryDTO> getObject() {

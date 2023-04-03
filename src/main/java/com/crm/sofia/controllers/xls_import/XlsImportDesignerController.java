@@ -1,5 +1,7 @@
 package com.crm.sofia.controllers.xls_import;
 
+import com.crm.sofia.dto.list.ListDTO;
+import com.crm.sofia.dto.tag.TagDTO;
 import com.crm.sofia.dto.xls_import.XlsImportDTO;
 import com.crm.sofia.services.xls_import.XlsImportDesignerService;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +24,17 @@ public class XlsImportDesignerController {
     @GetMapping
     List<XlsImportDTO> getObject() {
         return this.xlsImportDesignerService.getObject();
+    }
+
+    @GetMapping(path = "/tag")
+    List<TagDTO> getTag() {
+        return this.xlsImportDesignerService.getTag();
+    }
+
+
+    @GetMapping(path = "/by-tag")
+    List<XlsImportDTO> getObjectByTag(@RequestParam("tag") String tag) {
+        return this.xlsImportDesignerService.getObjectByTag(tag);
     }
 
     @GetMapping(path = "/by-id")

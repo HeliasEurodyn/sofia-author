@@ -2,6 +2,7 @@ package com.crm.sofia.services.appview;
 
 import com.crm.sofia.dto.appview.AppViewDTO;
 import com.crm.sofia.dto.appview.AppViewFieldDTO;
+import com.crm.sofia.dto.tag.TagDTO;
 import com.crm.sofia.exception.DoesNotExistException;
 import com.crm.sofia.mapper.appview.AppViewMapper;
 import com.crm.sofia.model.persistEntity.PersistEntity;
@@ -44,7 +45,24 @@ public class AppViewService {
         this.componentDesignerService = componentDesignerService;
     }
 
+    public List<TagDTO> getTag(){
+        List<TagDTO> tag = appViewRepository.findTagDistinct("appview");
+        return tag;
+    }
+
+    public List<AppViewDTO> getObjectByTag(String tag){
+        return this.appViewRepository.getObjectByTagAppView(tag);
+
+    }
+
     public AppViewDTO postObject(AppViewDTO appViewDTO) {
+
+        List<TagDTO> tags =
+                appViewDTO.getTags().stream().collect(Collectors.toMap(TagDTO::getId, p -> p, (p, q) -> p))
+                        .values()
+                        .stream().collect(Collectors.toList());
+
+        appViewDTO.setTags(tags);
 
         if (appViewDTO.getQuery() != null) {
             byte[] decodedQuery = Base64.getDecoder().decode(appViewDTO.getQuery());

@@ -26,6 +26,12 @@ public class ListDesignerController {
         return this.listDesignerService.getObject();
     }
 
+    @GetMapping(path = "/tag")
+    List<TagDTO> getTag() {
+        return this.listDesignerService.getTag();
+    }
+
+
     @GetMapping(path = "/by-tag")
     List<ListDTO> getObjectByTag(@RequestParam("tag") String tag) {
         return this.listDesignerService.getObjectByTag(tag);
@@ -66,11 +72,6 @@ public class ListDesignerController {
     @RequestMapping(value = "/clear-cache", method = RequestMethod.GET)
     boolean clearCache() {
         return this.listDesignerService.clearCacheForUi();
-    }
-
-    @GetMapping(path = "/tag")
-    List<TagDTO> getTag() {
-        return this.listDesignerService.getTag();
     }
 
 }

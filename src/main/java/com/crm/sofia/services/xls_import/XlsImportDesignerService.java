@@ -1,6 +1,8 @@
 package com.crm.sofia.services.xls_import;
 
 import com.crm.sofia.dto.component.ComponentPersistEntityDTO;
+import com.crm.sofia.dto.list.ListDTO;
+import com.crm.sofia.dto.tag.TagDTO;
 import com.crm.sofia.dto.xls_import.XlsImportDTO;
 import com.crm.sofia.exception.DoesNotExistException;
 import com.crm.sofia.mapper.xls_import.XlsImportMapper;
@@ -17,6 +19,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Slf4j
@@ -32,6 +35,15 @@ public class XlsImportDesignerService {
         this.xlsImportRepository = xlsImportRepository;
         this.xlsImportMapper = xlsImportMapper;
         this.componentPersistEntityFieldAssignmentService = componentPersistEntityFieldAssignmentService;
+    }
+
+    public List<TagDTO> getTag() {
+        List<TagDTO> tag = xlsImportRepository.findTagDistinct();
+        return tag;
+    }
+
+    public List<XlsImportDTO> getObjectByTag(String tag) {
+        return this.xlsImportRepository.getObjectByTag(tag);
     }
 
     public List<XlsImportDTO> getObject() {
@@ -98,6 +110,13 @@ public class XlsImportDesignerService {
 
     @Transactional
     public XlsImportDTO postObject(XlsImportDTO dto) {
+
+        List<TagDTO> tags =
+                dto.getTags().stream().collect(Collectors.toMap(TagDTO::getId, p -> p, (p, q) -> p))
+                        .values()
+                        .stream().collect(Collectors.toList());
+
+        dto.setTags(tags);
         List<ComponentPersistEntityDTO> cpeList = this.treeToList(dto.getComponent().getComponentPersistEntityList());
         cpeList.forEach(cpe -> {
             cpe.getComponentPersistEntityFieldList()

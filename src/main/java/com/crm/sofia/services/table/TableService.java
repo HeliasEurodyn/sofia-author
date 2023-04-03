@@ -1,9 +1,11 @@
 package com.crm.sofia.services.table;
 
+import com.crm.sofia.dto.list.ListDTO;
 import com.crm.sofia.dto.table.ForeignKeyConstrainDTO;
 import com.crm.sofia.dto.table.RemoveForeignKeyConstrainDTO;
 import com.crm.sofia.dto.table.TableDTO;
 import com.crm.sofia.dto.table.TableFieldDTO;
+import com.crm.sofia.dto.tag.TagDTO;
 import com.crm.sofia.exception.DoesNotExistException;
 import com.crm.sofia.exception.table.ForeignKeyConstrainAlreadyExist;
 import com.crm.sofia.mapper.persistEntity.ForeignKeyConstrainMapper;
@@ -51,6 +53,15 @@ public class TableService {
         this.jwtService = jwtService;
         this.componentDesignerService = componentDesignerService;
         this.foreignKeyConstrainMapper = foreignKeyConstrainMapper;
+    }
+
+    public List<TagDTO> getTag() {
+        List<TagDTO> tag = persistEntityRepository.findTagDistinct("Table");
+        return tag;
+    }
+
+    public List<TableDTO> getObjectByTag(String tag) {
+        return this.persistEntityRepository.getObjectByTagTable(tag);
     }
 
     public TableDTO postObject(TableDTO componentDTO) {
@@ -249,6 +260,13 @@ public class TableService {
 
     @Transactional
     public TableDTO save(TableDTO dto) {
+
+        List<TagDTO> tags =
+                dto.getTags().stream().collect(Collectors.toMap(TagDTO::getId, p -> p, (p, q) -> p))
+                        .values()
+                        .stream().collect(Collectors.toList());
+
+        dto.setTags(tags);
 
         /**
          * Remove deleted Fields From Components

@@ -3,6 +3,7 @@ package com.crm.sofia.services.menu;
 import com.crm.sofia.dto.common.BaseDTO;
 import com.crm.sofia.dto.menu.MenuDTO;
 import com.crm.sofia.dto.menu.MenuFieldDTO;
+import com.crm.sofia.dto.tag.TagDTO;
 import com.crm.sofia.exception.DoesNotExistException;
 import com.crm.sofia.mapper.menu.MenuMapper;
 import com.crm.sofia.model.menu.Menu;
@@ -63,6 +64,15 @@ public class MenuService {
         return dto;
     }
 
+    public List<TagDTO> getTag(){
+        List<TagDTO> tag = menuRepository.findTagDistinct();
+        return  tag;
+    }
+
+    public List<MenuDTO> getObjectByTag(String tag){
+        return this.menuRepository.getObjectByTag(tag);
+    }
+
     public void deleteObject(String id) {
         Menu optionalEntity = this.menuRepository.findById(id)
                 .orElseThrow(() -> new DoesNotExistException("Menu Does Not Exist"));
@@ -83,14 +93,21 @@ public class MenuService {
     }
 
     @Transactional
-    public MenuDTO putObject(MenuDTO componentDTO) {
+    public MenuDTO putObject(MenuDTO menuDTO) {
 
-       Menu optionalComponent = this.menuRepository.findById(componentDTO.getId())
+        List<TagDTO> tags =
+                menuDTO.getTags().stream().collect(Collectors.toMap(TagDTO::getId, p -> p, (p, q) -> p))
+                        .values()
+                        .stream().collect(Collectors.toList());
+
+        menuDTO.setTags(tags);
+
+       Menu optionalComponent = this.menuRepository.findById(menuDTO.getId())
                .orElseThrow(() -> new DoesNotExistException("Menu Does Not Exist"));
 
         Menu entity = optionalComponent;
 
-        menuMapper.mapDtoToEntity(componentDTO, entity);
+        menuMapper.mapDtoToEntity(menuDTO, entity);
 
         entity.setModifiedOn(Instant.now());
         entity.setModifiedBy(jwtService.getUserId());

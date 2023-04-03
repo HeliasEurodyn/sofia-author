@@ -1,6 +1,7 @@
 package com.crm.sofia.services.view;
 
 import com.crm.sofia.dto.appview.AppViewDTO;
+import com.crm.sofia.dto.tag.TagDTO;
 import com.crm.sofia.dto.view.ViewDTO;
 import com.crm.sofia.dto.view.ViewFieldDTO;
 import com.crm.sofia.exception.DoesNotExistException;
@@ -51,13 +52,16 @@ public class ViewService {
         this.jwtService = jwtService;
     }
 
+    public List<TagDTO> getTag(){
+        List<TagDTO> tag = persistEntityRepository.findTagDistinct("View");
+        return tag;
+    }
+
+    public List<ViewDTO> getObjectByTag(String tag){
+        return this.persistEntityRepository.getObjectByTagView(tag);
+    }
     public ViewDTO postObject(ViewDTO viewDTO) {
 
-        if (viewDTO.getQuery() != null) {
-            byte[] decodedQuery = Base64.getDecoder().decode(viewDTO.getQuery());
-            String query = EncodingUtil.decodeURIComponent(new String(decodedQuery));
-            viewDTO.setQuery(query);
-        }
 
         /**
          * Remove deleted Fields From Components
@@ -207,6 +211,20 @@ public class ViewService {
     @Transactional
     @Modifying
     public ViewDTO saveDTOAndCreate(ViewDTO dto) {
+
+        List<TagDTO> tags =
+                dto.getTags().stream().collect(Collectors.toMap(TagDTO::getId, p -> p, (p, q) -> p))
+                        .values()
+                        .stream().collect(Collectors.toList());
+
+        dto.setTags(tags);
+
+        if (dto.getQuery() != null) {
+            byte[] decodedQuery = Base64.getDecoder().decode(dto.getQuery());
+            String query = EncodingUtil.decodeURIComponent(new String(decodedQuery));
+            dto.setQuery(query);
+        }
+
         ViewDTO customComponentDTO = this.postObject(dto);
         this.dropView(customComponentDTO.getName());
         this.createView(

@@ -1,6 +1,7 @@
 package com.crm.sofia.controllers.form;
 
 import com.crm.sofia.dto.form.FormDTO;
+import com.crm.sofia.dto.list.ListDTO;
 import com.crm.sofia.dto.tag.TagDTO;
 import com.crm.sofia.services.form.FormDesignerService;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +25,11 @@ public class FormDesignerController {
     @GetMapping
     List<FormDTO> getObject() {
         return this.formDesignerService.getObject();
+    }
+
+    @GetMapping(path = "/by-tag")
+    List<FormDTO> getObjectByTag(@RequestParam("tag") String tag) {
+        return this.formDesignerService.getObjectByTag(tag);
     }
 
     @GetMapping(path="/10-latest")
@@ -59,7 +65,7 @@ public class FormDesignerController {
     }
 
     @GetMapping(path = "/tag")
-    List<String> getTag() {
+    List<TagDTO> getTag() {
         return this.formDesignerService.getTag();
     }
 

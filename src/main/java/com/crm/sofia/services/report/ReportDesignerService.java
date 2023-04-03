@@ -1,6 +1,8 @@
 package com.crm.sofia.services.report;
 
+import com.crm.sofia.dto.list.ListDTO;
 import com.crm.sofia.dto.report.ReportDTO;
+import com.crm.sofia.dto.tag.TagDTO;
 import com.crm.sofia.exception.DoesNotExistException;
 import com.crm.sofia.mapper.report.ReportMapper;
 import com.crm.sofia.model.report.Report;
@@ -25,6 +27,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.time.Instant;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class ReportDesignerService {
@@ -53,6 +56,15 @@ public class ReportDesignerService {
         Report entity = optionalEntity;
         ReportDTO dto = this.reportMapper.map(entity);
         return dto;
+    }
+
+    public List<ReportDTO> getObjectByTag(String tag) {
+        return this.reportRepository.getObjectByTag(tag);
+    }
+
+    public List<TagDTO> getTag() {
+        List<TagDTO> tag = reportRepository.findTagDistinct();
+        return tag;
     }
 
 //    public String getReportType(Long id) {
@@ -91,6 +103,14 @@ public class ReportDesignerService {
 
 
     public ReportDTO postObject(ReportDTO reportDTO) throws IOException {
+
+        List<TagDTO> tags =
+                reportDTO.getTags().stream().collect(Collectors.toMap(TagDTO::getId, p -> p, (p, q) -> p))
+                        .values()
+                        .stream().collect(Collectors.toList());
+
+        reportDTO.setTags(tags);
+
         if (reportDTO.getId() == null) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "File cannot be empty");
         } else {

@@ -3,6 +3,7 @@ package com.crm.sofia.services.form;
 import com.crm.sofia.dto.component.ComponentPersistEntityDTO;
 import com.crm.sofia.dto.component.ComponentPersistEntityFieldDTO;
 import com.crm.sofia.dto.form.*;
+import com.crm.sofia.dto.list.ListDTO;
 import com.crm.sofia.dto.tag.TagDTO;
 import com.crm.sofia.exception.DoesNotExistException;
 import com.crm.sofia.mapper.form.FormMapper;
@@ -106,6 +107,10 @@ public class FormDesignerService {
     public List<FormDTO> getObject() {
         List<FormDTO> formList = this.formRepository.getObject();
         return formList;
+    }
+
+    public List<FormDTO> getObjectByTag(String tag) {
+        return this.formRepository.getObjectByTag(tag);
     }
 
     public List<FormDTO> get10LatestObject() {
@@ -233,8 +238,8 @@ public class FormDesignerService {
         return true;
     }
 
-    public List<String> getTag() {
-        List<String> tag = formRepository.findTagDistinct();
+    public List<TagDTO> getTag() {
+        List<TagDTO> tag = formRepository.findTagDistinct();
         return tag;
     }
 

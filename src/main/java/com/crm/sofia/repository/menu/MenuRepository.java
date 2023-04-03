@@ -1,6 +1,8 @@
 package com.crm.sofia.repository.menu;
 
+import com.crm.sofia.dto.list.ListDTO;
 import com.crm.sofia.dto.menu.MenuDTO;
+import com.crm.sofia.dto.tag.TagDTO;
 import com.crm.sofia.model.menu.Menu;
 import com.crm.sofia.repository.common.BaseRepository;
 import org.hibernate.annotations.OrderBy;
@@ -25,4 +27,16 @@ public interface MenuRepository extends BaseRepository<Menu> {
 
     @Query("SELECT new com.crm.sofia.dto.menu.MenuDTO(m.id,m.name,m.modifiedOn) FROM Menu m ORDER BY m.modifiedOn DESC")
     List<MenuDTO> getObject();
+
+    @Query("SELECT DISTINCT new com.crm.sofia.dto.menu.MenuDTO(m.id,m.name,m.modifiedOn) " +
+            "FROM Menu m " +
+            "INNER JOIN m.tags mt " +
+            "WHERE mt.title = :tag " +
+            "ORDER BY m.modifiedOn DESC")
+    List<MenuDTO> getObjectByTag(@Param("tag") String tag);
+
+    @Query(" SELECT DISTINCT new com.crm.sofia.dto.tag.TagDTO(mt.title, mt.color) " +
+            " FROM Menu m  " +
+            " INNER JOIN m.tags mt ")
+    List<TagDTO> findTagDistinct();
 }

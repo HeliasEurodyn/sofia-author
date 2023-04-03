@@ -1,7 +1,9 @@
 package com.crm.sofia.services.search;
 
 
+import com.crm.sofia.dto.list.ListDTO;
 import com.crm.sofia.dto.search.SearchDTO;
+import com.crm.sofia.dto.tag.TagDTO;
 import com.crm.sofia.exception.DoesNotExistException;
 import com.crm.sofia.mapper.search.SearchMapper;
 import com.crm.sofia.model.search.Search;
@@ -17,6 +19,7 @@ import javax.persistence.EntityManager;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class SearchDesignerService {
@@ -51,9 +54,25 @@ public class SearchDesignerService {
         return dto;
     }
 
+    public List<TagDTO> getTag() {
+        List<TagDTO> tag = searchRepository.findTagDistinct();
+        return tag;
+    }
+
+    public List<SearchDTO> getObjectByTag(String tag) {
+        return this.searchRepository.getObjectByTag(tag);
+    }
+
     @Transactional
     @Modifying
     public SearchDTO postObject(SearchDTO dto) {
+
+        List<TagDTO> tags =
+                dto.getTags().stream().collect(Collectors.toMap(TagDTO::getId, p -> p, (p, q) -> p))
+                        .values()
+                        .stream().collect(Collectors.toList());
+
+        dto.setTags(tags);
 
         if (dto.getQuery() != null) {
             byte[] decodedHtml = Base64.getDecoder().decode(dto.getQuery());

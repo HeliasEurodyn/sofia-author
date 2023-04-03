@@ -1,6 +1,8 @@
 package com.crm.sofia.repository.report;
 
+import com.crm.sofia.dto.list.ListDTO;
 import com.crm.sofia.dto.report.ReportDTO;
+import com.crm.sofia.dto.tag.TagDTO;
 import com.crm.sofia.model.report.Report;
 import com.crm.sofia.model.report.ReportParameter;
 import com.crm.sofia.repository.common.BaseRepository;
@@ -30,5 +32,17 @@ public interface ReportRepository extends BaseRepository<Report> {
     List<ReportParameter> getReportParametersById(String id);
     @Query("SELECT new com.crm.sofia.dto.report.ReportDTO(r.id,r.code,r.name,r.modifiedOn) FROM Report r ORDER BY r.modifiedOn DESC")
     List<ReportDTO> getObject();
+
+    @Query(" SELECT DISTINCT new com.crm.sofia.dto.tag.TagDTO(rt.title, rt.color) " +
+            " FROM Report r  " +
+            " INNER JOIN r.tags rt ")
+    List<TagDTO> findTagDistinct();
+
+    @Query("SELECT DISTINCT new com.crm.sofia.dto.report.ReportDTO(r.id, r.code,r.name,r.modifiedOn) " +
+            "FROM Report r " +
+            "INNER JOIN r.tags rt " +
+            "WHERE rt.title = :tag " +
+            "ORDER BY r.modifiedOn DESC")
+    List<ReportDTO> getObjectByTag(@Param("tag") String tag);
 
 }

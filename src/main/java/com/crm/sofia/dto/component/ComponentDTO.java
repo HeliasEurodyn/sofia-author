@@ -31,8 +31,6 @@ public class ComponentDTO extends BaseDTO {
 
     private List<AccessControlDTO> accessControls;
 
-    private String tag;
-
     private List<TagDTO> tags;
 
     public ComponentDTO(String id, String name, Instant modifiedOn) {

@@ -1,5 +1,6 @@
 package com.crm.sofia.controllers.view;
 
+import com.crm.sofia.dto.tag.TagDTO;
 import com.crm.sofia.dto.view.ViewDTO;
 import com.crm.sofia.dto.view.ViewFieldDTO;
 import com.crm.sofia.services.view.ViewService;
@@ -25,6 +26,16 @@ public class ViewController {
     @GetMapping
     List<ViewDTO> getObject() {
         return this.viewService.getObjectView();
+    }
+
+    @GetMapping(path = "/tag")
+    List<TagDTO> getTag(){
+        return this.viewService.getTag();
+    }
+
+    @GetMapping(path = "/by-tag")
+    List<ViewDTO> getObjectByTag(@RequestParam("tag") String tag){
+        return this.viewService.getObjectByTag(tag);
     }
 
     @PostMapping(path = "/generate-view-fields")

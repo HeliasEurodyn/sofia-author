@@ -25,8 +25,6 @@ public class MenuDTO extends BaseDTO {
 
     private Boolean accessControlEnabled;
 
-    private String tag;
-
     private List<MenuFieldDTO> menuFieldList;
 
     private List<AccessControlDTO> accessControls;

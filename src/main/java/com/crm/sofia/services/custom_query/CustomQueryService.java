@@ -1,6 +1,8 @@
 package com.crm.sofia.services.custom_query;
 
 import com.crm.sofia.dto.custom_query.CustomQueryDTO;
+import com.crm.sofia.dto.list.ListDTO;
+import com.crm.sofia.dto.tag.TagDTO;
 import com.crm.sofia.exception.DoesNotExistException;
 import com.crm.sofia.mapper.custom_query.CustomQueryMapper;
 import com.crm.sofia.model.custom_query.CustomQuery;
@@ -24,6 +26,7 @@ import java.time.Instant;
 import java.util.Base64;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class CustomQueryService {
@@ -58,6 +61,15 @@ public class CustomQueryService {
             dto.setQuery(encodedQuery);
         }
         return dto;
+    }
+
+    public List<TagDTO> getTag() {
+        List<TagDTO> tag = customQueryRepository.findTagDistinct();
+        return tag;
+    }
+
+    public List<CustomQueryDTO> getObjectByTag(String tag) {
+        return this.customQueryRepository.getObjectByTag(tag);
     }
 
     public Object getDataObjects(String id, Map<String, String> parameters) {
@@ -115,6 +127,13 @@ public class CustomQueryService {
     }
 
     public CustomQueryDTO postObject(CustomQueryDTO customQueryDto) {
+
+        List<TagDTO> tags =
+                customQueryDto.getTags().stream().collect(Collectors.toMap(TagDTO::getId, p -> p, (p, q) -> p))
+                        .values()
+                        .stream().collect(Collectors.toList());
+
+        customQueryDto.setTags(tags);
 
         if (customQueryDto.getQuery() != null) {
             byte[] decodedQuery = Base64.getDecoder().decode(customQueryDto.getQuery());

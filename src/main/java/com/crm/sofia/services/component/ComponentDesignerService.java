@@ -3,6 +3,8 @@ package com.crm.sofia.services.component;
 import com.crm.sofia.dto.component.ComponentDTO;
 import com.crm.sofia.dto.component.ComponentPersistEntityDTO;
 import com.crm.sofia.dto.component.ComponentPersistEntityFieldDTO;
+import com.crm.sofia.dto.list.ListDTO;
+import com.crm.sofia.dto.tag.TagDTO;
 import com.crm.sofia.exception.DoesNotExistException;
 import com.crm.sofia.mapper.component.ComponentMapper;
 import com.crm.sofia.mapper.component.ComponentPersistEntityMapper;
@@ -104,6 +106,13 @@ public class ComponentDesignerService {
 
     @Transactional
     public ComponentDTO putObject(ComponentDTO dto) {
+        List<TagDTO> tags =
+                dto.getTags().stream().collect(Collectors.toMap(TagDTO::getId, p -> p, (p, q) -> p))
+                        .values()
+                        .stream().collect(Collectors.toList());
+
+        dto.setTags(tags);
+
         Component entity = this.componentMapper.map(dto);
         Component createdEntity = this.componentRepository.save(entity);
         return this.componentMapper.map(createdEntity);
@@ -186,5 +195,14 @@ public class ComponentDesignerService {
                 });
 
         this.componentPersistEntityRepository.saveAll(componentPersistEntities);
+    }
+
+    public List<TagDTO> getTag() {
+        List<TagDTO> tag = componentRepository.findTagDistinct();
+        return tag;
+    }
+
+    public List<ComponentDTO> getObjectByTag(String tag) {
+        return this.componentRepository.getObjectByTag(tag);
     }
 }

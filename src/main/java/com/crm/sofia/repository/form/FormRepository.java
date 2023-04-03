@@ -1,6 +1,7 @@
 package com.crm.sofia.repository.form;
 
 import com.crm.sofia.dto.form.FormDTO;
+import com.crm.sofia.dto.list.ListDTO;
 import com.crm.sofia.dto.tag.TagDTO;
 import com.crm.sofia.model.form.FormEntity;
 import com.crm.sofia.repository.common.BaseRepository;
@@ -18,8 +19,10 @@ public interface FormRepository extends BaseRepository<FormEntity> {
 
     List<FormEntity> findAllByOrderByModifiedOn();
 
-    @Query(" SELECT DISTINCT f.tag FROM FormEntity f WHERE f.tag IS NOT NULL ")
-    List<String> findTagDistinct();
+    @Query(" SELECT DISTINCT new com.crm.sofia.dto.tag.TagDTO(ft.title,ft.color) " +
+            " FROM FormEntity f  " +
+            " INNER JOIN f.tags ft ")
+    List<TagDTO> findTagDistinct();
 
     @Query(" SELECT DISTINCT fs.script FROM FormEntity f " +
             " INNER JOIN f.formScripts fs " +
@@ -69,5 +72,14 @@ public interface FormRepository extends BaseRepository<FormEntity> {
 
     @Query("SELECT new com.crm.sofia.dto.form.FormDTO(f.id, f.name, f.modifiedOn,f.jsonUrl, c.id, c.name) FROM FormEntity f INNER JOIN f.component c ORDER BY f.modifiedOn DESC")
     List<FormDTO> get10LatestObject(Pageable pageable);
+
+    @Query("SELECT DISTINCT new com.crm.sofia.dto.form.FormDTO(f.id, f.name,f.modifiedOn,f.jsonUrl, c.id, c.name) " +
+            "FROM FormEntity f " +
+            "INNER JOIN f.component c " +
+            "INNER JOIN f.tags ft " +
+            "WHERE ft.title = :tag " +
+            "ORDER BY f.modifiedOn DESC")
+    List<FormDTO> getObjectByTag(@Param("tag") String tag);
+
 
 }

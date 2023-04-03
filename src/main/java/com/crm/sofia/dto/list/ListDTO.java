@@ -53,7 +53,6 @@ public class ListDTO extends BaseDTO {
     private ComponentDTO component;
     private Long instanceVersion;
     private Boolean accessControlEnabled;
-    private String tag;
     private List<TagDTO> tags;
     private List<AccessControlDTO> accessControls;
     private List<ListScriptDTO> listScripts;
