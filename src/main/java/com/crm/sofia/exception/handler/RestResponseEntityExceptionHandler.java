@@ -1,5 +1,6 @@
 package com.crm.sofia.exception.handler;
 
+import com.crm.sofia.exception.CouldNotSaveException;
 import com.crm.sofia.exception.DoesNotExistException;
 import com.crm.sofia.exception.ExpressionException;
 import com.crm.sofia.exception.common.SofiaException;
@@ -28,7 +29,7 @@ public class RestResponseEntityExceptionHandler {
     @ExceptionHandler(
             {ExpressionException.class, DoesNotExistException.class, UserNotFoundException.class,
                     IncorrectPasswordException.class, DataImportException.class, WrongFileTypeException.class,
-                    ImportedFileAlreadyExistsException.class, ForeignKeyConstrainAlreadyExist.class})
+                    ImportedFileAlreadyExistsException.class, ForeignKeyConstrainAlreadyExist.class, CouldNotSaveException.class})
     public ResponseEntity<Map<String,String>> handleException(SofiaException exception){
         Map<String,String> response = new HashMap<>();
         response.put("code", exception.getCode());
