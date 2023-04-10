@@ -78,7 +78,7 @@ public class SettingsService {
                 .ifPresentOrElse(s -> {
                             try {
                                 AES_ENCRYPTION aes_encryption = new AES_ENCRYPTION();
-                                aes_encryption.init();
+                                aes_encryption.initFromStrings("+SN6d+OLRgkwDR13dFiq+w==","TDNvUIiNHCGtQKrQ");
                                 settings.setMailSenderPassword(aes_encryption.encrypt(emailPassword));
                             } catch (Exception exception) {
                                 throw new CouldNotSaveException("encryption of mail password failed");
