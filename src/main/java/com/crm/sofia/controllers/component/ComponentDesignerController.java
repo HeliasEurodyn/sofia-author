@@ -24,7 +24,6 @@ public class ComponentDesignerController {
     @Autowired
     private FormDynamicQueryService formDynamicQueryService;
 
-
     @GetMapping
     List<ComponentDTO> getObject() {
         return this.componentDesignerService.getObject();
@@ -39,7 +38,6 @@ public class ComponentDesignerController {
     List<ComponentDTO> getObjectByTag(@RequestParam("tag") String tag) {
         return this.componentDesignerService.getObjectByTag(tag);
     }
-
 
     @GetMapping(path = "/by-id")
     ComponentDTO getObject(@RequestParam("id") String id) {

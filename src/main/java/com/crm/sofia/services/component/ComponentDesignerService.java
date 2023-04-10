@@ -15,6 +15,7 @@ import com.crm.sofia.model.persistEntity.PersistEntity;
 import com.crm.sofia.repository.component.ComponentPersistEntityRepository;
 import com.crm.sofia.repository.component.ComponentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.CacheManager;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,15 +27,15 @@ import java.util.stream.Collectors;
 @Service
 public class ComponentDesignerService {
     @Autowired
-    private  ComponentMapper componentMapper;
+    private ComponentMapper componentMapper;
     @Autowired
-    private  ComponentRepository componentRepository;
+    private ComponentRepository componentRepository;
     @Autowired
-    private  ComponentPersistEntityRepository componentPersistEntityRepository;
+    private ComponentPersistEntityRepository componentPersistEntityRepository;
     @Autowired
-    private  ComponentPersistEntityMapper componentPersistEntityMapper;
-
-
+    private ComponentPersistEntityMapper componentPersistEntityMapper;
+    @Autowired
+    CacheManager cacheManager;
 
     public List<ComponentDTO> getObject() {
         List<ComponentDTO> componentList = this.componentRepository.getObject();
@@ -115,6 +116,9 @@ public class ComponentDesignerService {
 
         Component entity = this.componentMapper.map(dto);
         Component createdEntity = this.componentRepository.save(entity);
+
+        this.redisCacheEvict(createdEntity.getId());
+
         return this.componentMapper.map(createdEntity);
     }
 
@@ -123,6 +127,7 @@ public class ComponentDesignerService {
                 .orElseThrow(() -> new DoesNotExistException("Component Does Not Exist"));
 
         this.componentRepository.deleteById(optionalComponent.getId());
+        this.redisCacheEvict(id);
     }
 
     public ComponentPersistEntityDTO getComponentPersistEntityDataById(String id, String selectionId) {
@@ -204,5 +209,11 @@ public class ComponentDesignerService {
 
     public List<ComponentDTO> getObjectByTag(String tag) {
         return this.componentRepository.getObjectByTag(tag);
+    }
+
+    private void redisCacheEvict(String id){
+        cacheManager.getCache("component_select_query").evict(id);
+        cacheManager.getCache("component_insert_query").evict(id);
+        cacheManager.getCache("component_update_query_map").evict(id);
     }
 }

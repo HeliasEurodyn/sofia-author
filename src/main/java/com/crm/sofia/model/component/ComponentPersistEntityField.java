@@ -33,13 +33,6 @@ public class ComponentPersistEntityField extends BaseEntity implements Serializa
     @Column
     private String locateStatement;
 
-//    @OneToOne(fetch = FetchType.LAZY,
-//            cascade = {CascadeType.ALL},
-//            orphanRemoval = true,
-//            targetEntity = ComponentPersistEntity.class)
-//    @JoinColumn(name = "join_persist_entity_id", referencedColumnName = "id")
-//    private ComponentPersistEntity joinPersistEntity;
-
     @ManyToOne(fetch = FetchType.LAZY, targetEntity = PersistEntityField.class)
     @JoinColumn(name = "persist_entity_field_id", referencedColumnName = "id")
     private PersistEntityField persistEntityField;
