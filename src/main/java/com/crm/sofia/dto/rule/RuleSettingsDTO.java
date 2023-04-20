@@ -1,10 +1,6 @@
 package com.crm.sofia.dto.rule;
 
-import com.crm.sofia.dto.access_control.AccessControlDTO;
 import com.crm.sofia.dto.common.BaseDTO;
-import com.crm.sofia.dto.menu.MenuFieldDTO;
-import com.crm.sofia.dto.menu.MenuTranslationDTO;
-import com.crm.sofia.dto.tag.TagDTO;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -21,17 +17,23 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Accessors(chain = true)
-public class RuleDTO extends BaseDTO {
-
-    private String code;
+public class RuleSettingsDTO extends BaseDTO {
 
     private String name;
 
+    private String title;
+
     private String description;
 
-    private List<RuleExpressionDTO> ruleExpressionList;
+    private String ruleSectionTitle;
 
-    public RuleDTO(String id, String name, Instant modifiedOn) {
+    private String ruleSectionDescription;
+
+    private String fieldCommand;
+
+    private String operatorCommand;
+
+    public RuleSettingsDTO(String id, String name, Instant modifiedOn) {
         this.setId(id);
         this.name = name;
         this.setModifiedOn(modifiedOn);

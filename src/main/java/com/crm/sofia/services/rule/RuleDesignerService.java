@@ -1,12 +1,11 @@
 package com.crm.sofia.services.rule;
 
-import com.crm.sofia.dto.rule.RuleDTO;
+import com.crm.sofia.dto.rule.RuleSettingsDTO;
 import com.crm.sofia.exception.DoesNotExistException;
-import com.crm.sofia.mapper.rule.RuleMapper;
-import com.crm.sofia.model.rule.Rule;
-import com.crm.sofia.repository.rule.RuleRepository;
+import com.crm.sofia.mapper.rule.RuleSettingsMapper;
+import com.crm.sofia.model.rule.RuleSettings;
+import com.crm.sofia.repository.rule.RuleSettingsRepository;
 import com.crm.sofia.services.auth.JWTService;
-import com.crm.sofia.services.menu.MenuFieldService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,57 +17,55 @@ import java.util.List;
 public class RuleDesignerService {
 
     @Autowired
-    private RuleRepository ruleRepository;
+    private RuleSettingsRepository ruleSettingsRepository;
 
     @Autowired
-    private RuleMapper ruleMapper;
+    private RuleSettingsMapper ruleSettingsMapper;
 
-    @Autowired
-    private MenuFieldService menuFieldService;
     @Autowired
     private JWTService jwtService;
 
 
-    public List<RuleDTO> getObject() {
-        List<RuleDTO> list = this.ruleRepository.getObject();
+    public List<RuleSettingsDTO> getObject() {
+        List<RuleSettingsDTO> list = this.ruleSettingsRepository.getObject();
         return list;
     }
 
-    public RuleDTO getObject(String id) {
+    public RuleSettingsDTO getObject(String id) {
 
-        Rule entity = this.ruleRepository.findById(id)
+        RuleSettings entity = this.ruleSettingsRepository.findById(id)
                 .orElseThrow(() -> new DoesNotExistException("Rule Does Not Exist"));
 
-        return this.ruleMapper.map(entity);
+        return this.ruleSettingsMapper.map(entity);
     }
 
     public void deleteObject(String id) {
-        Rule optionalEntity = this.ruleRepository.findById(id)
+        RuleSettings optionalEntity = this.ruleSettingsRepository.findById(id)
                 .orElseThrow(() -> new DoesNotExistException("Rule Does Not Exist"));
 
-        this.ruleRepository.deleteById(optionalEntity.getId());
+        this.ruleSettingsRepository.deleteById(optionalEntity.getId());
     }
 
     @Transactional
-    public RuleDTO postObject(RuleDTO ruleDTO) {
-        Rule component = this.ruleMapper.map(ruleDTO);
+    public RuleSettingsDTO postObject(RuleSettingsDTO ruleSettingsDTO) {
+        RuleSettings component = this.ruleSettingsMapper.map(ruleSettingsDTO);
         component.setCreatedOn(Instant.now());
         component.setModifiedOn(Instant.now());
         component.setCreatedBy(jwtService.getUserId());
         component.setModifiedBy(jwtService.getUserId());
 
-        Rule createdComponent = this.ruleRepository.save(component);
-        return this.ruleMapper.map(createdComponent);
+        RuleSettings createdComponent = this.ruleSettingsRepository.save(component);
+        return this.ruleSettingsMapper.map(createdComponent);
     }
 
     @Transactional
-    public RuleDTO putObject(RuleDTO ruleDTO) {
-        Rule entity = ruleMapper.map(ruleDTO);
+    public RuleSettingsDTO putObject(RuleSettingsDTO ruleSettingsDTO) {
+        RuleSettings entity = ruleSettingsMapper.map(ruleSettingsDTO);
 
         entity.setModifiedOn(Instant.now());
         entity.setModifiedBy(jwtService.getUserId());
 
-        Rule createdEntity = this.ruleRepository.save(entity);
-        return this.ruleMapper.map(createdEntity);
+        RuleSettings createdEntity = this.ruleSettingsRepository.save(entity);
+        return this.ruleSettingsMapper.map(createdEntity);
     }
 }

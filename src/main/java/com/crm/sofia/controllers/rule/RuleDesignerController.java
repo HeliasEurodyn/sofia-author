@@ -1,6 +1,6 @@
 package com.crm.sofia.controllers.rule;
 
-import com.crm.sofia.dto.rule.RuleDTO;
+import com.crm.sofia.dto.rule.RuleSettingsDTO;
 import com.crm.sofia.services.rule.RuleDesignerService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
@@ -11,7 +11,7 @@ import java.util.List;
 @Slf4j
 @RestController
 @Validated
-@RequestMapping("/rule")
+@RequestMapping("/rule-designer")
 public class RuleDesignerController {
 
     private final RuleDesignerService ruleDesignerService;
@@ -21,24 +21,24 @@ public class RuleDesignerController {
     }
 
     @GetMapping
-    List<RuleDTO> getObject() {
+    List<RuleSettingsDTO> getObject() {
         return this.ruleDesignerService.getObject();
     }
 
     @GetMapping(path = "/by-id")
-    RuleDTO getObject(@RequestParam("id") String id) {
+    RuleSettingsDTO getObject(@RequestParam("id") String id) {
         return this.ruleDesignerService.getObject(id);
     }
 
     @PostMapping
-    public RuleDTO postObject(@RequestBody RuleDTO dto) {
-        RuleDTO createdDTO = this.ruleDesignerService.postObject(dto);
+    public RuleSettingsDTO postObject(@RequestBody RuleSettingsDTO dto) {
+        RuleSettingsDTO createdDTO = this.ruleDesignerService.postObject(dto);
         return createdDTO;
     }
 
     @PutMapping
-    public RuleDTO putObject(@RequestBody RuleDTO dto) {
-        RuleDTO createdDTO = this.ruleDesignerService.putObject(dto);
+    public RuleSettingsDTO putObject(@RequestBody RuleSettingsDTO dto) {
+        RuleSettingsDTO createdDTO = this.ruleDesignerService.putObject(dto);
         return createdDTO;
     }
 
