@@ -1,0 +1,31 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet author="helias" id="create_rule_settings_table">
+        <createTable tableName="rule_settings">
+            <column name="id" type="varchar(36)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="created_by" type="varchar(255)"/>
+            <column name="created_on" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column name="modified_by" type="varchar(255)"/>
+            <column name="modified_on" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column name="short_order" type="bigint(20)"/>
+            <column name="description" type="varchar(255)"/>
+            <column name="field_command" type="varchar(255)"/>
+            <column name="name" type="varchar(255)"/>
+            <column name="operator_command" type="varchar(255)"/>
+            <column name="rule_section_description" type="varchar(255)"/>
+            <column name="rule_section_title" type="varchar(255)"/>
+            <column name="title" type="varchar(255)"/>
+        </createTable>
+        <addPrimaryKey columnNames="id" tableName="rule_settings"/>
+    </changeSet>
+
+</databaseChangeLog>
