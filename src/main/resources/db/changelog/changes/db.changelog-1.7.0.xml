@@ -45,6 +45,6 @@
 
     <changeSet author="helias" id="add_primary_key_to_rule_table">
         <addPrimaryKey columnNames="id" tableName="rule"/>
-    </changeSet
+    </changeSet>
 
 </databaseChangeLog>
