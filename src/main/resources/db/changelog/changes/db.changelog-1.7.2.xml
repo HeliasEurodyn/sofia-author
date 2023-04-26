@@ -1,0 +1,17 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet author="Helias" id="form_control_field__add__header_filter">
+        <addColumn tableName="form_control_field">
+            <column name="header_filter" type="BIT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Helias" id="component_persist_entity_field_assignment__add__filter_editor">
+        <addColumn tableName="component_persist_entity_field_assignment">
+            <column name="filter_editor" type="VARCHAR(1000)"/>
+        </addColumn>
+    </changeSet>
+
+</databaseChangeLog>

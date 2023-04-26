@@ -42,6 +42,9 @@ public class FormControlField extends BaseEntity {
     @Column
     private Boolean required;
 
+    @Column(name = "header_filter")
+    private Boolean headerFilter;
+
     @Column
     private String css;
 

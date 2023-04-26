@@ -45,7 +45,6 @@ public class MenuService {
             throw new DoesNotExistException("Menu Does Not Exist");
         }
         Menu entity = optionalEntity.get();
-        System.out.println(entity);
         MenuDTO dto = this.menuMapper.mapMenu(entity, languageId);
 
         List<MenuFieldDTO> menuFieldList =

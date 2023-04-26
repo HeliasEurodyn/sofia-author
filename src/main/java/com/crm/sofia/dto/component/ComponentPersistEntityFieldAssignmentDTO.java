@@ -26,6 +26,8 @@ public class ComponentPersistEntityFieldAssignmentDTO extends BaseDTO {
 
     private String editor;
 
+    private String filterEditor;
+
     private String defaultValue;
 
     private String onSaveValue;
