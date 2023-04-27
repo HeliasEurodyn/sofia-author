@@ -100,7 +100,8 @@ public class ComponentDesignerService {
     @Transactional
     public ComponentDTO postObject(ComponentDTO dto) {
         Component entity = this.componentMapper.mapWithPersistEntities(dto);
-        Component createdEntity = this.componentRepository.save(entity);
+        this.componentRepository.save(entity);
+        //Component createdEntity = this.componentRepository.save(entity);
         //return this.componentMapper.map(createdEntity);
         return null;
     }
