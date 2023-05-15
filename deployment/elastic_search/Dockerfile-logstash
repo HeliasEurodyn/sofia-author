@@ -1,0 +1,4 @@
+FROM docker.elastic.co/logstash/logstash:8.6.2
+# Download JDBC connector for Logstash
+RUN curl -o "/usr/share/logstash/logstash-core/lib/jars/mariadb-connector-java-2.4.4.jar" "https://downloads.mariadb.com/Connectors/java/connector-java-2.4.4/mariadb-java-client-2.4.4.jar"
+ENTRYPOINT ["/usr/local/bin/docker-entrypoint"]

@@ -2,6 +2,7 @@ package com.crm.sofia.model.component;
 
 import com.crm.sofia.model.access_control.AccessControl;
 import com.crm.sofia.model.common.MainEntity;
+import com.crm.sofia.model.tag.Tag;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import org.hibernate.annotations.DynamicInsert;
@@ -43,5 +44,15 @@ public class Component extends MainEntity implements Serializable {
     )
     @JoinColumn(name = "component_id")
     private List<AccessControl> accessControls;
+
+    @ManyToMany(fetch = FetchType.LAZY,cascade = {CascadeType.MERGE})
+    @JoinTable(
+            name = "entity_tag",
+            joinColumns = @JoinColumn(name = "component_id"),
+            inverseJoinColumns = {
+                    @JoinColumn(name = "tag_id", referencedColumnName = "id")
+            }
+    )
+    private List<Tag> tags;
 
 }

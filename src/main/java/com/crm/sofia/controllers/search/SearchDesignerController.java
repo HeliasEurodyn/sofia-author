@@ -1,6 +1,8 @@
 package com.crm.sofia.controllers.search;
 
+import com.crm.sofia.dto.list.ListDTO;
 import com.crm.sofia.dto.search.SearchDTO;
+import com.crm.sofia.dto.tag.TagDTO;
 import com.crm.sofia.services.search.SearchDesignerService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
@@ -23,6 +25,17 @@ public class SearchDesignerController {
     @GetMapping
     List<SearchDTO> getObject() {
         return this.searchDesignerService.getObject();
+    }
+
+    @GetMapping(path = "/tag")
+    List<TagDTO> getTag() {
+        return this.searchDesignerService.getTag();
+    }
+
+
+    @GetMapping(path = "/by-tag")
+    List<SearchDTO> getObjectByTag(@RequestParam("tag") String tag) {
+        return this.searchDesignerService.getObjectByTag(tag);
     }
 
     @GetMapping(path = "/by-id")

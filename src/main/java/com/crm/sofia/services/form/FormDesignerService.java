@@ -3,8 +3,10 @@ package com.crm.sofia.services.form;
 import com.crm.sofia.dto.component.ComponentPersistEntityDTO;
 import com.crm.sofia.dto.component.ComponentPersistEntityFieldDTO;
 import com.crm.sofia.dto.form.*;
+import com.crm.sofia.dto.tag.TagDTO;
 import com.crm.sofia.exception.DoesNotExistException;
 import com.crm.sofia.mapper.form.FormMapper;
+import com.crm.sofia.model.expression.ExprResponse;
 import com.crm.sofia.model.form.FormEntity;
 import com.crm.sofia.repository.form.FormRepository;
 import com.crm.sofia.services.auth.JWTService;
@@ -12,6 +14,7 @@ import com.crm.sofia.services.component.ComponentPersistEntityFieldAssignmentSer
 import com.crm.sofia.services.language.LanguageDesignerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -96,17 +99,30 @@ public class FormDesignerService {
 
         FormDTO createdFormDTO = this.formMapper.map(createdFormEntity);
 
-        cacheManager.getCache("form_uil_cache").evict(createdFormDTO.getId());
-        cacheManager.getCache("form_uil_cache").evict(new Object[]{createdFormDTO.getId(), ""});
-        languageDesignerService.getObject().forEach(language -> {
-            cacheManager.getCache("form_uil_cache").evict(new Object[]{createdFormDTO.getId(), language.getId()});
-        });
+        List<ComponentPersistEntityDTO> componentPersistEntityList =
+                this.componentPersistEntityFieldAssignmentService.retrieveFieldAssignments(
+                        createdFormDTO.getComponent().getComponentPersistEntityList(),
+                        "form",
+                        createdFormDTO.getId()
+                );
+        createdFormDTO.getComponent().setComponentPersistEntityList(componentPersistEntityList);
+
+        this.redisCacheEvict(createdFormDTO);
 
         return createdFormDTO;
     }
 
     public List<FormDTO> getObject() {
         List<FormDTO> formList = this.formRepository.getObject();
+        return formList;
+    }
+
+    public List<FormDTO> getObjectByTag(String tag) {
+        return this.formRepository.getObjectByTag(tag);
+    }
+
+    public List<FormDTO> get10LatestObject() {
+        List<FormDTO> formList = this.formRepository.get10LatestObject(PageRequest.of(0, 10));
         return formList;
     }
 
@@ -214,27 +230,72 @@ public class FormDesignerService {
     @Transactional
     @Modifying
     public void deleteObject(String id) {
-        FormEntity optionalFormEntity = this.formRepository.findById(id)
+        FormEntity formEntity = this.formRepository.findById(id)
                 .orElseThrow(() -> new DoesNotExistException("Form Does Not Exist"));
 
-        this.componentPersistEntityFieldAssignmentService.deleteByIdAndEntityType(optionalFormEntity.getId(), "form");
-        this.formRepository.deleteById(optionalFormEntity.getId());
+        this.componentPersistEntityFieldAssignmentService.deleteByIdAndEntityType(formEntity.getId(), "form");
+        this.formRepository.deleteById(formEntity.getId());
 
-        cacheManager.getCache("form_uil_cache").evict(id);
-        cacheManager.getCache("form_uil_cache").evict(new Object[]{id, ""});
-        languageDesignerService.getObject().forEach(language -> {
-            cacheManager.getCache("form_uil_cache").evict(new Object[]{id, language.getId()});
-        });
+        FormDTO formDTO = this.formMapper.map(formEntity);
+        List<ComponentPersistEntityDTO> componentPersistEntityList =
+                this.componentPersistEntityFieldAssignmentService.retrieveFieldAssignments(
+                        formDTO.getComponent().getComponentPersistEntityList(),
+                        "form",
+                        formDTO.getId()
+                );
+        formDTO.getComponent().setComponentPersistEntityList(componentPersistEntityList);
+
+        this.redisCacheEvict(formDTO);
     }
 
     public boolean clearCache() {
         this.formRepository.increaseInstanceVersions();
+        List<FormEntity> entities = this.formRepository.findAll();
+        entities.forEach(entity -> {
+
+            FormDTO formDTO = this.formMapper.map(entity);
+            List<ComponentPersistEntityDTO> componentPersistEntityList =
+                    this.componentPersistEntityFieldAssignmentService.retrieveFieldAssignments(
+                            formDTO.getComponent().getComponentPersistEntityList(),
+                            "form",
+                            formDTO.getId()
+                    );
+            formDTO.getComponent().setComponentPersistEntityList(componentPersistEntityList);
+            this.redisCacheEvict(formDTO);
+
+        });
         return true;
     }
 
-    public List<String> getBusinessUnits() {
-        List<String> businessUnits = formRepository.findBusinessUnitsDistinct();
-        return businessUnits;
+    public List<TagDTO> getTag() {
+        List<TagDTO> tag = formRepository.findTagDistinct();
+        return tag;
+    }
+
+    private void redisCacheEvict(FormDTO formEntity) {
+        cacheManager.getCache("form_db_cache").evict(formEntity.getId());
+        cacheManager.getCache("form_uil_cache").evict(formEntity.getId());
+        cacheManager.getCache("form_uil_cache").evict(new Object[]{formEntity.getId(), ""});
+        languageDesignerService.getObject().forEach(language -> {
+            cacheManager.getCache("form_uil_cache").evict(new Object[]{formEntity.getId(), language.getId()});
+        });
+
+        formEntity.getComponent().getComponentPersistEntityList().forEach(cpe -> {
+            cpe.getComponentPersistEntityFieldList()
+                    .stream()
+                    .filter(cpef -> cpef.getAssignment() != null)
+                    .forEach(cpef -> {
+                        cacheManager.getCache("expression").evict(cpef.getAssignment().getId() + "-s");
+                        cacheManager.getCache("expression").evict(cpef.getAssignment().getId()+ "-l");
+                        cacheManager.getCache("expression").evict(cpef.getAssignment().getId());
+                    });
+
+            cpe.getComponentPersistEntityFieldList()
+                    .stream()
+                    .forEach(cpef -> {
+                        cacheManager.getCache("expression").evict(cpef.getPersistEntityField().getId());
+                    });
+        });
     }
 
 }

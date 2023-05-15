@@ -8,6 +8,7 @@ import com.crm.sofia.model.info_card.InfoCard;
 import com.crm.sofia.native_repository.info_card.InfoCardNativeRepository;
 import com.crm.sofia.repository.info_card.InfoCardRepository;
 import com.crm.sofia.services.auth.JWTService;
+import com.crm.sofia.utils.EncodingUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
@@ -15,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.Map;
@@ -23,18 +23,15 @@ import java.util.Map;
 @Service
 public class InfoCardDesignerService {
     @Autowired
-    private  InfoCardRepository infoCardRepository;
+    private InfoCardRepository infoCardRepository;
     @Autowired
-    private  InfoCardMapper infoCardMapper;
+    private InfoCardMapper infoCardMapper;
     @Autowired
-    private  InfoCardNativeRepository infoCardNativeRepository;
+    private InfoCardNativeRepository infoCardNativeRepository;
     @Autowired
-    private  JWTService jwtService;
+    private JWTService jwtService;
     @Autowired
-    private  InfoCardJavascriptService infoCardJavascriptService;
-
-
-
+    private InfoCardJavascriptService infoCardJavascriptService;
 
 
     public List<InfoCardDTO> getObject() {
@@ -48,17 +45,48 @@ public class InfoCardDesignerService {
                 .orElseThrow(() -> new DoesNotExistException("InfoCard does not exist"));
 
         InfoCardDTO infoCardDTO = this.infoCardMapper.map(optionalInfoCard);
-        String encQuery = Base64.getEncoder().encodeToString(infoCardDTO.getQuery().getBytes(StandardCharsets.UTF_8));
-        infoCardDTO.setQuery(encQuery);
+        if (infoCardDTO.getQuery() != null) {
+            String uriEncoded = EncodingUtil.encodeURIComponent(infoCardDTO.getQuery());
+            String encodedHtml = Base64.getEncoder().encodeToString(uriEncoded.getBytes(StandardCharsets.UTF_8));
+            infoCardDTO.setQuery(encodedHtml);
+        }
+
+        infoCardDTO.getScripts()
+                .stream()
+                .filter(scriptDTO -> scriptDTO.getScript() != null)
+                .forEach(scriptDto -> {
+                    String uriEncoded = EncodingUtil.encodeURIComponent(scriptDto.getScript());
+                    String encoded = Base64.getEncoder().encodeToString(uriEncoded.getBytes(StandardCharsets.UTF_8));
+                    scriptDto.setScript(encoded);
+
+
+                });
+
+
         return infoCardDTO;
     }
 
+
     @Transactional
     @Modifying
-    public InfoCardDTO postObject(InfoCardDTO dto)  {
+    public InfoCardDTO postObject(InfoCardDTO dto) {
 
-        String decQuery = new String(Base64.getDecoder().decode(dto.getQuery().getBytes(StandardCharsets.UTF_8)));
-        dto.setQuery(decQuery);
+        if (dto.getQuery() != null) {
+            byte[] decodeQuery = Base64.getDecoder().decode(dto.getQuery());
+            String query = EncodingUtil.decodeURIComponent(new String(decodeQuery));
+            dto.setQuery(query);
+        }
+
+        dto.getScripts()
+                .stream()
+                .filter(scriptDTO -> scriptDTO.getScript() != null)
+                .forEach(scriptDto -> {
+
+                    byte[] decodeScript = Base64.getDecoder().decode(scriptDto.getScript());
+                    String Script = EncodingUtil.decodeURIComponent(new String(decodeScript));
+                    scriptDto.setScript(Script);
+                });
+
 
         InfoCard infoCard = this.infoCardMapper.map(dto);
 

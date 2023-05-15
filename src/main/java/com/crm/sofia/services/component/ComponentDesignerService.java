@@ -1,13 +1,13 @@
 package com.crm.sofia.services.component;
 
-import com.crm.sofia.dto.common.BaseDTO;
 import com.crm.sofia.dto.component.ComponentDTO;
 import com.crm.sofia.dto.component.ComponentPersistEntityDTO;
 import com.crm.sofia.dto.component.ComponentPersistEntityFieldDTO;
+import com.crm.sofia.dto.list.ListDTO;
+import com.crm.sofia.dto.tag.TagDTO;
 import com.crm.sofia.exception.DoesNotExistException;
 import com.crm.sofia.mapper.component.ComponentMapper;
 import com.crm.sofia.mapper.component.ComponentPersistEntityMapper;
-import com.crm.sofia.model.common.MainEntity;
 import com.crm.sofia.model.component.Component;
 import com.crm.sofia.model.component.ComponentPersistEntity;
 import com.crm.sofia.model.component.ComponentPersistEntityField;
@@ -15,7 +15,7 @@ import com.crm.sofia.model.persistEntity.PersistEntity;
 import com.crm.sofia.repository.component.ComponentPersistEntityRepository;
 import com.crm.sofia.repository.component.ComponentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
+import org.springframework.cache.CacheManager;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,15 +27,15 @@ import java.util.stream.Collectors;
 @Service
 public class ComponentDesignerService {
     @Autowired
-    private  ComponentMapper componentMapper;
+    private ComponentMapper componentMapper;
     @Autowired
-    private  ComponentRepository componentRepository;
+    private ComponentRepository componentRepository;
     @Autowired
-    private  ComponentPersistEntityRepository componentPersistEntityRepository;
+    private ComponentPersistEntityRepository componentPersistEntityRepository;
     @Autowired
-    private  ComponentPersistEntityMapper componentPersistEntityMapper;
-
-
+    private ComponentPersistEntityMapper componentPersistEntityMapper;
+    @Autowired
+    CacheManager cacheManager;
 
     public List<ComponentDTO> getObject() {
         List<ComponentDTO> componentList = this.componentRepository.getObject();
@@ -100,15 +100,26 @@ public class ComponentDesignerService {
     @Transactional
     public ComponentDTO postObject(ComponentDTO dto) {
         Component entity = this.componentMapper.mapWithPersistEntities(dto);
-        Component createdEntity = this.componentRepository.save(entity);
+        this.componentRepository.save(entity);
+        //Component createdEntity = this.componentRepository.save(entity);
         //return this.componentMapper.map(createdEntity);
         return null;
     }
 
     @Transactional
     public ComponentDTO putObject(ComponentDTO dto) {
+        List<TagDTO> tags =
+                dto.getTags().stream().collect(Collectors.toMap(TagDTO::getId, p -> p, (p, q) -> p))
+                        .values()
+                        .stream().collect(Collectors.toList());
+
+        dto.setTags(tags);
+
         Component entity = this.componentMapper.map(dto);
         Component createdEntity = this.componentRepository.save(entity);
+
+        this.redisCacheEvict(createdEntity.getId());
+
         return this.componentMapper.map(createdEntity);
     }
 
@@ -117,6 +128,7 @@ public class ComponentDesignerService {
                 .orElseThrow(() -> new DoesNotExistException("Component Does Not Exist"));
 
         this.componentRepository.deleteById(optionalComponent.getId());
+        this.redisCacheEvict(id);
     }
 
     public ComponentPersistEntityDTO getComponentPersistEntityDataById(String id, String selectionId) {
@@ -189,5 +201,20 @@ public class ComponentDesignerService {
                 });
 
         this.componentPersistEntityRepository.saveAll(componentPersistEntities);
+    }
+
+    public List<TagDTO> getTag() {
+        List<TagDTO> tag = componentRepository.findTagDistinct();
+        return tag;
+    }
+
+    public List<ComponentDTO> getObjectByTag(String tag) {
+        return this.componentRepository.getObjectByTag(tag);
+    }
+
+    private void redisCacheEvict(String id){
+        cacheManager.getCache("component_select_query").evict(id);
+        cacheManager.getCache("component_insert_query").evict(id);
+        cacheManager.getCache("component_update_query_map").evict(id);
     }
 }

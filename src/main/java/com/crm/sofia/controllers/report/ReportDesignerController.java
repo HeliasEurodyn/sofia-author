@@ -1,6 +1,8 @@
 package com.crm.sofia.controllers.report;
 
+import com.crm.sofia.dto.list.ListDTO;
 import com.crm.sofia.dto.report.ReportDTO;
+import com.crm.sofia.dto.tag.TagDTO;
 import com.crm.sofia.services.report.ReportDesignerService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
@@ -26,6 +28,16 @@ public class ReportDesignerController {
     @GetMapping
     List<ReportDTO> getObject() {
         return this.reportDesignerService.getObject();
+    }
+
+    @GetMapping(path = "/tag")
+    List<TagDTO> getTag() {
+        return this.reportDesignerService.getTag();
+    }
+
+    @GetMapping(path = "/by-tag")
+    List<ReportDTO> getObjectByTag(@RequestParam("tag") String tag) {
+        return this.reportDesignerService.getObjectByTag(tag);
     }
 
     @GetMapping(path = "/by-id")

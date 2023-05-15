@@ -1,11 +1,14 @@
 package com.crm.sofia.repository.persistEntity;
 
 import com.crm.sofia.dto.appview.AppViewDTO;
+import com.crm.sofia.dto.list.ListDTO;
 import com.crm.sofia.dto.table.TableDTO;
+import com.crm.sofia.dto.tag.TagDTO;
 import com.crm.sofia.dto.view.ViewDTO;
 import com.crm.sofia.model.persistEntity.PersistEntity;
 import com.crm.sofia.repository.common.BaseRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -20,6 +23,38 @@ public interface PersistEntityRepository extends BaseRepository<PersistEntity> {
     List<AppViewDTO> getObjectAppView(String entityType);
     @Query("SELECT new com.crm.sofia.dto.view.ViewDTO(v.id,v.name,v.modifiedOn) FROM PersistEntity v WHERE v.entitytype =:entityType  ORDER BY v.modifiedOn DESC")
     List<ViewDTO> getObjectView(String entityType);
+
+    @Query("SELECT DISTINCT new com.crm.sofia.dto.table.TableDTO(p.id, p.name, p.modifiedOn) " +
+            "FROM PersistEntity p " +
+            "INNER JOIN p.tags t " +
+            "WHERE t.title = :tag " +
+            "AND p.entitytype ='Table' "+
+            "ORDER BY p.modifiedOn DESC")
+    List<TableDTO> getObjectByTagTable(@Param("tag") String tag);
+
+    @Query("SELECT DISTINCT new com.crm.sofia.dto.view.ViewDTO(p.id, p.name, p.modifiedOn) " +
+            "FROM PersistEntity p " +
+            "INNER JOIN p.tags t " +
+            "WHERE t.title = :tag " +
+            "AND p.entitytype ='View' "+
+            "ORDER BY p.modifiedOn DESC")
+    List<ViewDTO> getObjectByTagView(@Param("tag") String tag);
+
+    @Query("SELECT DISTINCT new com.crm.sofia.dto.appview.AppViewDTO(p.id, p.name, p.modifiedOn) " +
+            "FROM PersistEntity p " +
+            "INNER JOIN p.tags t " +
+            "WHERE t.title = :tag " +
+            "AND p.entitytype ='AppView' "+
+            "ORDER BY p.modifiedOn DESC")
+    List<AppViewDTO> getObjectByTagAppView(@Param("tag") String tag);
+
+    @Query(" SELECT DISTINCT new com.crm.sofia.dto.tag.TagDTO(t.title, t.color) " +
+            " FROM PersistEntity p  " +
+            " INNER JOIN p.tags t " +
+            " WHERE p.entitytype = :entityType ")
+    List<TagDTO> findTagDistinct(String entityType);
+
+
 
 }
 

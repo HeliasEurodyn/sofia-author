@@ -4,6 +4,7 @@ import com.crm.sofia.dto.access_control.AccessControlDTO;
 import com.crm.sofia.dto.common.BaseDTO;
 import com.crm.sofia.dto.component.ComponentDTO;
 import com.crm.sofia.dto.list.translation.ListTranslationDTO;
+import com.crm.sofia.dto.tag.TagDTO;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 import lombok.experimental.Accessors;
@@ -52,7 +53,7 @@ public class ListDTO extends BaseDTO {
     private ComponentDTO component;
     private Long instanceVersion;
     private Boolean accessControlEnabled;
-    private String businessUnit;
+    private List<TagDTO> tags;
     private List<AccessControlDTO> accessControls;
     private List<ListScriptDTO> listScripts;
     private List<ListCssDTO> listCssList;
@@ -72,6 +73,7 @@ public class ListDTO extends BaseDTO {
         component.setId(componentId);
         component.setName(componentName);
         this.setComponent(component);
+
     }
 
 }

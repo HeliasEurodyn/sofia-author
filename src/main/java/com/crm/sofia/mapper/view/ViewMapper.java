@@ -7,16 +7,18 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.NullValueCheckStrategy;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Mapper(componentModel = "spring", nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
+@Mapper(componentModel = "spring", nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS, imports = Collections.class)
 public abstract class ViewMapper extends BaseMapper<ViewDTO, PersistEntity> {
 
     @Mapping(ignore = true, target = "modifiedBy")
     @Mapping(ignore = true, target = "modifiedOn")
     @Mapping(ignore = true, target = "createdBy")
     @Mapping(target="persistEntityFieldList", source="dto.viewFieldList")
+    @Mapping(target="foreignKeyConstrainList", expression = "java(Collections.emptyList())")
     public abstract PersistEntity map(ViewDTO dto);
 
     @Mapping(target = "viewFieldList", source = "entity.persistEntityFieldList")

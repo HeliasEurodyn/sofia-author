@@ -3,6 +3,7 @@ package com.crm.sofia.controllers.component;
 import com.crm.sofia.dto.component.ComponentDTO;
 import com.crm.sofia.dto.component.ComponentPersistEntityDTO;
 import com.crm.sofia.dto.component.ComponentPersistEntityFieldDTO;
+import com.crm.sofia.dto.tag.TagDTO;
 import com.crm.sofia.services.component.ComponentDesignerService;
 import com.crm.sofia.services.form.FormDynamicQueryService;
 import lombok.extern.slf4j.Slf4j;
@@ -19,15 +20,23 @@ import java.util.stream.Collectors;
 @RequestMapping("/component-designer")
 public class ComponentDesignerController {
     @Autowired
-    private  ComponentDesignerService componentDesignerService;
+    private ComponentDesignerService componentDesignerService;
     @Autowired
-    private  FormDynamicQueryService formDynamicQueryService;
-
-
+    private FormDynamicQueryService formDynamicQueryService;
 
     @GetMapping
     List<ComponentDTO> getObject() {
         return this.componentDesignerService.getObject();
+    }
+
+    @GetMapping(path = "/tag")
+    List<TagDTO> getTag() {
+        return this.componentDesignerService.getTag();
+    }
+
+    @GetMapping(path = "/by-tag")
+    List<ComponentDTO> getObjectByTag(@RequestParam("tag") String tag) {
+        return this.componentDesignerService.getObjectByTag(tag);
     }
 
     @GetMapping(path = "/by-id")
@@ -59,7 +68,7 @@ public class ComponentDesignerController {
 
         List<ComponentPersistEntityFieldDTO> retrievalFieldList = componentPersistEntityDTO.getComponentPersistEntityFieldList()
                 .stream()
-                .filter(x -> (x.getPersistEntityField().getPrimaryKey() == null ? false : x.getPersistEntityField().getPrimaryKey()))
+                .filter(x -> (x.getPersistEntityField().getPrimaryKey() != null && x.getPersistEntityField().getPrimaryKey()))
                 .collect(Collectors.toList());
 
         retrievalFieldList

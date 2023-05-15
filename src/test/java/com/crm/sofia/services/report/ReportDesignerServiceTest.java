@@ -6,7 +6,6 @@ import com.crm.sofia.mapper.report.ReportMapper;
 import com.crm.sofia.model.report.Report;
 import com.crm.sofia.repository.report.ReportRepository;
 import com.crm.sofia.services.auth.JWTService;
-import net.sf.jasperreports.parts.subreport.SubreportPartComponent;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,7 +15,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

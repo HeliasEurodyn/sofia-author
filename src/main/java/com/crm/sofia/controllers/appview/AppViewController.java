@@ -2,12 +2,14 @@ package com.crm.sofia.controllers.appview;
 
 import com.crm.sofia.dto.appview.AppViewDTO;
 import com.crm.sofia.dto.appview.AppViewFieldDTO;
+import com.crm.sofia.dto.tag.TagDTO;
 import com.crm.sofia.services.appview.AppViewService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RestController
@@ -24,6 +26,16 @@ public class AppViewController {
     @GetMapping
     List<AppViewDTO> getObject() {
         return this.appViewService.getObjectAppView();
+    }
+
+    @GetMapping(path = "/tag")
+    List<TagDTO> getTag(){
+        return  this.appViewService.getTag();
+    }
+
+    @GetMapping(path = "/by-tag")
+    List<AppViewDTO> getObjectByTag(@RequestParam("tag") String tag){
+        return  this.appViewService.getObjectByTag(tag);
     }
 
     @GetMapping(path = "/by-id")
@@ -46,9 +58,9 @@ public class AppViewController {
         this.appViewService.deleteObject(id);
     }
 
-    @GetMapping(path = "/generate-view-fields")
-    List<AppViewFieldDTO> generateViewFields(@RequestParam("query") String query) {
-        return this.appViewService.generateViewFields(query);
+    @PostMapping(path = "/generate-view-fields")
+    List<AppViewFieldDTO> generateViewFields(@RequestBody Map<String, String> parameters) {
+        return this.appViewService.generateViewFields(parameters.get("query"));
     }
 
     @GetMapping(path = "/view-exists")

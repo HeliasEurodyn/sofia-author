@@ -4,6 +4,7 @@ import com.crm.sofia.dto.access_control.AccessControlDTO;
 import com.crm.sofia.dto.common.BaseDTO;
 import com.crm.sofia.dto.component.ComponentDTO;
 import com.crm.sofia.dto.form.translation.FormTranslationDTO;
+import com.crm.sofia.dto.tag.TagDTO;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -30,7 +31,9 @@ public class FormDTO extends BaseDTO {
 
     private Boolean accessControlEnabled;
 
-    private String businessUnit;
+    private String tag;
+
+    private List<TagDTO> tags;
 
     private ComponentDTO component;
 
@@ -61,6 +64,5 @@ public class FormDTO extends BaseDTO {
         componentDTO.setId(componentId);
         componentDTO.setName(componentName);
         this.setComponent(componentDTO);
-
     }
 }

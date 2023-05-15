@@ -2,6 +2,7 @@ package com.crm.sofia.model.menu;
 
 import com.crm.sofia.model.access_control.AccessControl;
 import com.crm.sofia.model.common.MainEntity;
+import com.crm.sofia.model.tag.Tag;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import org.hibernate.annotations.DynamicInsert;
@@ -23,6 +24,7 @@ public class Menu extends MainEntity {
 
     @Column
     private String name;
+
 
     @OneToMany(
             fetch = FetchType.LAZY,
@@ -47,4 +49,14 @@ public class Menu extends MainEntity {
     )
     @JoinColumn(name = "menu_id")
     private List<MenuTranslation> translations;
+
+    @ManyToMany(fetch = FetchType.LAZY,cascade = {CascadeType.MERGE})
+    @JoinTable(
+            name = "entity_tag",
+            joinColumns = @JoinColumn(name = "menu_id"),
+            inverseJoinColumns = {
+                    @JoinColumn(name = "tag_id", referencedColumnName = "id")
+            }
+    )
+    private List<Tag> tags;
 }

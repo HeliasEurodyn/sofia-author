@@ -1,11 +1,14 @@
 package com.crm.sofia.services.custom_query;
 
 import com.crm.sofia.dto.custom_query.CustomQueryDTO;
+import com.crm.sofia.dto.list.ListDTO;
+import com.crm.sofia.dto.tag.TagDTO;
 import com.crm.sofia.exception.DoesNotExistException;
 import com.crm.sofia.mapper.custom_query.CustomQueryMapper;
 import com.crm.sofia.model.custom_query.CustomQuery;
 import com.crm.sofia.repository.custom_query.CustomQueryRepository;
 import com.crm.sofia.services.auth.JWTService;
+import com.crm.sofia.utils.EncodingUtil;
 import org.hibernate.HibernateException;
 import org.hibernate.query.internal.NativeQueryImpl;
 import org.hibernate.transform.AliasToEntityMapResultTransformer;
@@ -18,9 +21,12 @@ import org.springframework.web.server.ResponseStatusException;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.transaction.Transactional;
+import java.nio.charset.StandardCharsets;
 import java.time.Instant;
+import java.util.Base64;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class CustomQueryService {
@@ -48,7 +54,22 @@ public class CustomQueryService {
                 .orElseThrow(() -> new DoesNotExistException("CustomQuery Does Not Exist"));
 
         CustomQueryDTO dto = customQueryMapper.map(optionalEntity);
+
+        if (dto.getQuery() != null) {
+            String uriEncoded = EncodingUtil.encodeURIComponent(dto.getQuery());
+            String encodedQuery = Base64.getEncoder().encodeToString(uriEncoded.getBytes(StandardCharsets.UTF_8));
+            dto.setQuery(encodedQuery);
+        }
         return dto;
+    }
+
+    public List<TagDTO> getTag() {
+        List<TagDTO> tag = customQueryRepository.findTagDistinct();
+        return tag;
+    }
+
+    public List<CustomQueryDTO> getObjectByTag(String tag) {
+        return this.customQueryRepository.getObjectByTag(tag);
     }
 
     public Object getDataObjects(String id, Map<String, String> parameters) {
@@ -106,6 +127,19 @@ public class CustomQueryService {
     }
 
     public CustomQueryDTO postObject(CustomQueryDTO customQueryDto) {
+
+        List<TagDTO> tags =
+                customQueryDto.getTags().stream().collect(Collectors.toMap(TagDTO::getId, p -> p, (p, q) -> p))
+                        .values()
+                        .stream().collect(Collectors.toList());
+
+        customQueryDto.setTags(tags);
+
+        if (customQueryDto.getQuery() != null) {
+            byte[] decodedQuery = Base64.getDecoder().decode(customQueryDto.getQuery());
+            String query = EncodingUtil.decodeURIComponent(new String(decodedQuery));
+            customQueryDto.setQuery(query);
+        }
 
         CustomQuery customQuery = customQueryMapper.map(customQueryDto);
         if (customQueryDto.getId() == null) {

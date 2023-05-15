@@ -13,4 +13,11 @@ public class CouldNotSaveException extends SofiaException {
         this.reason = "NOT_FOUND_TABLE";
     }
 
+    public CouldNotSaveException(String message) {
+        super(message);
+        this.setCategory("Save");
+        this.setCode("4002");
+        this.setVisible(true);
+    }
+
 }

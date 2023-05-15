@@ -7,11 +7,14 @@ import com.crm.sofia.mapper.html_dashboard.HtmlDashboardMapper;
 import com.crm.sofia.model.html_dashboard.HtmlDashboard;
 import com.crm.sofia.repository.html_dashboard.HtmlDashboardRepository;
 import com.crm.sofia.services.auth.JWTService;
+import com.crm.sofia.utils.EncodingUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.nio.charset.StandardCharsets;
 import java.time.Instant;
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,11 +39,23 @@ public class HtmlDashboardDesignerService {
 
         HtmlDashboard entity = optionalEntity;
         HtmlDashboardDTO dto = htmlDashboardMapper.map(entity);
+
+        if (dto.getHtml() != null) {
+            String uriEncoded = EncodingUtil.encodeURIComponent(dto.getHtml());
+            String encodedHtml = Base64.getEncoder().encodeToString(uriEncoded.getBytes(StandardCharsets.UTF_8));
+            dto.setHtml(encodedHtml);
+        }
         return dto;
     }
 
     @Transactional
     public HtmlDashboardDTO postObject(HtmlDashboardDTO htmlDashboardDto) {
+
+        if (htmlDashboardDto.getHtml() != null) {
+            byte[] decodedHtml = Base64.getDecoder().decode(htmlDashboardDto.getHtml());
+            String Html = EncodingUtil.decodeURIComponent(new String(decodedHtml));
+            htmlDashboardDto.setHtml(Html);
+        }
 
         HtmlDashboard htmlDashboard = htmlDashboardMapper.map(htmlDashboardDto);
         if (htmlDashboardDto.getId() == null) {

@@ -1,5 +1,6 @@
 package com.crm.sofia.controllers.view;
 
+import com.crm.sofia.dto.tag.TagDTO;
 import com.crm.sofia.dto.view.ViewDTO;
 import com.crm.sofia.dto.view.ViewFieldDTO;
 import com.crm.sofia.services.view.ViewService;
@@ -8,6 +9,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RestController
@@ -26,9 +28,19 @@ public class ViewController {
         return this.viewService.getObjectView();
     }
 
-    @GetMapping(path = "/generate-view-fields")
-    List<ViewFieldDTO> generateViewFields(@RequestParam("query") String query) {
-        return this.viewService.generateViewFields(query);
+    @GetMapping(path = "/tag")
+    List<TagDTO> getTag(){
+        return this.viewService.getTag();
+    }
+
+    @GetMapping(path = "/by-tag")
+    List<ViewDTO> getObjectByTag(@RequestParam("tag") String tag){
+        return this.viewService.getObjectByTag(tag);
+    }
+
+    @PostMapping(path = "/generate-view-fields")
+    List<ViewFieldDTO> generateViewFields(@RequestBody Map<String, String> parameters) {
+        return this.viewService.generateViewFields(parameters.get("query"));
     }
 
     @PostMapping
@@ -38,12 +50,8 @@ public class ViewController {
     }
 
     @PutMapping
-    public ViewDTO putObject(@RequestBody ViewDTO viewDTO) {
-        ViewDTO customComponentDTO = this.viewService.postObject(viewDTO);
-        this.viewService.dropView(customComponentDTO.getName());
-        this.viewService.createView(
-                customComponentDTO.getName(),
-                customComponentDTO.getQuery());
+    public ViewDTO putObject(@RequestBody ViewDTO dto) {
+        ViewDTO customComponentDTO = this.viewService.saveDTOAndCreate(dto);
         return customComponentDTO;
     }
 

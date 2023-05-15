@@ -1,12 +1,15 @@
 package com.crm.sofia.services.xls_import;
 
 import com.crm.sofia.dto.component.ComponentPersistEntityDTO;
+import com.crm.sofia.dto.list.ListDTO;
+import com.crm.sofia.dto.tag.TagDTO;
 import com.crm.sofia.dto.xls_import.XlsImportDTO;
 import com.crm.sofia.exception.DoesNotExistException;
 import com.crm.sofia.mapper.xls_import.XlsImportMapper;
 import com.crm.sofia.model.xls_import.XlsImport;
 import com.crm.sofia.repository.xls_import.XlsImportRepository;
 import com.crm.sofia.services.component.ComponentPersistEntityFieldAssignmentService;
+import com.crm.sofia.utils.EncodingUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
@@ -16,6 +19,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Slf4j
@@ -33,6 +37,15 @@ public class XlsImportDesignerService {
         this.componentPersistEntityFieldAssignmentService = componentPersistEntityFieldAssignmentService;
     }
 
+    public List<TagDTO> getTag() {
+        List<TagDTO> tag = xlsImportRepository.findTagDistinct();
+        return tag;
+    }
+
+    public List<XlsImportDTO> getObjectByTag(String tag) {
+        return this.xlsImportRepository.getObjectByTag(tag);
+    }
+
     public List<XlsImportDTO> getObject() {
         List<XlsImportDTO> chartsList = this.xlsImportRepository.getObject();
         return chartsList;
@@ -43,6 +56,12 @@ public class XlsImportDesignerService {
                 .orElseThrow(() -> new DoesNotExistException("XlsImport Does Not Exist"));
 
         XlsImportDTO dto = this.xlsImportMapper.map(optionalChart);
+
+        if (dto.getDescription() != null) {
+            String uriEncoded = EncodingUtil.encodeURIComponent(dto.getDescription());
+            String encodedQuery = Base64.getEncoder().encodeToString(uriEncoded.getBytes(StandardCharsets.UTF_8));
+            dto.setDescription(encodedQuery);
+        }
 
         List<ComponentPersistEntityDTO> cpeList =
                 this.treeToList(dto.getComponent().getComponentPersistEntityList());
@@ -91,6 +110,13 @@ public class XlsImportDesignerService {
 
     @Transactional
     public XlsImportDTO postObject(XlsImportDTO dto) {
+
+        List<TagDTO> tags =
+                dto.getTags().stream().collect(Collectors.toMap(TagDTO::getId, p -> p, (p, q) -> p))
+                        .values()
+                        .stream().collect(Collectors.toList());
+
+        dto.setTags(tags);
         List<ComponentPersistEntityDTO> cpeList = this.treeToList(dto.getComponent().getComponentPersistEntityList());
         cpeList.forEach(cpe -> {
             cpe.getComponentPersistEntityFieldList()
@@ -102,6 +128,12 @@ public class XlsImportDesignerService {
                         cpef.getAssignment().setDefaultValue(decDefaultValue);
                     });
         });
+
+        if (dto.getDescription() != null) {
+            byte[] decodedDescription = Base64.getDecoder().decode(dto.getDescription());
+            String Description = EncodingUtil.decodeURIComponent(new String(decodedDescription));
+            dto.setDescription(Description);
+        }
 
         XlsImport chart = this.xlsImportMapper.map(dto);
         XlsImport savedChart = this.xlsImportRepository.save(chart);

@@ -6,6 +6,7 @@ import com.crm.sofia.mapper.html_template.HtmlTemplateMapper;
 import com.crm.sofia.model.html_template.HtmlTemplate;
 import com.crm.sofia.repository.html_template.HtmlTemplateRepository;
 import com.crm.sofia.services.auth.JWTService;
+import com.crm.sofia.utils.EncodingUtil;
 import com.crm.sofia.utils.html_to_xhtml.HtmlToXhtml;
 import com.crm.sofia.utils.xhtml_to_pdf.XhtmlToPdf;
 import com.lowagie.text.DocumentException;
@@ -47,13 +48,13 @@ public class HtmlTemplateDesignerService {
 
         HtmlTemplateDTO dto = htmlTemplateMapper.map(entity);
         if (dto.getHtml() != null) {
-            String encodedHtml = Base64.getEncoder().encodeToString(dto.getHtml().getBytes(StandardCharsets.UTF_8));
+            String uriEncoded = EncodingUtil.encodeURIComponent(dto.getHtml());
+            String encodedHtml = Base64.getEncoder().encodeToString(uriEncoded.getBytes(StandardCharsets.UTF_8));
             dto.setHtml(encodedHtml);
         }
 
         return dto;
     }
-
 
     public HtmlTemplateDTO generatePdf(String id) {
         HtmlTemplate entity = htmlTemplateRepository.findById(id)
@@ -62,14 +63,13 @@ public class HtmlTemplateDesignerService {
         HtmlTemplateDTO dto = htmlTemplateMapper.map(entity);
 
         return dto;
-
     }
-
 
     public HtmlTemplateDTO postObject(HtmlTemplateDTO htmlTemplateDTO) {
         if (htmlTemplateDTO.getHtml() != null) {
             byte[] decodedHtml = Base64.getDecoder().decode(htmlTemplateDTO.getHtml());
-            htmlTemplateDTO.setHtml(new String(decodedHtml));
+            String html = EncodingUtil.decodeURIComponent(new String(decodedHtml));
+            htmlTemplateDTO.setHtml(html);
         }
 
 

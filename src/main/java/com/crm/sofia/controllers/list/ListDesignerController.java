@@ -1,6 +1,7 @@
 package com.crm.sofia.controllers.list;
 
 import com.crm.sofia.dto.list.ListDTO;
+import com.crm.sofia.dto.tag.TagDTO;
 import com.crm.sofia.services.list.ListDesignerService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
@@ -23,6 +24,22 @@ public class ListDesignerController {
     @GetMapping
     List<ListDTO> getObject() {
         return this.listDesignerService.getObject();
+    }
+
+    @GetMapping(path = "/tag")
+    List<TagDTO> getTag() {
+        return this.listDesignerService.getTag();
+    }
+
+
+    @GetMapping(path = "/by-tag")
+    List<ListDTO> getObjectByTag(@RequestParam("tag") String tag) {
+        return this.listDesignerService.getObjectByTag(tag);
+    }
+
+    @GetMapping(path="/10-latest")
+    List<ListDTO> get10LatestObject() {
+        return this.listDesignerService.get10LatestObject();
     }
 
     @GetMapping(path = "/by-id")
@@ -55,11 +72,6 @@ public class ListDesignerController {
     @RequestMapping(value = "/clear-cache", method = RequestMethod.GET)
     boolean clearCache() {
         return this.listDesignerService.clearCacheForUi();
-    }
-
-    @GetMapping(path = "/business-units")
-    List<String> getBusinessUnits() {
-        return this.listDesignerService.getBusinessUnits();
     }
 
 }

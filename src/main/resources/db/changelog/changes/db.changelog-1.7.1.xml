@@ -1,0 +1,73 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet author="helias" id="create_rule_xpression_table">
+
+        <createTable tableName="rule_xpression">
+            <column name="id" type="varchar(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="children_join_type" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="color" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="join_type" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="operator" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="rule_expression_id" type="varchar(36)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="rule_id" type="varchar(36)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="children_color" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="field_code" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="field_name" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="operator_code" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="operator_name" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+
+    </changeSet>
+
+    <changeSet author="helias" id="add_constraints_to_rule_xpression_table">
+        <addPrimaryKey columnNames="id" tableName="rule_xpression"/>
+        <addForeignKeyConstraint baseColumnNames="rule_expression_id"
+                                 baseTableName="rule_xpression"
+                                 constraintName="FKbdwma3gs7k4ycrky811b8pk4i"
+                                 referencedColumnNames="id"
+                                 referencedTableName="rule_xpression"/>
+        <addForeignKeyConstraint baseColumnNames="rule_id"
+                                 baseTableName="rule_xpression"
+                                 constraintName="FKcu00g66iokwrjl23qwibtji4t"
+                                 referencedColumnNames="id"
+                                 referencedTableName="rule"/>
+        <createIndex indexName="idx_rule_expression_id"
+                     tableName="rule_xpression"
+                     unique="false">
+            <column name="rule_expression_id"/>
+        </createIndex>
+        <createIndex indexName="idx_rule_id"
+                     tableName="rule_xpression"
+                     unique="false">
+            <column name="rule_id"/>
+        </createIndex>
+    </changeSet>
+
+</databaseChangeLog>

@@ -1,6 +1,7 @@
 package com.crm.sofia.model.persistEntity;
 
 import com.crm.sofia.model.common.MainEntity;
+import com.crm.sofia.model.tag.Tag;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -52,5 +53,19 @@ public class PersistEntity extends MainEntity implements Serializable {
     )
     @JoinColumn(name = "base_table_id", referencedColumnName = "id")
     private List<ForeignKeyConstrain> foreignKeyConstrainList;
+
+    @ManyToMany(fetch = FetchType.LAZY,cascade = {CascadeType.MERGE})
+    @JoinTable(
+            name = "entity_tag",
+            joinColumns = @JoinColumn(name = "persist_entity_id"),
+            inverseJoinColumns = {
+                    @JoinColumn(name = "tag_id", referencedColumnName = "id")
+            }
+    )
+    private List<Tag> tags;
+
+    public void removeForeignKeyConstrain(ForeignKeyConstrain foreignKeyConstrain){
+        foreignKeyConstrainList.remove(foreignKeyConstrain);
+    }
 
 }

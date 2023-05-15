@@ -1,6 +1,8 @@
 package com.crm.sofia.controllers.form;
 
 import com.crm.sofia.dto.form.FormDTO;
+import com.crm.sofia.dto.list.ListDTO;
+import com.crm.sofia.dto.tag.TagDTO;
 import com.crm.sofia.services.form.FormDesignerService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
@@ -23,6 +25,16 @@ public class FormDesignerController {
     @GetMapping
     List<FormDTO> getObject() {
         return this.formDesignerService.getObject();
+    }
+
+    @GetMapping(path = "/by-tag")
+    List<FormDTO> getObjectByTag(@RequestParam("tag") String tag) {
+        return this.formDesignerService.getObjectByTag(tag);
+    }
+
+    @GetMapping(path="/10-latest")
+    List<FormDTO> get10LatestObject() {
+        return this.formDesignerService.get10LatestObject();
     }
 
     @GetMapping(path = "/by-id")
@@ -52,9 +64,9 @@ public class FormDesignerController {
         return this.formDesignerService.clearCache();
     }
 
-    @GetMapping(path = "/business-units")
-    List<String> getBusinessUnits() {
-        return this.formDesignerService.getBusinessUnits();
+    @GetMapping(path = "/tag")
+    List<TagDTO> getTag() {
+        return this.formDesignerService.getTag();
     }
 
 }

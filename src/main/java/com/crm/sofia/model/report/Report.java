@@ -2,6 +2,7 @@ package com.crm.sofia.model.report;
 
 import com.crm.sofia.model.access_control.AccessControl;
 import com.crm.sofia.model.common.MainEntity;
+import com.crm.sofia.model.tag.Tag;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -66,5 +67,17 @@ public class Report extends MainEntity {
     )
     @JoinColumn(name = "report_id")
     private List<AccessControl> accessControls;
+
+    @ManyToMany(fetch = FetchType.LAZY,cascade = {CascadeType.MERGE})
+    @JoinTable(
+            name = "entity_tag",
+            joinColumns = @JoinColumn(name = "report_id"),
+            inverseJoinColumns = {
+                    @JoinColumn(name = "tag_id", referencedColumnName = "id")
+            }
+    )
+    private List<Tag> tags;
+
+
 
 }

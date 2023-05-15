@@ -31,4 +31,16 @@ public class Settings extends BaseEntity {
 
     @Column
     String oauthPrototypeUserName;
+
+    @Column
+    String mailSenderHost;
+
+    @Column
+    String mailSenderPort;
+
+    @Column
+    String mailSenderUsername;
+
+    @Column
+    String mailSenderPassword;
 }
