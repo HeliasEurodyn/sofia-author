@@ -2,7 +2,6 @@ package com.crm.sofia.dto.form;
 
 import com.crm.sofia.dto.common.BaseDTO;
 import com.crm.sofia.dto.form.translation.FormControlButtonTranslationDTO;
-import com.crm.sofia.dto.form.translation.FormControlFieldTranslationDTO;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
