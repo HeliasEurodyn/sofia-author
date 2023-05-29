@@ -24,7 +24,6 @@ public class TagDTO extends BaseDTO {
     @NotBlank
     private String title;
 
-
     private String description;
 
     private String color;
