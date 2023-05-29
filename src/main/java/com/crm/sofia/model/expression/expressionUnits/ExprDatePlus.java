@@ -47,19 +47,19 @@ public class ExprDatePlus extends ExprUnit {
             return null;
         }
 
-        Object daysObject = (Integer) this.rightChildExprUnit.getResult();
+        Object daysObject = (Double) this.rightChildExprUnit.getResult();
         if (daysObject == null) {
             return null;
         }
 
-        if (!(daysObject instanceof Integer)){
+        if (!(daysObject instanceof Double)){
             return null;
         }
 
         Instant date = (Instant) dateObject;
 
-        Integer days = (Integer) daysObject;
+        Double days = (Double) daysObject;
 
-        return date.plus(days, ChronoUnit.DAYS);
+        return date.plus(days.intValue(), ChronoUnit.DAYS);
     }
 }

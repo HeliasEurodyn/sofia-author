@@ -344,7 +344,10 @@ public class ExpressionService {
             if ((exprUnit instanceof ExprUuid
                     || exprUnit instanceof ExprStringValue
                     || exprUnit instanceof ExprDoubleValue
-                    || exprUnit instanceof ExprIntegerValue)
+                    || exprUnit instanceof ExprIntegerValue
+                    || exprUnit instanceof ExprTrue
+                    || exprUnit instanceof ExprFalse
+            )
                     && !exprUnit.getIsOnTree()
                     && exprUnit.getPriority().equals(currentPriority)) {
 
@@ -418,6 +421,8 @@ public class ExpressionService {
             if (exprUnit == null) exprUnit = ExprStringValue.exrtactExprUnit(expression, i);
             if (exprUnit == null) exprUnit = ExprDoubleValue.exrtactExprUnit(expression, i);
             if (exprUnit == null) exprUnit = ExprIntegerValue.exrtactExprUnit(expression, i);
+            if (exprUnit == null) exprUnit = ExprTrue.exrtactExprUnit(expression, i);
+            if (exprUnit == null) exprUnit = ExprFalse.exrtactExprUnit(expression, i);
             if (exprUnit == null) exprUnit = ExprSystemParameter.exrtactExprUnit(expression, i, parameters);
             if (exprUnit == null) exprUnit = ExprImportColumnParameter.exrtactExprUnit(expression, i, parameters);
             if (exprUnit == null) exprUnit = ExprGetSqlValParameter.exrtactExprUnit(expression, i, entityManager);
