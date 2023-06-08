@@ -118,17 +118,18 @@ public class ComponentDesignerService {
         Component entity = this.componentMapper.map(dto);
         Component createdEntity = this.componentRepository.save(entity);
 
-        this.redisCacheEvict(createdEntity.getId());
+        createdEntity.flatComponentPersistEntityTree().forEach(cpe -> this.redisCacheEvict(cpe.getId()));
 
         return this.componentMapper.map(createdEntity);
     }
 
     public void deleteObject(String id) {
-        Component optionalComponent = this.componentRepository.findById(id)
+        Component component = this.componentRepository.findById(id)
                 .orElseThrow(() -> new DoesNotExistException("Component Does Not Exist"));
 
-        this.componentRepository.deleteById(optionalComponent.getId());
-        this.redisCacheEvict(id);
+        component.flatComponentPersistEntityTree().forEach(cpe -> this.redisCacheEvict(cpe.getId()));
+
+        this.componentRepository.deleteById(component.getId());
     }
 
     public ComponentPersistEntityDTO getComponentPersistEntityDataById(String id, String selectionId) {

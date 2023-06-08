@@ -9,29 +9,25 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 @Data
 @Accessors(chain = true)
 @Entity(name = "ComponentPersistEntity")
 @Table(name = "component_persist_entity")
 public class ComponentPersistEntity extends BaseEntity implements Serializable {
-    
-    @ManyToOne(fetch = FetchType.LAZY, targetEntity = PersistEntity.class)
-    @JoinColumn(name = "persist_entity_id", referencedColumnName = "id")
-    private PersistEntity persistEntity;
-
-    @Column
-    private String code;
-
-    @Column
-    private String selector;
 
     @Column
     Boolean allowRetrieve;
-
     @Column
     Boolean allowSave;
-
+    @ManyToOne(fetch = FetchType.LAZY, targetEntity = PersistEntity.class)
+    @JoinColumn(name = "persist_entity_id", referencedColumnName = "id")
+    private PersistEntity persistEntity;
+    @Column
+    private String code;
+    @Column
+    private String selector;
     @Column
     private String deleteType;
 
@@ -55,4 +51,8 @@ public class ComponentPersistEntity extends BaseEntity implements Serializable {
 
     @Column(name = "short_order")
     private Long shortOrder;
+
+    public Stream<ComponentPersistEntity> streamTree() {
+        return Stream.concat(Stream.of(this), this.getComponentPersistEntityList().stream().flatMap(ComponentPersistEntity::streamTree));
+    }
 }

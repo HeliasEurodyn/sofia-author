@@ -12,6 +12,7 @@ import lombok.experimental.Accessors;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.stream.Stream;
 
 @Data
 @NoArgsConstructor
@@ -37,5 +38,10 @@ public class ComponentDTO extends BaseDTO {
         this.setId(id);
         this.name = name;
         this.setModifiedOn(modifiedOn);
+    }
+
+    public Stream<ComponentPersistEntityDTO> flatComponentPersistEntityTree(){
+        return this.getComponentPersistEntityList().stream()
+                .flatMap(ComponentPersistEntityDTO::streamTree);
     }
 }

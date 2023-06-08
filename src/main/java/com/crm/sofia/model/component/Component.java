@@ -11,6 +11,7 @@ import org.hibernate.annotations.DynamicUpdate;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
+import java.util.stream.Stream;
 
 @Data
 @Accessors(chain = true)
@@ -45,7 +46,7 @@ public class Component extends MainEntity implements Serializable {
     @JoinColumn(name = "component_id")
     private List<AccessControl> accessControls;
 
-    @ManyToMany(fetch = FetchType.LAZY,cascade = {CascadeType.MERGE})
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE})
     @JoinTable(
             name = "entity_tag",
             joinColumns = @JoinColumn(name = "component_id"),
@@ -54,5 +55,10 @@ public class Component extends MainEntity implements Serializable {
             }
     )
     private List<Tag> tags;
+
+    public Stream<ComponentPersistEntity> flatComponentPersistEntityTree() {
+        return this.getComponentPersistEntityList().stream()
+                .flatMap(ComponentPersistEntity::streamTree);
+    }
 
 }

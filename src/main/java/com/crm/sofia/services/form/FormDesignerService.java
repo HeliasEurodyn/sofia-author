@@ -276,6 +276,7 @@ public class FormDesignerService {
         cacheManager.getCache("form_db_cache").evict(formEntity.getId());
         cacheManager.getCache("form_uil_cache").evict(formEntity.getId());
         cacheManager.getCache("form_uil_cache").evict(new Object[]{formEntity.getId(), ""});
+        cacheManager.getCache("form_uil_cache").evict(new Object[]{formEntity.getId(), "0"});
         languageDesignerService.getObject().forEach(language -> {
             cacheManager.getCache("form_uil_cache").evict(new Object[]{formEntity.getId(), language.getId()});
         });
