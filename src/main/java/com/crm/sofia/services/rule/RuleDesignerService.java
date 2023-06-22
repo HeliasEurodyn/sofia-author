@@ -7,6 +7,7 @@ import com.crm.sofia.model.rule.RuleSettings;
 import com.crm.sofia.repository.rule.RuleSettingsRepository;
 import com.crm.sofia.services.auth.JWTService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -59,6 +60,7 @@ public class RuleDesignerService {
     }
 
     @Transactional
+    @Modifying
     public RuleSettingsDTO putObject(RuleSettingsDTO ruleSettingsDTO) {
         RuleSettings entity = ruleSettingsMapper.map(ruleSettingsDTO);
 

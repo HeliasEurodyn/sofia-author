@@ -37,4 +37,14 @@ public class RuleSettings extends MainEntity {
 
     @Column
     private String operatorCommand;
+
+    @OneToMany(
+            fetch = FetchType.LAZY,
+            cascade = {CascadeType.ALL},
+            orphanRemoval = true
+    )
+    @JoinColumn(name = "rule_settings_id")
+    private List<RuleSettingsQuery> queryList;
+
+
 }

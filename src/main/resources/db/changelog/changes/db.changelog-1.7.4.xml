@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.10.xsd">
+
+    <changeSet id="create-rule_settings-table" author="Helias">
+        <createTable tableName="rule_settings">
+            <column name="id" type="VARCHAR(36)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="created_on" type="TIMESTAMP" defaultValueDate="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_by" type="VARCHAR(255)"/>
+            <column name="modified_on" type="TIMESTAMP" defaultValueDate="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="modified_by" type="VARCHAR(255)"/>
+            <column name="short_order" type="BIGINT"/>
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="title" type="VARCHAR(255)"/>
+            <column name="description" type="VARCHAR(255)"/>
+            <column name="rule_section_title" type="VARCHAR(255)"/>
+            <column name="rule_section_description" type="VARCHAR(255)"/>
+            <column name="field_command" type="VARCHAR(255)"/>
+            <column name="operator_command" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="create-rule_settings_query-table" author="Helias">
+        <createTable tableName="rule_settings_query">
+            <column name="id" type="VARCHAR(36)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="title" type="VARCHAR(255)"/>
+            <column name="query" type="VARCHAR(2000)"/>
+            <column name="rule_settings_id" type="VARCHAR(36)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="create-rule_settings_query-fk-table" author="Helias">
+        <addForeignKeyConstraint baseTableName="rule_settings_query"
+                                 baseColumnNames="rule_settings_id"
+                                 referencedTableName="rule_settings"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_rule_settings_query_settings_id"
+                                 onDelete="CASCADE"/>
+    </changeSet>
+
+</databaseChangeLog>

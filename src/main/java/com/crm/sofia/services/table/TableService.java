@@ -1,6 +1,5 @@
 package com.crm.sofia.services.table;
 
-import com.crm.sofia.dto.list.ListDTO;
 import com.crm.sofia.dto.table.ForeignKeyConstrainDTO;
 import com.crm.sofia.dto.table.RemoveForeignKeyConstrainDTO;
 import com.crm.sofia.dto.table.TableDTO;
@@ -23,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
+import java.math.BigInteger;
 import java.time.Instant;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -32,21 +32,16 @@ import java.util.stream.Collectors;
 @Service
 public class TableService {
 
-    @Value("${sofia.db.name}")
-    private String sofiaDatabase;
-
     private final PersistEntityRepository persistEntityRepository;
     private final TableMapper tableMapper;
     private final EntityManager entityManager;
     private final JWTService jwtService;
     private final ComponentDesignerService componentDesignerService;
-
     private final ForeignKeyConstrainMapper foreignKeyConstrainMapper;
+    @Value("${sofia.db.name}")
+    private String sofiaDatabase;
 
-    public TableService(PersistEntityRepository persistEntityRepository,
-                        TableMapper tableMapper,
-                        EntityManager entityManager, JWTService jwtService,
-                        ComponentDesignerService componentDesignerService, ForeignKeyConstrainMapper foreignKeyConstrainMapper) {
+    public TableService(PersistEntityRepository persistEntityRepository, TableMapper tableMapper, EntityManager entityManager, JWTService jwtService, ComponentDesignerService componentDesignerService, ForeignKeyConstrainMapper foreignKeyConstrainMapper) {
         this.persistEntityRepository = persistEntityRepository;
         this.tableMapper = tableMapper;
         this.entityManager = entityManager;
@@ -85,8 +80,7 @@ public class TableService {
     }
 
     public TableDTO getObject(String id) {
-        PersistEntity optionalComponent = this.persistEntityRepository.findById(id)
-                .orElseThrow(() -> new DoesNotExistException("Component Does Not Exist"));
+        PersistEntity optionalComponent = this.persistEntityRepository.findById(id).orElseThrow(() -> new DoesNotExistException("Component Does Not Exist"));
 
         TableDTO tableDTO = this.tableMapper.map(optionalComponent);
         this.shortTableFields(tableDTO);
@@ -94,19 +88,14 @@ public class TableService {
     }
 
     public void shortTableFields(TableDTO tableDTO) {
-        tableDTO.getTableFieldList().stream()
-                .filter(field -> field.getShortOrder() == null)
-                .forEach(field -> field.setShortOrder(0L));
+        tableDTO.getTableFieldList().stream().filter(field -> field.getShortOrder() == null).forEach(field -> field.setShortOrder(0L));
 
-        List<TableFieldDTO> shortedFieldList = tableDTO.getTableFieldList()
-                .stream()
-                .sorted(Comparator.comparingLong(TableFieldDTO::getShortOrder)).collect(Collectors.toList());
+        List<TableFieldDTO> shortedFieldList = tableDTO.getTableFieldList().stream().sorted(Comparator.comparingLong(TableFieldDTO::getShortOrder)).collect(Collectors.toList());
         tableDTO.setTableFieldList(shortedFieldList);
     }
 
     public void deleteObject(String id) {
-        PersistEntity optionalPersistEntity = this.persistEntityRepository.findById(id)
-                .orElseThrow(() -> new DoesNotExistException("Persist Entity Does Not Exist"));
+        PersistEntity optionalPersistEntity = this.persistEntityRepository.findById(id).orElseThrow(() -> new DoesNotExistException("Persist Entity Does Not Exist"));
 
         this.componentDesignerService.removeComponentTablesByTableId(id);
         this.persistEntityRepository.deleteById(optionalPersistEntity.getId());
@@ -150,10 +139,7 @@ public class TableService {
             }
             sql += " ADD COLUMN ";
             sql += tableFieldDTO.getName().replace(" ", "") + " ";
-            sql += " " + tableFieldDTO.getType()
-                    .replace(" ", "")
-                    .replace("datetime", "timestamp")
-                    .replace("password", "varchar");
+            sql += " " + tableFieldDTO.getType().replace(" ", "").replace("datetime", "timestamp").replace("password", "varchar");
 
             if (Arrays.asList("varchar", "password").contains(tableFieldDTO.getType())) {
                 sql += " (" + tableFieldDTO.getSize().toString().replace(" ", "") + ") ";
@@ -205,10 +191,7 @@ public class TableService {
                 sql += ",";
             }
             sql += tableFieldDTO.getName().replace(" ", "") + " ";
-            sql += " " + tableFieldDTO.getType()
-                    .replace(" ", "")
-                    .replace("datetime", "timestamp")
-                    .replace("password", "varchar");
+            sql += " " + tableFieldDTO.getType().replace(" ", "").replace("datetime", "timestamp").replace("password", "varchar");
 
             if (Arrays.asList("varchar", "password").contains(tableFieldDTO.getType())) {
                 sql += " (" + tableFieldDTO.getSize().toString().replace(" ", "") + ") ";
@@ -247,8 +230,7 @@ public class TableService {
 
     public Boolean tableOnDatabase(String tableName) {
         List<String> tables = this.getTables();
-        if (tables.contains(tableName)) return true;
-        else return false;
+        return tables.contains(tableName);
     }
 
 //    @Transactional
@@ -261,23 +243,14 @@ public class TableService {
     @Transactional
     public TableDTO save(TableDTO dto) {
 
-        List<TagDTO> tags =
-                dto.getTags().stream().collect(Collectors.toMap(TagDTO::getId, p -> p, (p, q) -> p))
-                        .values()
-                        .stream().collect(Collectors.toList());
+        List<TagDTO> tags = dto.getTags().stream().collect(Collectors.toMap(TagDTO::getId, p -> p, (p, q) -> p)).values().stream().collect(Collectors.toList());
 
         dto.setTags(tags);
 
         /**
          * Remove deleted Fields From Components
          */
-        this.componentDesignerService.removeComponentTableFieldsByTable(
-                dto.getId(),
-                dto.getTableFieldList()
-                        .stream()
-                        .map(x -> x.getId())
-                        .collect(Collectors.toList())
-        );
+        this.componentDesignerService.removeComponentTableFieldsByTable(dto.getId(), dto.getTableFieldList().stream().map(x -> x.getId()).collect(Collectors.toList()));
 
         /**
          * Save DTO
@@ -350,18 +323,11 @@ public class TableService {
         List<ForeignKeyConstrainDTO> addedForeignKeyConstrain = null;
         if (Optional.of(tableDTO).isPresent()) {
 
-            remainingForeignKeyConstrains = tableDTO.getForeignKeyConstrainList()
-                    .stream()
-                    .filter(foreignKeyConstrain1 -> existingForeignKeyConstrainsOfTheTable
-                            .stream()
-                            .noneMatch(foreignKeyConstrainName -> foreignKeyConstrainName.equals(foreignKeyConstrain1.getName())))
-                    .collect(Collectors.toList());
+            remainingForeignKeyConstrains = tableDTO.getForeignKeyConstrainList().stream().filter(foreignKeyConstrain1 -> existingForeignKeyConstrainsOfTheTable.stream().noneMatch(foreignKeyConstrainName -> foreignKeyConstrainName.equals(foreignKeyConstrain1.getName()))).collect(Collectors.toList());
 
-            boolean foreignKeyConstrainAlreadyExist = remainingForeignKeyConstrains
-                    .stream()
-                    .map(foreignKeyConstrainDTO -> foreignKeyConstrainDTO.getName()).anyMatch(existingForeignKeyConstrains::contains);
+            boolean foreignKeyConstrainAlreadyExist = remainingForeignKeyConstrains.stream().map(foreignKeyConstrainDTO -> foreignKeyConstrainDTO.getName()).anyMatch(existingForeignKeyConstrains::contains);
 
-            if(foreignKeyConstrainAlreadyExist){
+            if (foreignKeyConstrainAlreadyExist) {
                 throw new ForeignKeyConstrainAlreadyExist();
             }
         }
@@ -376,8 +342,8 @@ public class TableService {
     }
 
     public List<String> getExistingConstrainsOfSpecifTable(TableDTO tableDTO) {
-        if(tableDTO!=null){
-            char QuotationMark  = '"';
+        if (tableDTO != null) {
+            char QuotationMark = '"';
             Query query = entityManager.createNativeQuery("select CONSTRAINT_NAME from information_schema.KEY_COLUMN_USAGE WHERE TABLE_NAME=" + QuotationMark + tableDTO.getName() + QuotationMark + ";");
             List<String> existingConstrains = query.getResultList();
             return existingConstrains;
@@ -419,12 +385,10 @@ public class TableService {
             }
 
             String isNullField = field[2].toString();
-            if (isNullField.equals("NO")) dto.setHasNotNull(true);
-            else dto.setHasNotNull(false);
+            dto.setHasNotNull(isNullField.equals("NO"));
 
             String keyField = field[3].toString();
-            if (keyField.equals("PRI")) dto.setPrimaryKey(true);
-            else dto.setPrimaryKey(false);
+            dto.setPrimaryKey(keyField.equals("PRI"));
 
             if (field[4] != null) {
                 dto.setDefaultValue(field[4].toString());
@@ -434,8 +398,7 @@ public class TableService {
             }
             String extraField = field[5].toString();
 
-            if (extraField.equals("auto_increment")) dto.setAutoIncrement(true);
-            else dto.setAutoIncrement(false);
+            dto.setAutoIncrement(extraField.equals("auto_increment"));
 
             dto.setIsUnsigned(false);
 
@@ -447,15 +410,19 @@ public class TableService {
     @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<Map<String, String>> DropForeignKeyConstrain(RemoveForeignKeyConstrainDTO dto) {
 
-        Map<String,String> response = new HashMap<>();
+        Map<String, String> response = new HashMap<>();
 
-        if(dto!= null){
-            if(dto.getForeignKeyConstrainDTO()!= null && dto.getTableDTO()!=null){
+        if (!checkForeignKeyConstraintExistence(dto.getForeignKeyConstrainDTO().getName())) {
+            response.put("message", "The foreign key constrain does not exist");
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        }
+
+        if (dto != null) {
+            if (dto.getForeignKeyConstrainDTO() != null && dto.getTableDTO() != null) {
 
                 ForeignKeyConstrainDTO foreignKeyConstrainDTO = dto.getForeignKeyConstrainDTO();
                 TableDTO tableDTO = dto.getTableDTO();
-                PersistEntity persistEntity = persistEntityRepository.findById(tableDTO.getId())
-                        .orElseThrow(() -> new DoesNotExistException("Table Does Not Exist"));
+                PersistEntity persistEntity = persistEntityRepository.findById(tableDTO.getId()).orElseThrow(() -> new DoesNotExistException("Table Does Not Exist"));
 
                 ForeignKeyConstrain foreignKeyConstrain = foreignKeyConstrainMapper.map(foreignKeyConstrainDTO);
 
@@ -471,12 +438,27 @@ public class TableService {
                 Query query = entityManager.createNativeQuery(sql);
                 query.executeUpdate();
 
-                response.put("message","The foreign key constrain  has been removed successfully");
+                response.put("message", "The foreign key constrain  has been removed successfully");
                 return new ResponseEntity<>(response, HttpStatus.OK);
 
             }
         }
-        response.put("message","Table or Foreign Key are missing");
+        response.put("message", "Table or Foreign Key are missing");
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
+
+    public boolean checkForeignKeyConstraintExistence(String constraintName) {
+        String sql = "SELECT COUNT(*) AS total " +
+                "FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE " +
+                "WHERE CONSTRAINT_SCHEMA = ? " +
+                "AND CONSTRAINT_NAME = ?";
+
+        Query query = entityManager.createNativeQuery(sql);
+        query.setParameter(1, this.sofiaDatabase);
+        query.setParameter(2, constraintName);
+
+        BigInteger result = (BigInteger) query.getSingleResult();
+        return result.intValue() > 0;
+    }
+
 }

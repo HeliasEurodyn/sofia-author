@@ -37,5 +37,4 @@ public abstract class MainEntity extends BaseEntity {
 
   @Column(name = "short_order")
   private Long shortOrder;
-
 }
