@@ -65,10 +65,11 @@ public class ListDTO extends BaseDTO {
     private List<ListComponentFieldDTO> listComponentTopGroupFieldList;
     private List<ListComponentFieldDTO> listComponentOrderByFieldList;
     private List<ListComponentFieldDTO> listComponentActionFieldList;
-    public ListDTO(String id, String name, Instant modifiedOn, String componentId, String componentName) {
+    public ListDTO(String id, String name, Instant modifiedOn, String jsonUrl, String componentId, String componentName) {
         this.setId(id);
         this.setName(name);
         this.setModifiedOn(modifiedOn);
+        this.setJsonUrl(jsonUrl);
         ComponentDTO component = new ComponentDTO();
         component.setId(componentId);
         component.setName(componentName);

@@ -59,12 +59,13 @@ public interface ListRepository extends BaseRepository<ListEntity> {
     @Query(" SELECT l FROM ListEntity l " + " WHERE l.jsonUrl <> '' AND l.jsonUrl is not null ")
     List<ListEntity> getIdsByExistingJsonUrls();
 
-    @Query("SELECT new com.crm.sofia.dto.list.ListDTO(l.id, l.name, l.modifiedOn, c.id, c.name) FROM ListEntity l INNER JOIN l.component c ORDER BY l.modifiedOn DESC")
+    @Query("SELECT new com.crm.sofia.dto.list.ListDTO(l.id, l.name, l.modifiedOn, l.jsonUrl, c.id, c.name) FROM ListEntity l INNER JOIN l.component c ORDER BY l.modifiedOn DESC")
     List<ListDTO> getObject();
 
-    @Query("SELECT new com.crm.sofia.dto.list.ListDTO(l.id, l.name, l.modifiedOn, c.id, c.name) FROM ListEntity l INNER JOIN l.component c ORDER BY l.modifiedOn DESC")
+    @Query("SELECT new com.crm.sofia.dto.list.ListDTO(l.id, l.name, l.modifiedOn, l.jsonUrl, c.id, c.name) FROM ListEntity l INNER JOIN l.component c ORDER BY l.modifiedOn DESC")
     List<ListDTO> get10LatestObject(Pageable pageable);
-    @Query("SELECT DISTINCT new com.crm.sofia.dto.list.ListDTO(l.id, l.name, l.modifiedOn, c.id, c.name) " +
+
+    @Query("SELECT DISTINCT new com.crm.sofia.dto.list.ListDTO(l.id, l.name, l.modifiedOn, l.jsonUrl, c.id, c.name) " +
             "FROM ListEntity l " +
             "INNER JOIN l.component c " +
             "INNER JOIN l.tags lt " +

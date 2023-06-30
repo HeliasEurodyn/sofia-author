@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.10.xsd">
+
+    <changeSet author="KonstantinosAftzis" id="2053165644001-61">
+        <createTable tableName="rest_documentation_endpoint">
+            <column name="id" type="varchar(36)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="created_by" type="varchar(255)"/>
+            <column name="created_on" type="timestamp"  defaultValueComputed="current_timestamp()">
+                <constraints nullable="false"/>
+            </column>
+            <column name="modified_by" type="varchar(255)"/>
+            <column name="modified_on" type="timestamp"  defaultValueComputed="current_timestamp()">
+                <constraints nullable="false"/>
+            </column>
+            <column name="title" type="varchar(255)"/>
+            <column name="description" type="varchar(255)"/>
+            <column name="list_id" type="varchar(36)"/>
+            <column name="rest_documentation_id" type="varchar(36)"/>
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>
