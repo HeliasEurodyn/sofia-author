@@ -8,6 +8,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
+import javax.persistence.Column;
 import java.time.Instant;
 
 @Data
@@ -19,6 +20,8 @@ import java.time.Instant;
 public class RuleFieldDTO extends BaseDTO {
 
     private String code;
+
+    private String cpefCode;
     private String name;
 
     private String description;
