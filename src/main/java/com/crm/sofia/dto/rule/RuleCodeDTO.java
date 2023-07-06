@@ -8,9 +8,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
-import javax.persistence.Column;
 import java.time.Instant;
-import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -18,21 +16,9 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Accessors(chain = true)
-public class RuleFieldDTO extends BaseDTO {
-
-    private String code;
+public class RuleCodeDTO extends BaseDTO {
 
     private String name;
 
-    private String description;
-
-    List<RuleCodeDTO> codeList;
-
-    public RuleFieldDTO(String id, String code, String name, Instant modifiedOn) {
-        this.setId(id);
-        this.name = name;
-        this.code = code;
-        this.setModifiedOn(modifiedOn);
-    }
-
+    private String value;
 }

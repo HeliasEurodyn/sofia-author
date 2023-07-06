@@ -13,7 +13,7 @@ import java.util.List;
 @Repository
 public interface RuleFieldRepository extends BaseRepository<RuleField> {
 
-    @Query("SELECT new com.crm.sofia.dto.rule.RuleFieldDTO(r.id, r.name, r.modifiedOn) FROM RuleField r ORDER BY r.modifiedOn DESC")
+    @Query("SELECT new com.crm.sofia.dto.rule.RuleFieldDTO(r.id, r.code, r.name, r.modifiedOn) FROM RuleField r ORDER BY r.modifiedOn DESC")
     List<RuleFieldDTO> getObject();
 
 }
