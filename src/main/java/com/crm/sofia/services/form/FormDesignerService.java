@@ -3,6 +3,7 @@ package com.crm.sofia.services.form;
 import com.crm.sofia.dto.component.ComponentPersistEntityDTO;
 import com.crm.sofia.dto.component.ComponentPersistEntityFieldDTO;
 import com.crm.sofia.dto.form.*;
+import com.crm.sofia.dto.list.ListDTO;
 import com.crm.sofia.dto.tag.TagDTO;
 import com.crm.sofia.exception.DoesNotExistException;
 import com.crm.sofia.mapper.form.FormMapper;
@@ -298,6 +299,18 @@ public class FormDesignerService {
                         cacheManager.getCache("expression").evict(cpef.getPersistEntityField().getId());
                     });
         });
+    }
+
+    public List<FormDTO> getObjectWithJsonUrl() {
+        List<FormDTO> entities = this.getObject();
+
+
+        return entities
+                .stream()
+                .filter(field -> field.getJsonUrl() != null)
+                .filter(field -> !field.getJsonUrl().isEmpty())
+                .collect(Collectors.toList());
+
     }
 
 }

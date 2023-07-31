@@ -193,4 +193,13 @@ public class ListDesignerService {
         });
     }
 
+    public List<ListDTO> getObjectWithJsonUrl() {
+        List<ListDTO> entities = this.getObject();
+        return entities
+                .stream()
+                .filter(field -> field.getJsonUrl() != null)
+                .filter(field -> !field.getJsonUrl().isEmpty())
+                .collect(Collectors.toList());
+
+    }
 }

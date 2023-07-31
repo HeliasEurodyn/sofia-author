@@ -1,6 +1,7 @@
 package com.crm.sofia.controllers.list;
 
 import com.crm.sofia.dto.list.ListDTO;
+import com.crm.sofia.dto.rest_documentation.RestDocumentationDTO;
 import com.crm.sofia.dto.tag.TagDTO;
 import com.crm.sofia.services.list.ListDesignerService;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +26,12 @@ public class ListDesignerController {
     List<ListDTO> getObject() {
         return this.listDesignerService.getObject();
     }
+
+    @GetMapping(path = "/with-jsonUrl")
+    List<ListDTO> getObjectWithJsonUrl() {
+        return this.listDesignerService.getObjectWithJsonUrl();
+    }
+
 
     @GetMapping(path = "/tag")
     List<TagDTO> getTag() {

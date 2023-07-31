@@ -27,6 +27,11 @@ public class FormDesignerController {
         return this.formDesignerService.getObject();
     }
 
+    @GetMapping(path = "/with-jsonUrl")
+    List<FormDTO> getObjectWithJsonUrl() {
+        return this.formDesignerService.getObjectWithJsonUrl();
+    }
+
     @GetMapping(path = "/by-tag")
     List<FormDTO> getObjectByTag(@RequestParam("tag") String tag) {
         return this.formDesignerService.getObjectByTag(tag);
