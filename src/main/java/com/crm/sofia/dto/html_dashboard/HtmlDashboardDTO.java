@@ -1,6 +1,7 @@
 package com.crm.sofia.dto.html_dashboard;
 
 import com.crm.sofia.dto.common.BaseDTO;
+import com.crm.sofia.dto.list.ListScriptDTO;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,6 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 import java.time.Instant;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -22,6 +24,8 @@ public class HtmlDashboardDTO extends BaseDTO {
     private String name;
 
     private String html;
+
+    private List<HtmlDashboardScriptDTO> scripts;
 
     public HtmlDashboardDTO(String id, String code, String name, Instant modifiedOn) {
         this.setId(id);

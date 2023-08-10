@@ -58,10 +58,7 @@ public class InfoCardDesignerService {
                     String uriEncoded = EncodingUtil.encodeURIComponent(scriptDto.getScript());
                     String encoded = Base64.getEncoder().encodeToString(uriEncoded.getBytes(StandardCharsets.UTF_8));
                     scriptDto.setScript(encoded);
-
-
                 });
-
 
         return infoCardDTO;
     }
