@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.10.xsd">
+
+    <changeSet author="Helias" id="token">
+        <createTable tableName="token">
+            <column name="token" type="VARCHAR(250)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="expiration_date" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="expired" type="BIT" defaultValueBoolean="false"/>
+            <column name="revoked" type="BIT" defaultValueBoolean="false"/>
+            <column name="token_type" type="varchar(20)"/>
+            <column name="user_id" type="varchar(36)"/>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>
