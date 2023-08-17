@@ -55,6 +55,8 @@ public class FormDTO extends BaseDTO {
 
     private List<FormTranslationDTO> translations;
 
+    private List<FormBackendActionsDTO> formBackendActionsList;
+
     public FormDTO(String id, String name, Instant modifiedOn,String jsonUrl,String componentId,String componentName) {
         this.setId(id);
         this.name = name;
