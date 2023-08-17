@@ -13,8 +13,6 @@ import java.io.Serializable;
 
 @Data
 @Accessors(chain = true)
-@DynamicUpdate
-@DynamicInsert
 @Entity(name = "FormBackendActions")
 @Table(name = "form_backend_actions")
 public class FormBackendActions extends BaseEntity implements Serializable {
