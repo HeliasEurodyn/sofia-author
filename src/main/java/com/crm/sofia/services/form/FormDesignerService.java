@@ -176,6 +176,7 @@ public class FormDesignerService {
         });
 
         formDTO.getFormActionButtons().sort(Comparator.comparingLong(FormActionButtonDTO::getShortOrder));
+        formDTO.getFormBackendActionsList().sort(Comparator.comparingLong(FormBackendActionsDTO::getShortOrder));
 
         /* Shorting Component*/
         List<ComponentPersistEntityDTO> sorted = this.shortCPEList(formDTO.getComponent().getComponentPersistEntityList());
