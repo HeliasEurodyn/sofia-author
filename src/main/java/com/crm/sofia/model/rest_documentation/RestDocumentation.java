@@ -31,4 +31,5 @@ public class RestDocumentation  extends MainEntity implements Serializable {
     )
     @JoinColumn(name = "rest_documentation_id")
     private List<RestDocumentationEndpoint> restDocumentationEndpoints;
+
 }

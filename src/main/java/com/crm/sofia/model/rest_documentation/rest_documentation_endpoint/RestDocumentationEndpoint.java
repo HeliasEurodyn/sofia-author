@@ -49,5 +49,11 @@ public class RestDocumentationEndpoint extends BaseEntity implements Serializabl
     @JoinColumn(name = "rest_documentation_endpoint_id")
     private List<ExcludeEndpointField> excludeEndPointFields;
 
+    @Column(name = "short_order")
+    private Long shortOrder;
+
+    @Column
+    private String jsonUrl;
+
 
 }

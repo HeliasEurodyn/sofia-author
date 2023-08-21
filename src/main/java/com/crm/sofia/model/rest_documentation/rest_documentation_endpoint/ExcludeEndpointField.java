@@ -22,5 +22,8 @@ public class ExcludeEndpointField extends BaseEntity implements Serializable {
     @Column(columnDefinition = "TEXT")
     private String excludeField;
 
+    @Column(name = "short_order")
+    private Long shortOrder;
+
 
 }

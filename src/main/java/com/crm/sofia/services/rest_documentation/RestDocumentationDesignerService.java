@@ -2,7 +2,10 @@ package com.crm.sofia.services.rest_documentation;
 
 
 
+import com.crm.sofia.dto.form.FormActionButtonDTO;
 import com.crm.sofia.dto.rest_documentation.RestDocumentationDTO;
+import com.crm.sofia.dto.rest_documentation.rest_documentation_endpoint.ExcludeEndPointFieldDTO;
+import com.crm.sofia.dto.rest_documentation.rest_documentation_endpoint.RestDocumentationEndpointDTO;
 import com.crm.sofia.exception.DoesNotExistException;
 import com.crm.sofia.mapper.rest_documentation.RestDocumentationMapper;
 import com.crm.sofia.model.rest_documentation.RestDocumentation;
@@ -14,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -41,6 +45,24 @@ public class RestDocumentationDesignerService {
                 .orElseThrow(() -> new DoesNotExistException("RestDocumentation Does Not Exist"));
 
         RestDocumentationDTO dto = restDocumentationMapper.map(entity);
+
+        dto.getRestDocumentationEndpoints().sort(
+                Comparator.comparingLong(
+                        endpoint -> {
+                            Long shortOrder = endpoint.getShortOrder();
+                            return shortOrder != null ? shortOrder : Long.MIN_VALUE;
+                        }
+                )
+        );
+
+        for (RestDocumentationEndpointDTO endpointDTO : dto.getRestDocumentationEndpoints()) {
+            endpointDTO.getExcludeEndPointFields().sort( Comparator.comparingLong(
+                    endpoint -> {
+                        Long shortOrder = endpoint.getShortOrder();
+                        return shortOrder != null ? shortOrder : Long.MIN_VALUE;
+                    }
+            ));
+        }
 
         return dto;
 
