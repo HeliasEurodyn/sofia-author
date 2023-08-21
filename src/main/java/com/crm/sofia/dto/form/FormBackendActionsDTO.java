@@ -14,6 +14,8 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class FormBackendActionsDTO extends BaseDTO {
 
+    private String title;
+
     private String editor;
 
     private String trigger_on;

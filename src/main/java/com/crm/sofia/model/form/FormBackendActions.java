@@ -23,6 +23,9 @@ public class FormBackendActions extends BaseEntity implements Serializable {
     @Column(columnDefinition = "TEXT")
     private String trigger_on;
 
+    @Column(columnDefinition = "TEXT")
+    private String title;
+
     @Column(name = "short_order")
     private Long shortOrder;
 }
