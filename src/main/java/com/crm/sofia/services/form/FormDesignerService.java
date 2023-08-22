@@ -300,6 +300,10 @@ public class FormDesignerService {
                         cacheManager.getCache("expression").evict(cpef.getPersistEntityField().getId());
                     });
         });
+
+        formEntity.getFormBackendActionsList().stream().forEach(action -> {
+            cacheManager.getCache("expression").evict(action.getId());
+        });
     }
 
     public List<FormDTO> getObjectWithJsonUrl() {
