@@ -47,7 +47,7 @@ public class HtmlDashboardJavascriptService {
                         "this.onHtmlDashboardOpen(metadata);");
 
         nativeFormEventsHandler.
-                add("if((type == 'onHtmlDashboardDataLoaded') && " +
+                add("if((type == '`onHtmlDashboardDataLoaded`') && " +
                         "(typeof this.onHtmlDashboardDataLoaded == \"function\")) " +
                         "this.onHtmlDashboardDataLoaded(metadata);");
 
